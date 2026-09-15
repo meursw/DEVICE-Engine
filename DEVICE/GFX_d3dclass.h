@@ -10,22 +10,21 @@ using namespace DirectX;
 
 #include <wrl/client.h> // Include for ComPtr
 
+
 class D3DClass
 {
 public:
-	D3DClass();
+	D3DClass(int, int, bool, HWND, bool, float, float);
 	~D3DClass() = default;
 
-	bool Initialize(int , int , bool , HWND , bool , float , float);
-
 private:
-	bool GetVideoCardInformation(int, int, int&, int&);
-	bool CreateDeviceAndSwapChain(int, int, bool, int, int, HWND, bool);
-	bool CreateRenderTargetView();
-	bool CreateDepthStencilBuffer(int, int);
-	bool CreateDisabledDepthState();
-	bool CreateRasterState();
-	bool CreateBlendState();
+	void GetVideoCardInformation(int, int, int&, int&);
+	void CreateDeviceAndSwapChain(int, int, bool, int, int, HWND, bool);
+	void CreateRenderTargetView();
+	void CreateDepthStencilBuffer(int, int);
+	void CreateDisabledDepthState();
+	void CreateRasterState();
+	void CreateBlendState();
 	
 	void CreateViewport(int, int);
 	void CreateProjectionMatrix(int, int, float, float);
@@ -51,7 +50,6 @@ public:
 
 	void EnableAlphaBlending();
 	void DisableAlphaBlending();
-	
 
 private:
 	Microsoft::WRL::ComPtr <IDXGISwapChain> m_swapChain;

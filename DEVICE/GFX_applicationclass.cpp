@@ -5,12 +5,7 @@ ApplicationClass::ApplicationClass() {}
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	// Initialize the direct 3D object
-	m_Direct3D = std::make_unique<D3DClass>();
-	if (!m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
-	{
-		MessageBox(hwnd, L"Could not initialize Direct3D", L"ERROR", MB_OK);
-		return false;
-	}
+	m_Direct3D = std::make_unique<D3DClass>(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 
 	m_vertexShader = std::make_unique<VertexShader>(ShaderType::VERTEX_SHADER);
 	if (!m_vertexShader->InitializeShader(m_Direct3D->GetDevice(), hwnd, L"vert.vs", "VertEntry"))

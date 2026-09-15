@@ -4,7 +4,7 @@ WindowClass::WindowClass(int screenWidth, int screenHeight, bool FULL_SCREEN)
 {
 	// Create window class.
 	m_applicationName = L"Engine";
-	m_hinstance = GetModuleHandle(NULL);
+	m_hinstance = GetModuleHandle(nullptr);
 	m_fullscreen = FULL_SCREEN;
 
 	WNDCLASSEX wc{ 0 };
@@ -87,14 +87,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-		// Check if window is being destroyed
+
+	// Check if window is being destroyed and close the application.
 	case WM_DESTROY:
 	{
 		PostQuitMessage(0);
 		return 0;
 	}
 
-	// Check if window is being closed
+	// Check if window is being closed and close the application.
 	case WM_CLOSE:
 	{
 		PostQuitMessage(0);
@@ -113,7 +114,7 @@ HWND WindowClass::GetHwnd() const
 	return m_hwnd;
 }
 
-HINSTANCE WindowClass::GetHinstance() const
+HINSTANCE WindowClass::GetInstance() const
 {
 	return m_hinstance;
 }

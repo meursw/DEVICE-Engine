@@ -1,7 +1,6 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "SYS_WinFilter.h"
 
 class WindowClass
 {
@@ -10,7 +9,7 @@ public:
 	~WindowClass();
 
 	HWND GetHwnd() const;
-	HINSTANCE GetHinstance() const;
+	HINSTANCE GetInstance() const;
 
 private:
 	// Application name.

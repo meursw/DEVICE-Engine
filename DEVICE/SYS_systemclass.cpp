@@ -1,4 +1,5 @@
 #include "SYS_systemclass.h"
+#
 
 SystemClass::SystemClass() {}
 
@@ -15,7 +16,7 @@ bool SystemClass::Initialize()
 	
 	// Create input class.
 	m_Input = std::make_unique<InputClass>();
-	if (!m_Input->Initialize(m_Window->GetHinstance(), m_Window->GetHwnd(), screenWidth, screenHeight))
+	if (!m_Input->Initialize(m_Window->GetInstance(), m_Window->GetHwnd(), screenWidth, screenHeight))
 		return false;
 
 	return true;

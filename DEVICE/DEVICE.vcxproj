@@ -26,6 +26,8 @@
     <ClCompile Include="GFX_pixelphader.cpp" />
     <ClCompile Include="GFX_vertexlayout.cpp" />
     <ClCompile Include="GFX_vertexshader.cpp" />
+    <ClCompile Include="SYS_d3d_exception.cpp" />
+    <ClCompile Include="SYS_DEVICE_exception.cpp" />
     <ClCompile Include="SYS_inputclass.cpp" />
     <ClCompile Include="SYS_systemclass.cpp" />
     <ClCompile Include="SYS_windowclass.cpp" />
@@ -40,9 +42,13 @@
     <ClInclude Include="GFX_pixelshader.h" />
     <ClInclude Include="GFX_vertexlayout.h" />
     <ClInclude Include="GFX_vertexshader.h" />
+    <ClInclude Include="SYS_d3d_exception.h" />
+    <ClInclude Include="SYS_D3D_ThrowMacros.h" />
+    <ClInclude Include="SYS_DEVICE_exception.h" />
     <ClInclude Include="SYS_inputclass.h" />
     <ClInclude Include="SYS_systemclass.h" />
     <ClInclude Include="SYS_windowclass.h" />
+    <ClInclude Include="SYS_WinFilter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="pix.ps" />
