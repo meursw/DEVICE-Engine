@@ -13,37 +13,119 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\SYSTEM">
+      <UniqueIdentifier>{d80462e0-407d-4139-82f1-f66ba2bbab04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GRAPHICS">
+      <UniqueIdentifier>{660eda5c-1a4c-4d24-b8e5-defdd8faa952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GRAPHICS\BINDABLES">
+      <UniqueIdentifier>{0a6a37f4-0cd9-4a9b-8ed1-c5c72848cede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SHADERS">
+      <UniqueIdentifier>{5af01f4f-119f-4132-99c0-d98861731910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SYSTEM">
+      <UniqueIdentifier>{76763cdd-e526-4c58-907a-cf1f44ab7c1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GRAPHICS">
+      <UniqueIdentifier>{4f842895-9075-4211-be16-5aefea3127a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GRAPHICS\BINDABLES">
+      <UniqueIdentifier>{7eb1b208-694c-4e10-8f45-cf55666a2bce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DEVICE.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include="pix.ps">
+      <Filter>Source Files\SHADERS</Filter>
+    </None>
+    <None Include="vert.vs">
+      <Filter>Source Files\SHADERS</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DEVICE.cpp">
+    <ClCompile Include="SOURCE\SYSTEM\SYS_d3d_exception.cpp">
+      <Filter>Source Files\SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\SYSTEM\SYS_DEVICE_exception.cpp">
+      <Filter>Source Files\SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\SYSTEM\SYS_inputclass.cpp">
+      <Filter>Source Files\SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\SYSTEM\SYS_systemclass.cpp">
+      <Filter>Source Files\SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\SYSTEM\SYS_windowclass.cpp">
+      <Filter>Source Files\SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_applicationclass.cpp">
+      <Filter>Source Files\GRAPHICS</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_d3dclass.cpp">
+      <Filter>Source Files\GRAPHICS</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_baseshaderclass.cpp">
+      <Filter>Source Files\GRAPHICS\BINDABLES</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_inputlayout.cpp">
+      <Filter>Source Files\GRAPHICS\BINDABLES</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_pixelphader.cpp">
+      <Filter>Source Files\GRAPHICS\BINDABLES</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexshader.cpp">
+      <Filter>Source Files\GRAPHICS\BINDABLES</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\WinMain.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_vertexlayout.cpp">
+      <Filter>Source Files\GRAPHICS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DEVICE.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="DEVICE.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_d3d_exception.h">
+      <Filter>Header Files\SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_DEVICE_exception.h">
+      <Filter>Header Files\SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_inputclass.h">
+      <Filter>Header Files\SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_systemclass.h">
+      <Filter>Header Files\SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_windowclass.h">
+      <Filter>Header Files\SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_WinFilter.h">
+      <Filter>Header Files\SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_d3dclass.h">
+      <Filter>Header Files\GRAPHICS</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h">
+      <Filter>Header Files\GRAPHICS</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_baseshaderclass.h">
+      <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_bindable.h">
+      <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_inputlayout.h">
+      <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_pixelshader.h">
+      <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h">
+      <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_vertexlayout.h">
+      <Filter>Header Files\GRAPHICS</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

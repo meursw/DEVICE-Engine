@@ -12,9 +12,8 @@ public:
 	SystemClass();
 	~SystemClass() = default;
 
-	bool Initialize();
-
 	void Start();
+	// Returns false if user presses ESC.
 	bool Frame();
 
 private:

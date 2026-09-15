@@ -1,32 +1,18 @@
 #include "SYS_systemclass.h"
-#
 
-SystemClass::SystemClass() {}
-
-bool SystemClass::Initialize()
+SystemClass::SystemClass() 
 {
 	// Create window.
 	int screenWidth{ 800 }, screenHeight{ 600 };
 	m_Window = std::make_unique<WindowClass>(screenWidth, screenHeight, FULL_SCREEN);
 
 	// Create application class.
-	m_Application = std::make_unique<ApplicationClass>();
-	if (!m_Application->Initialize(screenWidth, screenHeight, m_Window->GetHwnd()))
-		return false;
-	
-	// Create input class.
-	m_Input = std::make_unique<InputClass>();
-	if (!m_Input->Initialize(m_Window->GetInstance(), m_Window->GetHwnd(), screenWidth, screenHeight))
-		return false;
+	m_Application = std::make_unique<ApplicationClass>(screenWidth, screenHeight, m_Window->GetHwnd());
 
-	return true;
+	// Create input class.
+	m_Input = std::make_unique<InputClass>(m_Window->GetInstance(), m_Window->GetHwnd(), screenWidth, screenHeight);
 }
 
-// while not done
-// check for windows system messages
-// process system messages
-// process application loop
-// check if user wanted to quit during the frame processing 
 void SystemClass::Start()
 {
 	MSG msg{}; // Windows system message
@@ -35,6 +21,9 @@ void SystemClass::Start()
 	bool done{ false };
 	bool frame_result;
 
+	// Main loop of the program. 
+	// Window messages are processed first, then the rest of the application.
+	// Frame returns false if the user wanted to close the application, i.e. press ESC.
 	while (!done)
 	{
 		// Handle windows messages.
@@ -52,7 +41,6 @@ void SystemClass::Start()
 			if (!frame_result)
 				done = true;
 		}
-
 	}
 
 	return;
@@ -61,12 +49,8 @@ void SystemClass::Start()
 bool SystemClass::Frame()
 {
 	// First do the input frame processing.
-	if (!m_Input->Frame())
-		return false;
+	m_Input->Frame();
 
 	// Do the frame processing of the application class.
-	if (!m_Application->Frame(m_Input.get()))
-		return false;
-
-	return true;
+	return m_Application->Frame(m_Input.get());
 }

@@ -8,11 +8,11 @@ public:
 	void Bind(ID3D11DeviceContext*);
 
 public:
-	PixelShader(ShaderType);
+	PixelShader(ShaderType, ID3D11Device*, HWND, const wchar_t*, const char*);
 	~PixelShader() = default;
 
 private:
-	bool CreateShader(ID3D11Device*) override;
+	void CreateShader(ID3D11Device*) override;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;

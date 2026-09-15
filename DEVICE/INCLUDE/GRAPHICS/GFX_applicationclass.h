@@ -18,10 +18,8 @@ const float SCREEN_NEAR = 0.1f;
 class ApplicationClass
 {
 public:
-	ApplicationClass();
+	ApplicationClass(int screenWidth, int screenHeight, HWND hwnd);
 	~ApplicationClass() = default;
-
-	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 
 	bool Frame(InputClass*);
 	bool Render();

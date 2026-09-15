@@ -7,8 +7,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdlin
 
 	try
 	{
-		if(system.Initialize())
-			system.Start();
+		system.Start();
 	}
 	// Handle exceptions.
 	// This program defines DEVICE_Exception, a custom class that inherits from std::exception
@@ -27,6 +26,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdlin
 	{
 		MessageBoxA(nullptr, "No details available", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
 	}
+
 
 	return 0;
 }

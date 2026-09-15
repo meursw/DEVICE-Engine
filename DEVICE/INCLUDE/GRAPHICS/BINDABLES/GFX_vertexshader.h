@@ -8,13 +8,13 @@ public:
 	void Bind(ID3D11DeviceContext*);
 
 public:
-	VertexShader(ShaderType);
+	VertexShader(ShaderType, ID3D11Device*, HWND, const wchar_t*, const char*);
 	~VertexShader() = default;
 
 	ID3D10Blob* GetBytecode() const;
 
 private:
-	bool CreateShader(ID3D11Device*) override;
+	void CreateShader(ID3D11Device*) override;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;

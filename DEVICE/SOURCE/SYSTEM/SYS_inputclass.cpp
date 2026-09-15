@@ -1,8 +1,6 @@
 #include "SYS_inputclass.h"
 
-InputClass::InputClass() {}
-
-bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
+InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight) 
 {
 	HRESULT hr;
 
@@ -11,69 +9,65 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 
 	m_mouseX = 0; m_mouseY = 0;
 
-// KEYBOARD CREATION //
-	 
+	// KEYBOARD CREATION //
 	// Initialize the main direct input interface
-	hr = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
-	if (FAILED(hr)) return false;
+	D3D_THROW(DirectInput8Create(
+		hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL
+	));
 
-    // Initialize the direct input interface for the keyboard.
-    hr = m_directInput->CreateDevice(GUID_SysKeyboard, &m_keyboard, NULL);
-    if (FAILED(hr)) return false;
+	// Initialize the direct input interface for the keyboard.
+	D3D_THROW(m_directInput->CreateDevice(
+		GUID_SysKeyboard, &m_keyboard, NULL
+	));
 
-    // Set the data format. In this case since it is a keyboard we can use the predefined data format.
-    hr = m_keyboard->SetDataFormat(&c_dfDIKeyboard);
-	if (FAILED(hr)) return false;
+	// Set the data format. In this case since it is a keyboard we can use the predefined data format.
+	D3D_THROW(m_keyboard->SetDataFormat(
+		&c_dfDIKeyboard
+	));
 
-    // Set the cooperative level of the keyboard to not share with other programs.
-    hr = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
-	if (FAILED(hr)) return false;
+	// Set the cooperative level of the keyboard to not share with other programs.
+	D3D_THROW(m_keyboard->SetCooperativeLevel(
+		hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE
+	));
 
-	hr = m_keyboard->Acquire();
-	if (FAILED(hr)) return false;
+	D3D_THROW(m_keyboard->Acquire());
+	// END OF KEYBOARD CREATION //
 
-// END OF KEYBOARD CREATION //
 
-// MOUSE CREATION
-	
+	// MOUSE CREATION
 	// Initialize the direct input interface for the mouse.
-	hr = m_directInput->CreateDevice(GUID_SysMouse, &m_mouse, NULL);
-	if (FAILED(hr)) return false;
+	D3D_THROW(m_directInput->CreateDevice(
+		GUID_SysMouse, &m_mouse, NULL
+	));
 
 	// Set the data format for the mouse using the pre-defined mouse data format.
-	hr = m_mouse->SetDataFormat(&c_dfDIMouse);
-	if (FAILED(hr)) return false;
+	D3D_THROW(m_mouse->SetDataFormat(
+		&c_dfDIMouse
+	));
 
 	// Set the cooperative level of the mouse to share with other programs.
-	hr = m_mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-	if (FAILED(hr)) return false;
+	D3D_THROW(m_mouse->SetCooperativeLevel(
+		hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
+	));
 
 	// Acquire the mouse.
-	hr = m_mouse->Acquire();
-	if (FAILED(hr)) return false;
-
-// END OF MOUSE CREATION
-
-	return true;
+	D3D_THROW(m_mouse->Acquire());
+	// END OF MOUSE CREATION
 }
 
-bool InputClass::Frame()
+void InputClass::Frame()
 {
 	// Read the current state of the keyboard.
-	if (!ReadKeyboard())
-		return false;
+	ReadKeyboard();
 
-	// Read the current state of the mouse.
-	if (!ReadMouse())
-		return false;
+	// Read the current state of the keyboard.
+	ReadMouse();
 
 	// Process the changes in the mouse and keyboard.
 	ProcessInput();
-
-	return true;
 }
 
-bool InputClass::ReadKeyboard()
+void InputClass::ReadKeyboard()
 {
 	HRESULT hr;
 
@@ -86,18 +80,15 @@ bool InputClass::ReadKeyboard()
 		if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
 		{
 			m_keyboard->Acquire();
-			return true;
 		}
 		else
 		{
-			return false;
+			D3D_THROW(hr);
 		}
 	}
-
-	return true;
 }
 
-bool InputClass::ReadMouse()
+void InputClass::ReadMouse()
 {
 	HRESULT hr;
 
@@ -112,11 +103,9 @@ bool InputClass::ReadMouse()
 		}
 		else
 		{
-			return false;
+			D3D_THROW(hr);
 		}
 	}
-
-	return true;
 }
 
 void InputClass::ProcessInput()

@@ -2,7 +2,13 @@
 
 using namespace Microsoft::WRL;
 
-BaseShaderClass::BaseShaderClass(ShaderType shaderType) 
+BaseShaderClass::BaseShaderClass(
+	ShaderType shaderType,
+	ID3D11Device* device,
+	HWND hwnd,
+	const wchar_t* shaderFilename,
+	const char* shaderEntryPoint
+)
 {
 	switch (shaderType)
 	{
@@ -19,25 +25,11 @@ BaseShaderClass::BaseShaderClass(ShaderType shaderType)
 		break;
 		
 	}
+
+	CompileShader(hwnd, shaderFilename, shaderEntryPoint);
 }
 
-bool BaseShaderClass::InitializeShader(
-		ID3D11Device* device,
-		HWND hwnd, 
-		const wchar_t* shaderFilename, 
-		const char* shaderEntryPoint
-)
-{
-	if (!CompileShader(hwnd, shaderFilename, shaderEntryPoint))
-		return false;
-
-	if (!CreateShader(device))
-		return false;
-
-	return true;
-}
-
-bool BaseShaderClass::CompileShader(HWND hwnd, const wchar_t* shaderFilename,const char* shaderEntryPoint)
+void BaseShaderClass::CompileShader(HWND hwnd, const wchar_t* shaderFilename,const char* shaderEntryPoint)
 {
 	HRESULT hr;
 	ComPtr<ID3D10Blob> errorMessage;
@@ -60,10 +52,8 @@ bool BaseShaderClass::CompileShader(HWND hwnd, const wchar_t* shaderFilename,con
 		else
 			MessageBox(hwnd, shaderFilename, L"Missing Shader File", MB_OK);
 
-		return false;
+		D3D_THROW(hr);
 	}
-
-	return true;
 }
 
 

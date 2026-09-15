@@ -12,23 +12,23 @@
 #include <dinput.h>
 #include <wrl/client.h> // Include for ComPtr
 
+#include "SYS_d3d_exception.h"
+
 class InputClass
 {
 public:
-	InputClass();
+	InputClass(HINSTANCE, HWND, int, int);
 	~InputClass() = default;
 
-	bool Initialize(HINSTANCE, HWND, int, int);
-
-	bool Frame();
+	void Frame();
 
 	bool IsEscapePressed();
 	void GetMouseLocation(int&, int&);
 	bool IsMousePressed();
 
 private:
-	bool ReadKeyboard();
-	bool ReadMouse();
+	void ReadKeyboard();
+	void ReadMouse();
 	void ProcessInput();
 
 private:

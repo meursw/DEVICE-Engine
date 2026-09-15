@@ -1,21 +1,27 @@
 #include "GFX_vertexshader.h"
 
-VertexShader::VertexShader(ShaderType st) : BaseShaderClass(st) {}
+VertexShader::VertexShader(
+	ShaderType shaderType,
+	ID3D11Device* device,
+	HWND hwnd,
+	const wchar_t* shaderFilename,
+	const char* shaderEntryPoint) 
+	: 
+	BaseShaderClass(shaderType, device, hwnd, shaderFilename, shaderEntryPoint)
+{
+	CreateShader(device);
+}
 
-bool VertexShader::CreateShader(ID3D11Device* device)
+void VertexShader::CreateShader(ID3D11Device* device)
 {
 	HRESULT hr;
 
-	hr = device->CreateVertexShader(
+	D3D_THROW(device->CreateVertexShader(
 		m_shaderBuffer.Get()->GetBufferPointer(),
 		m_shaderBuffer.Get()->GetBufferSize(),
 		NULL,
 		m_vertexShader.GetAddressOf()
-	);
-
-	if (FAILED(hr)) return false;
-
-	return true;
+	));
 }
 
 ID3D10Blob* VertexShader::GetBytecode() const

@@ -19,40 +19,39 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GFX_applicationclass.cpp" />
-    <ClCompile Include="GFX_baseshaderclass.cpp" />
-    <ClCompile Include="GFX_d3dclass.cpp" />
-    <ClCompile Include="GFX_inputlayout.cpp" />
-    <ClCompile Include="GFX_pixelphader.cpp" />
-    <ClCompile Include="GFX_vertexlayout.cpp" />
-    <ClCompile Include="GFX_vertexshader.cpp" />
-    <ClCompile Include="SYS_d3d_exception.cpp" />
-    <ClCompile Include="SYS_DEVICE_exception.cpp" />
-    <ClCompile Include="SYS_inputclass.cpp" />
-    <ClCompile Include="SYS_systemclass.cpp" />
-    <ClCompile Include="SYS_windowclass.cpp" />
-    <ClCompile Include="WinMain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GFX_applicationclass.h" />
-    <ClInclude Include="GFX_baseshaderclass.h" />
-    <ClInclude Include="GFX_bindable.h" />
-    <ClInclude Include="GFX_d3dclass.h" />
-    <ClInclude Include="GFX_inputlayout.h" />
-    <ClInclude Include="GFX_pixelshader.h" />
-    <ClInclude Include="GFX_vertexlayout.h" />
-    <ClInclude Include="GFX_vertexshader.h" />
-    <ClInclude Include="SYS_d3d_exception.h" />
-    <ClInclude Include="SYS_D3D_ThrowMacros.h" />
-    <ClInclude Include="SYS_DEVICE_exception.h" />
-    <ClInclude Include="SYS_inputclass.h" />
-    <ClInclude Include="SYS_systemclass.h" />
-    <ClInclude Include="SYS_windowclass.h" />
-    <ClInclude Include="SYS_WinFilter.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="pix.ps" />
     <None Include="vert.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_baseshaderclass.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_inputlayout.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_pixelphader.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexshader.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_applicationclass.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_d3dclass.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_vertexlayout.cpp" />
+    <ClCompile Include="SOURCE\SYSTEM\SYS_d3d_exception.cpp" />
+    <ClCompile Include="SOURCE\SYSTEM\SYS_DEVICE_exception.cpp" />
+    <ClCompile Include="SOURCE\SYSTEM\SYS_inputclass.cpp" />
+    <ClCompile Include="SOURCE\SYSTEM\SYS_systemclass.cpp" />
+    <ClCompile Include="SOURCE\SYSTEM\SYS_windowclass.cpp" />
+    <ClCompile Include="SOURCE\WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_baseshaderclass.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_bindable.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_inputlayout.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_pixelshader.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_d3dclass.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_vertexlayout.h" />
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_d3d_exception.h" />
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_DEVICE_exception.h" />
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_inputclass.h" />
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_systemclass.h" />
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_windowclass.h" />
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_WinFilter.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -109,10 +108,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

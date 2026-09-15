@@ -10,7 +10,6 @@
 
 #include "GFX_bindable.h"
 
-
 enum class ShaderType
 {
 	VERTEX_SHADER,
@@ -24,18 +23,17 @@ public:
 	virtual void Bind(ID3D11DeviceContext*) = 0;
 
 public:
-	BaseShaderClass(ShaderType);
+	BaseShaderClass(ShaderType, ID3D11Device*, HWND, const wchar_t*, const char*);
 	virtual ~BaseShaderClass() = default;
 
-	bool InitializeShader(ID3D11Device*, HWND, const wchar_t*, const char*);
-	bool CompileShader(HWND, const wchar_t*, const char*);
+	void CompileShader(HWND, const wchar_t*, const char*);
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, const wchar_t*);
 
 protected:
-	virtual bool CreateShader(ID3D11Device*) = 0;
+	virtual void CreateShader(ID3D11Device*) = 0;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D10Blob> m_shaderBuffer;
-	const char* m_shaderTarget;
+	const char* m_shaderTarget = nullptr;
 };
 

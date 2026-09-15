@@ -6,8 +6,9 @@
 /// </summary>
 
 #include <wrl/client.h> // Include for ComPtr
-
 #include <d3d11.h>
+
+#include "SYS_d3d_exception.h"
 
 class Bindable
 {
