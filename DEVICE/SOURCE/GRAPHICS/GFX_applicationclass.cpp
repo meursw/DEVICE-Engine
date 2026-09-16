@@ -27,16 +27,18 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	m_inputLayout = std::make_unique<InputLayout>(m_Direct3D->GetDevice(), vl, m_vertexShader->GetBytecode());
 }
 
-bool ApplicationClass::Frame(InputClass* m_Input)
+void ApplicationClass::Frame(InputClass* m_Input)
 {
-	if (m_Input->IsEscapePressed())
-		return false;
+	if (m_Input->IsEscapePressed()) {
+		PostQuitMessage(0);
+		return;
+	}
 
-	return true;
+	Render();
 }
 
-bool ApplicationClass::Render()
+void ApplicationClass::Render()
 {
-
-	return true;
+	m_Direct3D->BeginScene(0.0, 0.0, 0.0, 1.0);
+	m_Direct3D->EndScene();
 } 

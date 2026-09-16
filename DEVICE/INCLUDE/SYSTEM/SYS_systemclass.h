@@ -13,8 +13,7 @@ public:
 	~SystemClass() = default;
 
 	void Start();
-	// Returns false if user presses ESC.
-	bool Frame();
+	void Frame();
 
 private:
 	std::unique_ptr<WindowClass> m_Window;

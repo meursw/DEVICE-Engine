@@ -47,7 +47,7 @@ void D3DClass::GetVideoCardInformation(int screenWidth, int screenHeight, int& n
 	HRESULT hr{};
 
 	ComPtr<IDXGIFactory> factory; // Used to create DXGI objects
-	// Create DX graphics interface factory. We use uuidof to get identifier of an interace.
+	// Create DX graphics interface factory. We use uuidof to get identifier of an interface.
 	D3D_THROW(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)factory.GetAddressOf()));
 
 	ComPtr<IDXGIAdapter> adapter; // Represents display subsystem (GPUs etc)

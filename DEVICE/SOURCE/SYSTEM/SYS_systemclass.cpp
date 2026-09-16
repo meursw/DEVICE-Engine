@@ -15,42 +15,22 @@ SystemClass::SystemClass()
 
 void SystemClass::Start()
 {
-	MSG msg{}; // Windows system message
-	ZeroMemory(&msg, sizeof(MSG));
-
-	bool done{ false };
-	bool frame_result;
-
 	// Main loop of the program. 
 	// Window messages are processed first, then the rest of the application.
 	// Frame returns false if the user wanted to close the application, i.e. press ESC.
-	while (!done)
-	{
-		// Handle windows messages.
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		// Check if the application should close.
-		if (msg.message == WM_QUIT)
-			done = true;
-		else
-		{
-			frame_result = Frame();
-			if (!frame_result)
-				done = true;
-		}
-	}
+	
+	// If Process Messages returns false it means that there was a QUIT message.
+	while (m_Window->ProcessMessages())
+		Frame();
 
 	return;
 }
 
-bool SystemClass::Frame()
+void SystemClass::Frame()
 {
 	// First do the input frame processing.
 	m_Input->Frame();
 
 	// Do the frame processing of the application class.
-	return m_Application->Frame(m_Input.get());
+	m_Application->Frame(m_Input.get());
 }

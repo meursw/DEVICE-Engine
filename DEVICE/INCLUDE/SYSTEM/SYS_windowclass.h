@@ -8,6 +8,9 @@ public:
 	WindowClass(int screenWidth, int screenHeight, bool FULL_SCREEN);
 	~WindowClass();
 
+	// Static so that this method process messages for all windows.
+	static bool ProcessMessages();
+
 	HWND GetHwnd() const;
 	HINSTANCE GetInstance() const;
 

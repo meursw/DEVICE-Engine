@@ -3,7 +3,7 @@
 WindowClass::WindowClass(int screenWidth, int screenHeight, bool FULL_SCREEN)
 {
 	// Create window class.
-	m_applicationName = L"Engine";
+	m_applicationName = L"DEVICE";
 	m_hinstance = GetModuleHandle(nullptr);
 	m_fullscreen = FULL_SCREEN;
 
@@ -52,9 +52,17 @@ WindowClass::WindowClass(int screenWidth, int screenHeight, bool FULL_SCREEN)
 	}
 
 	// Create an instance of the window and get a handle to it.
-	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+	m_hwnd = CreateWindowEx(
+		WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
+		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL
+	);
+
+	/*m_hwnd = CreateWindowEx(
+		WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL
+	);*/
 
 	// Bring the window up on the screen and set it as main focus.
 	ShowWindow(m_hwnd, SW_SHOW);
@@ -82,12 +90,32 @@ WindowClass::~WindowClass()
 	m_hinstance = NULL;
 }
 
+bool WindowClass::ProcessMessages()
+{
+	MSG msg{}; // Windows system message
+
+	// Handle windows messages.
+	// We use PeekMessage instead of GetMessage.
+	// This is because GetMessage blocks when a message is not being sent.
+	while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) 
+	{
+		// Check if the application should close.
+		if (msg.message == WM_QUIT)
+			return false;
+
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+
+	}
+	
+	return true;
+}
+
 // Here we handle the messages concerned with destroying the window or closing the window
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-
 	// Check if window is being destroyed and close the application.
 	case WM_DESTROY:
 	{

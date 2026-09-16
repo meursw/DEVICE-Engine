@@ -21,8 +21,8 @@ public:
 	ApplicationClass(int screenWidth, int screenHeight, HWND hwnd);
 	~ApplicationClass() = default;
 
-	bool Frame(InputClass*);
-	bool Render();
+	void Frame(InputClass*);
+	void Render();
 
 private:
 	std::unique_ptr<D3DClass> m_Direct3D;
