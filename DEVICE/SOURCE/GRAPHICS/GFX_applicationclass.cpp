@@ -34,11 +34,6 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Frame(InputClass* m_Input, float delta)
 {
-	if (m_Input->IsEscapePressed()) {
-		PostQuitMessage(0);
-		return;
-	}
-
 	Render(delta);
 }
 

@@ -33,6 +33,13 @@ void SystemClass::Frame()
 	// First do the input frame processing.
 	m_Input->Frame();
 
+	// Check if the user wants to close the application.
+	if (m_Input->IsEscapePressed())
+	{
+		PostQuitMessage(0);
+		return;
+	}
+
 	// Update timer status.
 	m_Timer->Frame();
 
