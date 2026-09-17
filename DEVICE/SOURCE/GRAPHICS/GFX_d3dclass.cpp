@@ -27,11 +27,11 @@ D3DClass::D3DClass(int screenWidth, int screenHeight, bool vysnc, HWND hwnd, boo
 		fullscreen
 	);
 
+	CreateRenderTargetView();
+
 	CreateDepthStencilBuffer(screenWidth, screenHeight);
 
 	CreateDisabledDepthState();
-
-	CreateRenderTargetView();
 
 	CreateRasterState();
 

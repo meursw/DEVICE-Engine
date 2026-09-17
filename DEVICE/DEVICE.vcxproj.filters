@@ -36,14 +36,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="pix.ps">
-      <Filter>Source Files\SHADERS</Filter>
-    </None>
-    <None Include="vert.vs">
-      <Filter>Source Files\SHADERS</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="SOURCE\SYSTEM\SYS_d3d_exception.cpp">
       <Filter>Source Files\SYSTEM</Filter>
     </ClCompile>
@@ -80,8 +72,17 @@
     <ClCompile Include="SOURCE\WinMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SOURCE\GRAPHICS\GFX_vertexlayout.cpp">
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexbuffer.cpp">
+      <Filter>Source Files\GRAPHICS\BINDABLES</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_camera.cpp">
       <Filter>Source Files\GRAPHICS</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_constantbuffer.cpp">
+      <Filter>Source Files\GRAPHICS\BINDABLES</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\SYSTEM\SYS_timerclass.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,8 +125,25 @@
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h">
       <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
     </ClInclude>
-    <ClInclude Include="INCLUDE\GRAPHICS\GFX_vertexlayout.h">
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexbuffer.h">
+      <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_camera.h">
       <Filter>Header Files\GRAPHICS</Filter>
     </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_constantbuffer.h">
+      <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_timerclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SHADERS\triangle.ps">
+      <Filter>Source Files\SHADERS</Filter>
+    </None>
+    <None Include="SHADERS\triangle.vs">
+      <Filter>Source Files\SHADERS</Filter>
+    </None>
   </ItemGroup>
 </Project>

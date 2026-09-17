@@ -19,39 +19,45 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="pix.ps" />
-    <None Include="vert.vs" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_baseshaderclass.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_constantbuffer.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_inputlayout.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_pixelphader.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexbuffer.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexshader.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_applicationclass.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_camera.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_d3dclass.cpp" />
-    <ClCompile Include="SOURCE\GRAPHICS\GFX_vertexlayout.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_d3d_exception.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_DEVICE_exception.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_inputclass.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_systemclass.cpp" />
+    <ClCompile Include="SOURCE\SYSTEM\SYS_timerclass.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_windowclass.cpp" />
     <ClCompile Include="SOURCE\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_baseshaderclass.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_bindable.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_constantbuffer.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_inputlayout.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_pixelshader.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexbuffer.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_camera.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_d3dclass.h" />
-    <ClInclude Include="INCLUDE\GRAPHICS\GFX_vertexlayout.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_d3d_exception.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_DEVICE_exception.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_inputclass.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_systemclass.h" />
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_timerclass.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_windowclass.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_WinFilter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SHADERS\triangle.ps" />
+    <None Include="SHADERS\triangle.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

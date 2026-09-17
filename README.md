@@ -1,2 +1,4 @@
-# DEVICE-Engine
-Graphics Engine using the DX11 API
+# DEVICE
+
+## PROGRESS (newest -> latest)
+### 01. SIERPINSKI FRACTAL
