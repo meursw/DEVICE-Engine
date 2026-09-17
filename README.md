@@ -6,5 +6,4 @@
 |:--:|
 Drawn with triangles.
 ![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/SIERPINSKI-POINT.gif)
-|:--:|
 Drawn with points.
