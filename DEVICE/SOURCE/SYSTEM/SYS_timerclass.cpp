@@ -1,11 +1,11 @@
 #include "SYS_timerclass.h"
 
-TimerClass::TimerClass()
+TimerClass::TimerClass() : m_deltaTime(0.0f)
 {
 	INT64 frequency{};
 
 	// Retrieves the frequency of the performance counter. 
-	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
+	QueryPerformanceFrequency((LARGE_INTEGER*)&(frequency));
 	if (frequency == 0)
 	{
 		// Convert the error that would occur into an HRESULT.

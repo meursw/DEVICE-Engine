@@ -9,9 +9,6 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera = std::make_unique<Camera>();
 	m_Camera->SetPosition({ 0.0, 0.0, -2.0f });
 
-	// Create the timer.
-	m_Timer = std::make_unique<TimerClass>();
-
 	m_vertexBuffer = std::make_unique<VertexBuffer>(m_Direct3D->GetDevice());
 
 	m_constantMatrixBuffer = std::make_unique<ConstantBuffer>(m_Direct3D->GetDevice());
@@ -33,22 +30,19 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	);
 
 	m_inputLayout = std::make_unique<InputLayout>(m_Direct3D->GetDevice(), m_vertexShader->GetBytecode());
-
-
-
 }
 
-void ApplicationClass::Frame(InputClass* m_Input)
+void ApplicationClass::Frame(InputClass* m_Input, float delta)
 {
 	if (m_Input->IsEscapePressed()) {
 		PostQuitMessage(0);
 		return;
 	}
 
-	Render();
+	Render(delta);
 }
 
-void ApplicationClass::Render()
+void ApplicationClass::Render(float delta)
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 
@@ -70,15 +64,13 @@ void ApplicationClass::Render()
 	m_vertexShader->Bind(deviceContext);
 	m_pixelShader->Bind(deviceContext);
 
-
 	static float elapsedTime{ 0.0 };
 	static int depth{ 0 };
 	static int sign{ 1 };
 
-	m_Timer->Frame();
-	elapsedTime += m_Timer->GetDeltaTime();
+	elapsedTime += delta;
 
-	if(elapsedTime >= 0.7f)
+	if(elapsedTime >= 0.4f)
 	{
 		if (depth == 12)
 			sign = -1;
@@ -96,8 +88,6 @@ void ApplicationClass::Render()
 		XMFLOAT3(0.0f, 1.0f, 0.0f),
 		XMFLOAT3(1.0f, -1.0f, 0.0f)
 	);
-
-
 
 	m_Direct3D->EndScene();
 }

@@ -135,7 +135,7 @@
       <Filter>Header Files\GRAPHICS\BINDABLES</Filter>
     </ClInclude>
     <ClInclude Include="INCLUDE\SYSTEM\SYS_timerclass.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SYSTEM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

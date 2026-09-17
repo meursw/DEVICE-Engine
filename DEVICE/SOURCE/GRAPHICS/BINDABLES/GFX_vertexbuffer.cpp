@@ -9,9 +9,12 @@ VertexBuffer::VertexBuffer(ID3D11Device* device)
 
 	D3D11_BUFFER_DESC vertexBufferDesc{}, indexBufferDesc{};
 
+	m_vertexCount = 3;
+	m_indexCount = 3;
+
 	// Fill vertex buffer desc
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) * 5000;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDesc.MiscFlags = 0;
@@ -23,7 +26,7 @@ VertexBuffer::VertexBuffer(ID3D11Device* device)
 	));
 
 	indexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * 5000;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	indexBufferDesc.MiscFlags = 0;
@@ -58,16 +61,16 @@ int VertexBuffer::GetVertexCount() const
 }
 
 
-void VertexBuffer::UpdateVertexBuffer(ID3D11DeviceContext* deviceContext, float depth, XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c)
+void VertexBuffer::UpdateVertexBuffer(ID3D11DeviceContext* deviceContext, int depth, XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c)
 {
 	Sierpinsky(depth, a, b, c, deviceContext);
 }
 
-void VertexBuffer::Sierpinsky(float depth, XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c, ID3D11DeviceContext* deviceContext)
+void VertexBuffer::Sierpinsky(int depth, XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c, ID3D11DeviceContext* deviceContext)
 {
-	XMFLOAT4 red	{ 0.022, 0.929, 0.412, 1.0 };
-	XMFLOAT4 green	{ 0.022, 0.929, 0.412, 1.0 };
-	XMFLOAT4 blue	{ 0.022, 0.929, 0.412, 1.0 };
+	XMFLOAT4 red	{ 0.022f, 0.929f, 0.412f, 1.0f };
+	XMFLOAT4 green	{ 0.022f, 0.929f, 0.412f, 1.0f };
+	XMFLOAT4 blue	{ 0.022f, 0.929f, 0.412f, 1.0f };
 
 	if (depth <= 0)
 	{

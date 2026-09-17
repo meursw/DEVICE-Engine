@@ -3,7 +3,7 @@
 SystemClass::SystemClass() 
 {
 	// Create window.
-	int screenWidth{ 800 }, screenHeight{ 600 };
+	int screenWidth{ 1400 }, screenHeight{ 900 };
 	m_Window = std::make_unique<WindowClass>(screenWidth, screenHeight, FULL_SCREEN);
 
 	// Create application class.
@@ -11,6 +11,8 @@ SystemClass::SystemClass()
 
 	// Create input class.
 	m_Input = std::make_unique<InputClass>(m_Window->GetInstance(), m_Window->GetHwnd(), screenWidth, screenHeight);
+
+	m_Timer = std::make_unique<TimerClass>();
 }
 
 void SystemClass::Start()
@@ -31,6 +33,9 @@ void SystemClass::Frame()
 	// First do the input frame processing.
 	m_Input->Frame();
 
+	// Update timer status.
+	m_Timer->Frame();
+
 	// Do the frame processing of the application class.
-	m_Application->Frame(m_Input.get());
+	m_Application->Frame(m_Input.get(), m_Timer->GetDeltaTime());
 }

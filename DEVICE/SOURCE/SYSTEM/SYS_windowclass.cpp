@@ -1,6 +1,6 @@
 #include "SYS_windowclass.h"
 
-WindowClass::WindowClass(int screenWidth, int screenHeight, bool FULL_SCREEN)
+WindowClass::WindowClass(int& screenWidth, int& screenHeight, bool FULL_SCREEN)
 {
 	// Create window class.
 	m_applicationName = L"DEVICE";
@@ -52,17 +52,17 @@ WindowClass::WindowClass(int screenWidth, int screenHeight, bool FULL_SCREEN)
 	}
 
 	// Create an instance of the window and get a handle to it.
-	m_hwnd = CreateWindowEx(
+	/*m_hwnd = CreateWindowEx(
 		WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL
-	);
+	);*/
 
-	/*m_hwnd = CreateWindowEx(
+	m_hwnd = CreateWindowEx(
 		WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL
-	);*/
+	);
 
 	// Bring the window up on the screen and set it as main focus.
 	ShowWindow(m_hwnd, SW_SHOW);

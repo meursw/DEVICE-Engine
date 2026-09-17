@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "SYS_inputclass.h"
-#include "SYS_timerclass.h"
 
 #include "GFX_d3dclass.h"
 #include "GFX_camera.h"
@@ -27,11 +26,8 @@ public:
 	ApplicationClass(int screenWidth, int screenHeight, HWND hwnd);
 	~ApplicationClass() = default;
 
-	void Frame(InputClass*);
-	void Render();
-
-private:
-	std::unique_ptr<TimerClass> m_Timer;
+	void Frame(InputClass*, float);
+	void Render(float);
 
 private:
 	std::unique_ptr<D3DClass> m_Direct3D;
