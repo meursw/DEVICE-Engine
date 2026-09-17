@@ -80,7 +80,7 @@ void ApplicationClass::Render()
 
 	if(elapsedTime >= 0.7f)
 	{
-		if (depth == 7)
+		if (depth == 12)
 			sign = -1;
 		else if (depth == 0)
 			sign = 1;
