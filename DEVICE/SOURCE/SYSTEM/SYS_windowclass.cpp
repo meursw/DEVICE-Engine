@@ -70,7 +70,8 @@ WindowClass::WindowClass(int& screenWidth, int& screenHeight, bool FULL_SCREEN)
 	SetFocus(m_hwnd);
 
 	// Hide the mouse cursor.
-	ShowCursor(false);
+	//ShowCursor(false);
+	CenterCursor();
 }
 
 WindowClass::~WindowClass()
@@ -145,4 +146,24 @@ HWND WindowClass::GetHwnd() const
 HINSTANCE WindowClass::GetInstance() const
 {
 	return m_hinstance;
+}
+
+void WindowClass::CenterCursor() const
+{
+	// First get the client rect size
+	RECT clientRect;
+	GetClientRect(m_hwnd, &clientRect);
+
+	// Calculate the center of the screen
+	int centerX = (clientRect.left + clientRect.right) / 2;
+	int centerY = (clientRect.top + clientRect.bottom) / 2;
+
+	// Turn to a point
+	POINT center{ centerX, centerY };
+
+	// Turn to screen coordinates
+	ClientToScreen(m_hwnd, &center);
+
+	// Set cursor to point in the center
+	SetCursorPos(center.x, center.y);
 }

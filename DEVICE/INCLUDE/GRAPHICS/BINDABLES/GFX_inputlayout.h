@@ -1,14 +1,15 @@
 #pragma once
 
 #include "GFX_bindable.h"
+#include <vector>
 
 class InputLayout : public Bindable
 {
 public:
-	void Bind(ID3D11DeviceContext*);
+	void Bind(D3DClass*) override;
 
 public:
-	InputLayout(ID3D11Device*, ID3D10Blob*);
+	InputLayout(ID3D11Device*, std::vector<D3D11_INPUT_ELEMENT_DESC> polygonLayout, ID3D10Blob*);
 	~InputLayout() = default;
 
 private:

@@ -3,7 +3,7 @@
 SystemClass::SystemClass() 
 {
 	// Create window.
-	int screenWidth{ 1400 }, screenHeight{ 900 };
+	int screenWidth{ 800 }, screenHeight{ 600 };
 	m_Window = std::make_unique<WindowClass>(screenWidth, screenHeight, FULL_SCREEN);
 
 	// Create application class.
@@ -45,4 +45,5 @@ void SystemClass::Frame()
 
 	// Do the frame processing of the application class.
 	m_Application->Frame(m_Input.get(), m_Timer->GetDeltaTime());
+
 }

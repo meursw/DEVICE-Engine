@@ -1,6 +1,13 @@
 # DEVICE
 
 ## PROGRESS (newest -> latest)
+
+### 02. CUBES / BINDABLE-DRAWABLE SYSTEM
+![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/ORBITING-CUBES.gif)
+|:--:|
+Drawing 150 cubes that orbit the center.
+Implemented the basics of the bindable-drawable system.
+
 ### 01. SIERPINSKI FRACTAL
 ![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/SIERPINSKI.gif)
 |:--:|

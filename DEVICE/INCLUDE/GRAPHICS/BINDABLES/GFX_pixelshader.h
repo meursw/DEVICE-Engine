@@ -5,7 +5,7 @@
 class PixelShader : public BaseShaderClass
 {
 public:
-	void Bind(ID3D11DeviceContext*);
+	void Bind(D3DClass*) override;
 
 public:
 	PixelShader(ShaderType, ID3D11Device*, HWND, const wchar_t*, const char*);

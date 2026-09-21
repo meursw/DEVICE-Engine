@@ -78,10 +78,19 @@
     <ClCompile Include="SOURCE\GRAPHICS\GFX_camera.cpp">
       <Filter>Source Files\GRAPHICS</Filter>
     </ClCompile>
-    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_constantbuffer.cpp">
-      <Filter>Source Files\GRAPHICS\BINDABLES</Filter>
-    </ClCompile>
     <ClCompile Include="SOURCE\SYSTEM\SYS_timerclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_indexbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_drawable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_transformcbuf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -137,12 +146,27 @@
     <ClInclude Include="INCLUDE\SYSTEM\SYS_timerclass.h">
       <Filter>Header Files\SYSTEM</Filter>
     </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_indexbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_BindableInc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_transformcbuf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SHADERS\triangle.ps">
+    <None Include="SHADERS\flatcube.ps">
       <Filter>Source Files\SHADERS</Filter>
     </None>
-    <None Include="SHADERS\triangle.vs">
+    <None Include="SHADERS\flatcube.vs">
       <Filter>Source Files\SHADERS</Filter>
     </None>
   </ItemGroup>

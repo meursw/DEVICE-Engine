@@ -4,7 +4,6 @@ using namespace Microsoft::WRL;
 
 BaseShaderClass::BaseShaderClass(
 	ShaderType shaderType,
-	ID3D11Device* device,
 	HWND hwnd,
 	const wchar_t* shaderFilename,
 	const char* shaderEntryPoint

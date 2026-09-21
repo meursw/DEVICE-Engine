@@ -6,13 +6,7 @@
 
 #include "GFX_d3dclass.h"
 #include "GFX_camera.h"
-
-#include "GFX_vertexbuffer.h"
-#include "GFX_inputlayout.h"
-#include "GFX_constantbuffer.h"
-
-#include "GFX_vertexshader.h"
-#include "GFX_pixelshader.h"
+#include "GFX_cube.h"
 
 // GLOBALS
 const bool FULL_SCREEN = false;
@@ -32,12 +26,7 @@ public:
 private:
 	std::unique_ptr<D3DClass> m_Direct3D;
 	std::unique_ptr<Camera> m_Camera;
-
-	std::unique_ptr<VertexBuffer> m_vertexBuffer;
-	std::unique_ptr<InputLayout> m_inputLayout;
-	std::unique_ptr<ConstantBuffer> m_constantMatrixBuffer;
-
-	std::unique_ptr<VertexShader> m_vertexShader;
-	std::unique_ptr<PixelShader> m_pixelShader;
+	std::unique_ptr<Camera> m_Camera2;
+	std::vector<std::unique_ptr<Cube>> m_Cubes;
 };
 

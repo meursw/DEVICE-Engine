@@ -14,6 +14,8 @@ public:
 	HWND GetHwnd() const;
 	HINSTANCE GetInstance() const;
 
+	void CenterCursor() const;
+
 private:
 	// Application name.
 	LPCWSTR m_applicationName;

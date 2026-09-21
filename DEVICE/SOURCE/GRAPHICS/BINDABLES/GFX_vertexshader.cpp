@@ -7,7 +7,7 @@ VertexShader::VertexShader(
 	const wchar_t* shaderFilename,
 	const char* shaderEntryPoint) 
 	: 
-	BaseShaderClass(shaderType, device, hwnd, shaderFilename, shaderEntryPoint)
+	BaseShaderClass(shaderType, hwnd, shaderFilename, shaderEntryPoint)
 {
 	CreateShader(device);
 }
@@ -17,8 +17,8 @@ void VertexShader::CreateShader(ID3D11Device* device)
 	HRESULT hr;
 
 	D3D_THROW(device->CreateVertexShader(
-		m_shaderBuffer.Get()->GetBufferPointer(),
-		m_shaderBuffer.Get()->GetBufferSize(),
+		m_shaderBuffer->GetBufferPointer(),
+		m_shaderBuffer->GetBufferSize(),
 		NULL,
 		m_vertexShader.GetAddressOf()
 	));
@@ -29,7 +29,7 @@ ID3D10Blob* VertexShader::GetBytecode() const
 	return m_shaderBuffer.Get();
 }
 
-void VertexShader::Bind(ID3D11DeviceContext* deviceContext)
+void VertexShader::Bind(D3DClass* d3d)
 {
-	deviceContext->VSSetShader(m_vertexShader.Get(), NULL, 0);
+	d3d->GetDeviceContext()->VSSetShader(m_vertexShader.Get(), NULL, 0);
 }

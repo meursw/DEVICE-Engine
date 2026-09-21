@@ -5,7 +5,7 @@
 class VertexShader : public BaseShaderClass
 {
 public:
-	void Bind(ID3D11DeviceContext*);
+	void Bind(D3DClass*) override;
 
 public:
 	VertexShader(ShaderType, ID3D11Device*, HWND, const wchar_t*, const char*);

@@ -6,30 +6,31 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	m_Direct3D = std::make_unique<D3DClass>(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 
 	// Create the camera.
-	m_Camera = std::make_unique<Camera>();
-	m_Camera->SetPosition({ 0.0, 0.0, -2.0f });
+	m_Camera = std::make_unique<Camera>(screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR);
+	m_Camera->SetPosition({ 0.0, 0.0, -60.0f });
+	m_Camera->UpdateViewMatrix();
+	
+	m_Camera2 = std::make_unique<Camera>(screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR);
+	m_Camera2->SetPosition({ 0.0, 160.0, 0.0 });
+	m_Camera2->SetRotation({ 90.0f,0.0,0.0 });
+	m_Camera2->UpdateViewMatrix();
 
-	m_vertexBuffer = std::make_unique<VertexBuffer>(m_Direct3D->GetDevice());
+	m_Direct3D->SetCamera(m_Camera.get());
 
-	m_constantMatrixBuffer = std::make_unique<ConstantBuffer>(m_Direct3D->GetDevice());
+	std::mt19937 rng(std::random_device{}());
+	std::uniform_real_distribution<float> a(0.0f, 3.1415f * 2.0f);
+	std::uniform_real_distribution<float> b(0.0f, 3.1415f * 2.0f);
+	std::uniform_real_distribution<float> c(0.0f, 3.1415f * 0.2f);
+	std::uniform_real_distribution<float> d(6.0f, 75.0f);
+	std::uniform_real_distribution<float> scale(0.5f, 3.0f);
 
-	m_vertexShader = std::make_unique<VertexShader>(
-		ShaderType::VERTEX_SHADER,
-		m_Direct3D->GetDevice(),
-		hwnd,
-		L"SHADERS/triangle.vs", 
-		"TriangleVertexEntry"
-	);
-
-	m_pixelShader = std::make_unique<PixelShader>(
-		ShaderType::PIXEL_SHADER,
-		m_Direct3D->GetDevice(),
-		hwnd,
-		L"SHADERS/triangle.ps",
-		"TrianglePixelEntry"
-	);
-
-	m_inputLayout = std::make_unique<InputLayout>(m_Direct3D->GetDevice(), m_vertexShader->GetBytecode());
+	for(int i = 0; i < 250; i++)
+		m_Cubes.push_back(std::make_unique<Cube>(
+			m_Direct3D->GetDevice(),
+			hwnd,
+			rng,
+			a,b,c,d,scale
+		));
 }
 
 void ApplicationClass::Frame(InputClass* m_Input, float delta)
@@ -39,50 +40,28 @@ void ApplicationClass::Frame(InputClass* m_Input, float delta)
 
 void ApplicationClass::Render(float delta)
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	static float elapsedTime{ 0.0 };
+	elapsedTime += delta;
 
-	m_Camera->UpdateViewMatrix();
+	if (elapsedTime >= 5.0f)
+	{
+		if (m_Direct3D->GetCamera() == m_Camera.get())
+			m_Direct3D->SetCamera(m_Camera2.get());
+		else
+			m_Direct3D->SetCamera(m_Camera.get());
+		elapsedTime -= 5.0f;
+	}
 
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	ID3D11DeviceContext* deviceContext = m_Direct3D->GetDeviceContext();
+	m_Direct3D->UpdateCurrentCamera();
 
 	m_Direct3D->BeginScene(0.0, 0.0, 0.0, 1.0);
 
-	m_constantMatrixBuffer->UpdateConstantBuffer(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
-	m_constantMatrixBuffer->Bind(deviceContext);
-	
-	m_inputLayout->Bind(deviceContext);
-
-	m_vertexShader->Bind(deviceContext);
-	m_pixelShader->Bind(deviceContext);
-
-	static float elapsedTime{ 0.0 };
-	static int depth{ 0 };
-	static int sign{ 1 };
-
-	elapsedTime += delta;
-
-	if(elapsedTime >= 0.4f)
+	for (int i = 0; i < 250; i++)
 	{
-		if (depth == 12)
-			sign = -1;
-		else if (depth == 0)
-			sign = 1;
-		depth += sign;
-
-		elapsedTime = 0.0f;
+		m_Cubes[i]->Update(delta);
+		m_Cubes[i]->Draw(m_Direct3D.get());
 	}
-
-	m_vertexBuffer->UpdateVertexBuffer(
-		m_Direct3D->GetDeviceContext(),
-		depth,
-		XMFLOAT3(-1.0f, -1.0f, 0.0f),
-		XMFLOAT3(0.0f, 1.0f, 0.0f),
-		XMFLOAT3(1.0f, -1.0f, 0.0f)
-	);
 
 	m_Direct3D->EndScene();
 }
+

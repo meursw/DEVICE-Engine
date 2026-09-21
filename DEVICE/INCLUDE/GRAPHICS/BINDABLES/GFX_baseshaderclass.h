@@ -20,10 +20,10 @@ enum class ShaderType
 class BaseShaderClass : public Bindable
 {
 public:
-	virtual void Bind(ID3D11DeviceContext*) = 0;
+	virtual void Bind(D3DClass*) = 0;
 
 public:
-	BaseShaderClass(ShaderType, ID3D11Device*, HWND, const wchar_t*, const char*);
+	BaseShaderClass(ShaderType, HWND, const wchar_t*, const char*);
 	virtual ~BaseShaderClass() = default;
 
 	void CompileShader(HWND, const wchar_t*, const char*);

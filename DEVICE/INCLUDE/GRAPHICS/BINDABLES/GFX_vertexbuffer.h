@@ -7,7 +7,7 @@
 class VertexBuffer : public Bindable
 {
 public:
-	void Bind(ID3D11DeviceContext*);
+	void Bind(D3DClass*) override;
 
 private:
 	struct VertexType
@@ -17,22 +17,41 @@ private:
 	};
 
 public:
-	VertexBuffer(ID3D11Device*);
+	template<class V>
+	VertexBuffer(ID3D11Device* device, const std::vector<V>& vertices)
+	{
+		HRESULT hr;
+
+		D3D11_BUFFER_DESC vertexBufferDesc{};
+		
+		m_vertexCount = vertices.size();
+		
+		// Fill vertex buffer desc.
+		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		vertexBufferDesc.ByteWidth = sizeof(V) * m_vertexCount;
+		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDesc.CPUAccessFlags = 0;
+		vertexBufferDesc.MiscFlags = 0;
+		vertexBufferDesc.StructureByteStride = sizeof(V);
+
+		D3D11_SUBRESOURCE_DATA vertexData{};
+		// Fill vertex data.
+		vertexData.pSysMem = vertices.data();
+		vertexData.SysMemPitch = 0;
+		vertexData.SysMemSlicePitch = 0;
+
+		// Create vertex buffer.
+		D3D_THROW(device->CreateBuffer(
+			&vertexBufferDesc, &vertexData, m_vertexBuffer.GetAddressOf()
+		));
+	}
 	~VertexBuffer() = default;
-
-	int GetIndexCount() const;
-
-	void UpdateVertexBuffer(ID3D11DeviceContext*, int, DirectX::XMFLOAT3 a, DirectX::XMFLOAT3 b, DirectX::XMFLOAT3 c);
 
 	int GetVertexCount() const;
 
 private:
-	void Sierpinsky(int, DirectX::XMFLOAT3, DirectX::XMFLOAT3, DirectX::XMFLOAT3, ID3D11DeviceContext*);
-
-private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
 
-	int m_vertexCount, m_indexCount;
+	UINT m_vertexCount;
 };
 

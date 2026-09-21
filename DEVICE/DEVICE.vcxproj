@@ -19,12 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_transformcbuf.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_cube.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_baseshaderclass.cpp" />
-    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_constantbuffer.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_indexbuffer.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_inputlayout.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_pixelphader.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexbuffer.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexshader.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_drawable.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_applicationclass.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_camera.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_d3dclass.cpp" />
@@ -37,13 +40,18 @@
     <ClCompile Include="SOURCE\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_transformcbuf.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_BindableInc.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_cube.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_baseshaderclass.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_bindable.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_constantbuffer.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_indexbuffer.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_inputlayout.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_pixelshader.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexbuffer.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawable.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_camera.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_d3dclass.h" />
@@ -56,8 +64,8 @@
     <ClInclude Include="INCLUDE\SYSTEM\SYS_WinFilter.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SHADERS\triangle.ps" />
-    <None Include="SHADERS\triangle.vs" />
+    <None Include="SHADERS\flatcube.ps" />
+    <None Include="SHADERS\flatcube.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -114,12 +122,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
+    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
+    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

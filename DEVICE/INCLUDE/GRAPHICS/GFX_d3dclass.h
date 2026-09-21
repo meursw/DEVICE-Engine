@@ -10,6 +10,7 @@ using namespace DirectX;
 
 #include <wrl/client.h> // Include for ComPtr
 
+#include "GFX_camera.h"
 
 class D3DClass
 {
@@ -27,7 +28,6 @@ private:
 	void CreateBlendState();
 	
 	void CreateViewport(int, int);
-	void CreateProjectionMatrix(int, int, float, float);
 
 public:
 	void BeginScene(float, float, float, float);
@@ -36,9 +36,11 @@ public:
 	ID3D11Device* GetDevice() const;
 	ID3D11DeviceContext* GetDeviceContext() const;
 
-	void GetProjectionMatrix(XMMATRIX&) const;
 	void GetWorldMatrix(XMMATRIX&) const;
-	void GetOrthoMatrix(XMMATRIX&) const;
+
+	const Camera* GetCamera() const;
+	void SetCamera(Camera*);
+	void UpdateCurrentCamera() const;
 
 	void GetVideoCardInfo(char*, int&) const;
 
@@ -68,9 +70,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11BlendState> m_alphaEnableBlendingState;
 	Microsoft::WRL::ComPtr<ID3D11BlendState> m_alphaDisableBlendingState;
 
-	XMMATRIX m_projectionMatrix;
+	Camera* m_Camera;
+
 	XMMATRIX m_worldMatrix;
-	XMMATRIX m_orthoMatrix;
 
 	D3D11_VIEWPORT m_viewport;
 

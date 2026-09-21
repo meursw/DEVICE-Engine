@@ -39,7 +39,6 @@ D3DClass::D3DClass(int screenWidth, int screenHeight, bool vysnc, HWND hwnd, boo
 
 	CreateViewport(screenWidth, screenHeight);
 
-	CreateProjectionMatrix(screenWidth, screenHeight, screenDepth, screenNear);
 }
 
 void D3DClass::GetVideoCardInformation(int screenWidth, int screenHeight, int& numerator, int& denominator)
@@ -329,7 +328,7 @@ void D3DClass::CreateRasterState()
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
 	rasterDesc.AntialiasedLineEnable = false;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.CullMode = D3D11_CULL_NONE;
 	rasterDesc.DepthBias = 0;
 	rasterDesc.DepthBiasClamp = 0.0f;
 	rasterDesc.DepthClipEnable = true;
@@ -394,28 +393,10 @@ void D3DClass::CreateViewport(int screenWidth, int screenHeight)
 	m_deviceContext->RSSetViewports(1, &m_viewport);
 }
 
-void D3DClass::CreateProjectionMatrix(int screenWidth, int screenHeight, float screenDepth, float screenNear)
-{
-	// The projection matrix is used to translate the 3D scene into the 2D viewport space that we previously created. 
-	// We will need to keep a copy of this matrix so that we can pass it to our shaders that will be used to render our scenes.
-
-	float fieldOfView = 3.141592654f / 3.0f;
-	float screenAspect = (float)screenWidth / (float)screenHeight;
-
-	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-
-	// Initialize the world matrix to the identity matrix.
-	m_worldMatrix = XMMatrixIdentity();
-
-	// Create an orthographic projection matrix for 2D rendering.
-	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
-
-}
-
 
 void D3DClass::BeginScene(float red, float green, float blue, float alpha)
 {
-	float color[4]{ red, green, blue, alpha };
+	const float color[4]{ red, green, blue, alpha };
 
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
 
@@ -440,21 +421,24 @@ ID3D11DeviceContext* D3DClass::GetDeviceContext() const {
 	return m_deviceContext.Get();
 }
 
-void D3DClass::GetProjectionMatrix(XMMATRIX& projectionMatrix) const {
-	projectionMatrix = m_projectionMatrix;
-	return;
-}
-
-
 void D3DClass::GetWorldMatrix(XMMATRIX& worldMatrix) const {
 	worldMatrix = m_worldMatrix;
 	return;
 }
 
+const Camera* D3DClass::GetCamera() const
+{
+	return m_Camera;
+}
 
-void D3DClass::GetOrthoMatrix(XMMATRIX& orthoMatrix) const {
-	orthoMatrix = m_orthoMatrix;
-	return;
+void D3DClass::SetCamera(Camera* cam)
+{
+	m_Camera = cam;
+}
+
+void D3DClass::UpdateCurrentCamera() const
+{
+	m_Camera->UpdateViewMatrix();
 }
 
 void D3DClass::GetVideoCardInfo(char* cardName, int& memory) const {

@@ -7,7 +7,7 @@ PixelShader::PixelShader(
 	const wchar_t* shaderFilename,
 	const char* shaderEntryPoint)
 	:
-	BaseShaderClass(shaderType, device, hwnd, shaderFilename, shaderEntryPoint)
+	BaseShaderClass(shaderType, hwnd, shaderFilename, shaderEntryPoint)
 {
 	CreateShader(device);
 }
@@ -17,14 +17,14 @@ void PixelShader::CreateShader(ID3D11Device* device)
 	HRESULT hr;
 
 	D3D_THROW(device->CreatePixelShader(
-		m_shaderBuffer.Get()->GetBufferPointer(),
-		m_shaderBuffer.Get()->GetBufferSize(),
+		m_shaderBuffer->GetBufferPointer(),
+		m_shaderBuffer->GetBufferSize(),
 		NULL,
 		m_pixelShader.GetAddressOf()
 	));
 }
 
-void PixelShader::Bind(ID3D11DeviceContext* deviceContext)
+void PixelShader::Bind(D3DClass* d3d)
 {
-	deviceContext->PSSetShader(m_pixelShader.Get(), NULL, 0);
+	d3d->GetDeviceContext()->PSSetShader(m_pixelShader.Get(), NULL, 0);
 }

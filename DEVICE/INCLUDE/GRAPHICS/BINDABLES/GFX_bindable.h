@@ -8,12 +8,12 @@
 #include <wrl/client.h> // Include for ComPtr
 #include <d3d11.h>
 
+#include "GFX_d3dclass.h"
 #include "SYS_d3d_exception.h"
 
-class Bindable
-{
+class Bindable {
 public:
-	virtual void Bind(ID3D11DeviceContext*) = 0;
+	virtual void Bind(D3DClass*) = 0;
 	virtual ~Bindable() = default;
 };
 
