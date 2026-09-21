@@ -5,7 +5,7 @@
 ### 02. CUBES / BINDABLE-DRAWABLE SYSTEM
 ![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/ORBITING-CUBES.gif)
 |:--:|
-Drawing 150 cubes that orbit the center.
+Drawing 150 cubes that orbit the center, while switching from one camera to another.
 Implemented the basics of the bindable-drawable system.
 
 ### 01. SIERPINSKI FRACTAL
