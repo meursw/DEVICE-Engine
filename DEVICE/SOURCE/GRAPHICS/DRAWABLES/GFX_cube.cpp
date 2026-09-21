@@ -29,7 +29,6 @@ Cube::Cube(ID3D11Device* device,
 	struct VertexType
 	{
 		XMFLOAT3 position;
-		XMFLOAT4 color;
 	};
 
 	std::vector<VertexType> vertices

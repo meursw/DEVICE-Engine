@@ -4,12 +4,9 @@ using namespace DirectX;
 
 void VertexBuffer::Bind(D3DClass* d3d)
 {
-	unsigned int stride, offset;
+	unsigned int offset{};
 
-	stride = sizeof(VertexType);
-	offset = 0;
-
-	d3d->GetDeviceContext()->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+	d3d->GetDeviceContext()->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &m_stride, &offset);
 	d3d->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

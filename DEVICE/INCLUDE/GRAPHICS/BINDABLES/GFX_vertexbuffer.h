@@ -9,16 +9,11 @@ class VertexBuffer : public Bindable
 public:
 	void Bind(D3DClass*) override;
 
-private:
-	struct VertexType
-	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT4 color;
-	};
-
 public:
 	template<class V>
 	VertexBuffer(ID3D11Device* device, const std::vector<V>& vertices)
+		:
+		m_stride(sizeof(V))
 	{
 		HRESULT hr;
 
@@ -53,5 +48,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
 
 	UINT m_vertexCount;
+	UINT m_stride;
 };
 
