@@ -1,12 +1,11 @@
 #pragma once
-#include "GFX_drawable.h"
+#include "GFX_drawablebase.h"
 #include "GFX_d3dclass.h"
-#include "GFX_camera.h"
 
-class Cube : public Drawable
+class Box : public DrawableBase<Box>
 {
 public:
-	Cube(
+	Box(
 		ID3D11Device*,
 		HWND,
 		std::mt19937& rng,

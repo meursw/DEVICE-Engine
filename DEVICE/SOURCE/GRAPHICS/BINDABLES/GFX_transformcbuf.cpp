@@ -2,11 +2,14 @@
 
 using namespace DirectX;
 
+
 TransformCbuf::TransformCbuf(ID3D11Device* device, const Drawable& parent)
 	: 
-	vcbuf(device),
 	parent(parent)
-{}
+{
+	if (!m_transformBuffer)
+		m_transformBuffer = std::make_unique<VertexConstantBuffer<TransformsBuffer>>(device);
+}
 
 void TransformCbuf::Bind(D3DClass* d3d)
 {
@@ -19,8 +22,11 @@ void TransformCbuf::Bind(D3DClass* d3d)
 	d3d->GetCamera()->GetProjectionMatrix(projection);
 	projection = XMMatrixTranspose(projection);
 
-	MatrixBufferType mvp{ world, view, projection };
-	vcbuf.Update(d3d->GetDeviceContext(), mvp);
+	TransformsBuffer mvp{ world, view, projection };
 
-	vcbuf.Bind(d3d);
+	m_transformBuffer->Update(d3d->GetDeviceContext(), mvp);
+
+	m_transformBuffer->Bind(d3d);
 }
+
+std::unique_ptr<VertexConstantBuffer<TransformCbuf::TransformsBuffer>> TransformCbuf::m_transformBuffer;

@@ -1,10 +1,12 @@
-#include "GFX_cube.h"
-#include "GFX_BindableInc.h"
 #include <random>
+
+#include "GFX_box.h"
+#include "GFX_BindableInc.h"
+#include "GFX_cube.h"
 
 using namespace DirectX;
 
-Cube::Cube(ID3D11Device* device,
+Box::Box(ID3D11Device* device,
 	HWND hwnd,
 	std::mt19937& rng,
 	std::uniform_real_distribution<float>& a,
@@ -24,38 +26,33 @@ Cube::Cube(ID3D11Device* device,
 	theta(a(rng)),
 	phi(a(rng)),
 	scale(scale(rng)),
-	Drawable(hwnd)
+	DrawableBase(hwnd)
 {
+
+	// If a cube and all its bindables have already been made,
+	// They are stored as static and there is no need to create them again.
+	// For the index buffer, since in AddIndexBuffer we retrieve the pointer
+	// for the Drawable class member " IndexBuffer* m_indexBuffer "
+	// we need to retrieve the pointer for the rest of the objects aswell.
+	// We also need to set it's transform buffer.
+	if (IsStaticInitialized())
+	{
+		SetIndexFromStatic();
+		AddBind(std::make_unique<TransformCbuf>(device, *this));
+		return;
+	}
+
 	struct VertexType
 	{
-		XMFLOAT3 position;
+		XMFLOAT3 pos;
 	};
 
-	std::vector<VertexType> vertices
-	{
-		{XMFLOAT3(-1,-1,-1),},
-		{XMFLOAT3(1,-1,-1),	},
-		{XMFLOAT3(1,1,-1),	},
-		{XMFLOAT3(-1,1,-1),	},
-		{XMFLOAT3(-1,-1,1),	},
-		{XMFLOAT3(1, -1, 1),},
-		{XMFLOAT3(1, 1, 1),	},
-		{XMFLOAT3(-1, 1, 1),}
-	};
+	auto cube = Cube::Make<VertexType>();
+	cube.Transform(XMMatrixScaling(0.9f, 1.1f, 1.2f));
 
-	AddBind(std::make_unique<VertexBuffer>(device, vertices));
+	AddStaticBind(std::make_unique<VertexBuffer>(device, cube.vertices));
 
-	std::vector<unsigned short> indices
-	{
-		0, 1, 3, 3, 1, 2,
-		1, 5, 2, 2, 5, 6,
-		5, 4, 6, 6, 4, 7,
-		4, 0, 7, 7, 0, 3,
-		3, 2, 7, 7, 2, 6,
-		4, 5, 0, 0, 5, 1
-	};
-
-	AddIndexBuffer(std::make_unique<IndexBuffer>(device, indices));
+	AddStaticIndexBuffer(std::make_unique<IndexBuffer>(device, cube.indices));
 
 	auto vertexShader = std::make_unique<VertexShader>(
 		ShaderType::VERTEX_SHADER,
@@ -67,7 +64,7 @@ Cube::Cube(ID3D11Device* device,
 
 	auto vsByteCode = vertexShader->GetBytecode();
 
-	AddBind(std::make_unique<PixelShader>(
+	AddStaticBind(std::make_unique<PixelShader>(
 		ShaderType::PIXEL_SHADER,
 		device,
 		m_hwnd,
@@ -75,16 +72,14 @@ Cube::Cube(ID3D11Device* device,
 		"FlatCubePixelEntry")
 	);
 
-	AddBind(std::move(vertexShader));
+	AddStaticBind(std::move(vertexShader));
 
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> polygonLayout =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
-	AddBind(std::make_unique<InputLayout>(device, polygonLayout, vsByteCode));
-
-	AddBind(std::make_unique<TransformCbuf>(device, *this));
+	AddStaticBind(std::make_unique<InputLayout>(device, polygonLayout, vsByteCode));
 
 	// Colors
 	XMFLOAT4 Egg1{ 0.345, 0.537, 0.345,1.0f };
@@ -104,10 +99,12 @@ Cube::Cube(ID3D11Device* device,
 		Egg1,Egg2,Egg3,Egg4,Egg5,Egg6
 	};
 
-	AddBind(std::make_unique<PixelConstantBuffer<FaceColorsType>>(device, colorsBuffer));
+	AddStaticBind(std::make_unique<PixelConstantBuffer<FaceColorsType>>(device, colorsBuffer));
+
+	AddBind(std::make_unique<TransformCbuf>(device, *this));
 }
 
-void Cube::Update(float delta)
+void Box::Update(float delta)
 {
 	static float elapsedTime{};
 	elapsedTime += delta;
@@ -122,7 +119,7 @@ void Cube::Update(float delta)
 	variableScale = (sin(elapsedTime * 0.01f) * 0.5 + 0.5)*scale+0.1;
 }
 
-XMMATRIX Cube::GetTransformXM() const
+XMMATRIX Box::GetTransformXM() const
 {
 	return XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 		XMMatrixScaling(variableScale, variableScale, variableScale) *

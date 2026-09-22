@@ -1,13 +1,12 @@
 #pragma once
 #include "GFX_constantbuffer.h"
 #include "GFX_drawable.h"
-#include "GFX_camera.h"
 #include <DirectXMath.h>
 
 class TransformCbuf : public Bindable
 {
-private:
-	struct MatrixBufferType
+public:
+	struct TransformsBuffer
 	{
 		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX view;
@@ -16,10 +15,12 @@ private:
 
 public:
 	void Bind(D3DClass*) override;
+
 public:
 	TransformCbuf(ID3D11Device*, const Drawable& parent);
+
 private:
-	VertexConstantBuffer<MatrixBufferType> vcbuf;
+	static std::unique_ptr<VertexConstantBuffer<TransformsBuffer>> m_transformBuffer;
 	const Drawable& parent;
 };
 

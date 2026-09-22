@@ -6,7 +6,7 @@
 
 #include "GFX_d3dclass.h"
 #include "GFX_camera.h"
-#include "GFX_cube.h"
+#include "GFX_box.h"
 
 // GLOBALS
 const bool FULL_SCREEN = false;
@@ -27,6 +27,6 @@ private:
 	std::unique_ptr<D3DClass> m_Direct3D;
 	std::unique_ptr<Camera> m_Camera;
 	std::unique_ptr<Camera> m_Camera2;
-	std::vector<std::unique_ptr<Cube>> m_Cubes;
+	std::vector<std::unique_ptr<Box>> m_Boxes;
 };
 

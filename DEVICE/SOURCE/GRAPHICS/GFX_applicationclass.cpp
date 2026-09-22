@@ -25,7 +25,7 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	std::uniform_real_distribution<float> scale(0.5f, 3.0f);
 
 	for(int i = 0; i < 250; i++)
-		m_Cubes.push_back(std::make_unique<Cube>(
+		m_Boxes.push_back(std::make_unique<Box>(
 			m_Direct3D->GetDevice(),
 			hwnd,
 			rng,
@@ -43,23 +43,14 @@ void ApplicationClass::Render(float delta)
 	static float elapsedTime{ 0.0 };
 	elapsedTime += delta;
 
-	if (elapsedTime >= 5.0f)
-	{
-		if (m_Direct3D->GetCamera() == m_Camera.get())
-			m_Direct3D->SetCamera(m_Camera2.get());
-		else
-			m_Direct3D->SetCamera(m_Camera.get());
-		elapsedTime -= 5.0f;
-	}
-
 	m_Direct3D->UpdateCurrentCamera();
 
 	m_Direct3D->BeginScene(0.0, 0.0, 0.0, 1.0);
 
 	for (int i = 0; i < 250; i++)
 	{
-		m_Cubes[i]->Update(delta);
-		m_Cubes[i]->Draw(m_Direct3D.get());
+		m_Boxes[i]->Update(delta);
+		m_Boxes[i]->Draw(m_Direct3D.get());
 	}
 
 	m_Direct3D->EndScene();

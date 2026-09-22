@@ -87,7 +87,7 @@
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_drawable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_cube.cpp">
+    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_transformcbuf.cpp">
@@ -152,13 +152,25 @@
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_cube.h">
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_box.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_BindableInc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_transformcbuf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawablebase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_indexedtrianglelist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,13 +4,17 @@
 #include "GFX_drawable.h"
 #include "GFX_indexbuffer.h"
 
-
 Drawable::Drawable(HWND hwnd) : m_hwnd(hwnd), m_indexBuffer(nullptr) {}
 
 void Drawable::Draw(D3DClass* d3d) const
 {
 	for (auto& b : binds)
 		b->Bind(d3d);
+
+	for (auto& b : GetStaticBinds())
+	{
+		b->Bind(d3d);
+	}
 
 	d3d->GetDeviceContext()->DrawIndexed(m_indexBuffer->GetIndexCount(), 0u, 0u);
 }
