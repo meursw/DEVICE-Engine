@@ -7,5 +7,8 @@
 #include "GFX_transformcbuf.h"
 #include "GFX_constantbuffer.h"
 
+#include "GFX_texture.h"
+#include "GFX_sampler.h"
+
 #include "GFX_vertexshader.h"
 #include "GFX_pixelshader.h"

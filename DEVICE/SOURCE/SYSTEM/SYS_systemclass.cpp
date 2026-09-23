@@ -6,6 +6,10 @@ SystemClass::SystemClass()
 	int screenWidth{ 800 }, screenHeight{ 600 };
 	m_Window = std::make_unique<WindowClass>(screenWidth, screenHeight, FULL_SCREEN);
 
+	// Initialize for WIC functionality
+	HRESULT hr;
+	D3D_THROW(CoInitializeEx(nullptr, COINIT_MULTITHREADED));
+
 	// Create application class.
 	m_Application = std::make_unique<ApplicationClass>(screenWidth, screenHeight, m_Window->GetHwnd());
 
@@ -13,6 +17,7 @@ SystemClass::SystemClass()
 	m_Input = std::make_unique<InputClass>(m_Window->GetInstance(), m_Window->GetHwnd(), screenWidth, screenHeight);
 
 	m_Timer = std::make_unique<TimerClass>();
+
 }
 
 void SystemClass::Start()

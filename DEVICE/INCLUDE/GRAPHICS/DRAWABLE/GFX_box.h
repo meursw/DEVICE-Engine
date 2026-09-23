@@ -6,7 +6,7 @@ class Box : public DrawableBase<Box>
 {
 public:
 	Box(
-		ID3D11Device*,
+		D3DClass*,
 		HWND,
 		std::mt19937& rng,
 		std::uniform_real_distribution<float>& a,

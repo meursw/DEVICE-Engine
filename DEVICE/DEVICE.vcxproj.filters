@@ -93,6 +93,15 @@
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_transformcbuf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EXTERNAL\WICTextureLoader11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_sampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="INCLUDE\SYSTEM\SYS_d3d_exception.h">
@@ -170,7 +179,13 @@
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_plane.h">
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EXTERNAL\WICTextureLoader11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_sampler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -181,5 +196,15 @@
     <None Include="SHADERS\flatcube.vs">
       <Filter>Source Files\SHADERS</Filter>
     </None>
+    <None Include="SHADERS\texturedcube.ps" />
+    <None Include="SHADERS\texturedcube.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ASSETS\IMAGE_DEPTHS_CUBE.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="ASSETS\minecraft.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

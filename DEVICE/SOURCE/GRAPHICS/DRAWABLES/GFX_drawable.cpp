@@ -4,7 +4,7 @@
 #include "GFX_drawable.h"
 #include "GFX_indexbuffer.h"
 
-Drawable::Drawable(HWND hwnd) : m_hwnd(hwnd), m_indexBuffer(nullptr) {}
+Drawable::Drawable() : m_indexBuffer(nullptr) {}
 
 void Drawable::Draw(D3DClass* d3d) const
 {

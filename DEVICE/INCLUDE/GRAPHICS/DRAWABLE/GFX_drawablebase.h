@@ -7,7 +7,7 @@ class DrawableBase : public Drawable
 {
 protected:
 
-	DrawableBase(HWND hwnd) : Drawable(hwnd) {};
+	DrawableBase() = default;
 
 	void AddStaticBind(std::unique_ptr<Bindable> bind)
 	{

@@ -33,4 +33,3 @@ public:
 	std::vector<T> vertices;
 	std::vector<unsigned short> indices;
 };
-

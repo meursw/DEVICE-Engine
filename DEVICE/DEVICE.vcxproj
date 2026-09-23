@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EXTERNAL\WICTextureLoader11.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_sampler.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_texture.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_transformcbuf.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_box.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_baseshaderclass.cpp" />
@@ -40,6 +43,9 @@
     <ClCompile Include="SOURCE\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EXTERNAL\WICTextureLoader11.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_sampler.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_texture.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_cube.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_indexedtrianglelist.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_transformcbuf.h" />
@@ -55,7 +61,6 @@
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawable.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawablebase.h" />
-    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_plane.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_camera.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_d3dclass.h" />
@@ -70,6 +75,12 @@
   <ItemGroup>
     <None Include="SHADERS\flatcube.ps" />
     <None Include="SHADERS\flatcube.vs" />
+    <None Include="SHADERS\texturedcube.ps" />
+    <None Include="SHADERS\texturedcube.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ASSETS\IMAGE_DEPTHS_CUBE.png" />
+    <Image Include="ASSETS\minecraft.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -126,12 +137,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
+    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\ASSETS;D:\Code\C++\DEVICE-Engine\DEVICE\EXTERNAL;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
+    <IncludePath>D:\Code\C++\DEVICE-Engine\DEVICE\ASSETS;D:\Code\C++\DEVICE-Engine\DEVICE\EXTERNAL;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\DRAWABLE;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\SYSTEM;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS;D:\Code\C++\DEVICE-Engine\DEVICE\INCLUDE\GRAPHICS\BINDABLES;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

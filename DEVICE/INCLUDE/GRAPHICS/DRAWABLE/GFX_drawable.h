@@ -13,7 +13,7 @@ class Drawable
 	friend class DrawableBase;
 
 public:
-	Drawable(HWND);
+	Drawable();
 	Drawable(const Drawable&) = delete;
 	virtual ~Drawable() = default;
 
@@ -32,9 +32,5 @@ private:
 private:
 	std::vector<std::unique_ptr<Bindable>> binds;
 	const class IndexBuffer* m_indexBuffer = nullptr;
-
-protected:
-	// Store hwnd for showing shader error compilation.
-	HWND m_hwnd;
 };
 
