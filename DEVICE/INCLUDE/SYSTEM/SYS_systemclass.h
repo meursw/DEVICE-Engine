@@ -21,7 +21,6 @@ private:
 	std::unique_ptr<WindowClass> m_Window;
 	std::unique_ptr<InputClass> m_Input;
 	std::unique_ptr<TimerClass> m_Timer;
-	
 	std::unique_ptr<ApplicationClass> m_Application;
 };
 

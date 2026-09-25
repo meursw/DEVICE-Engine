@@ -21,14 +21,21 @@ public:
 	void GetProjectionMatrix(DX::XMMATRIX&) const;
 	void GetOrthoMatrix(DX::XMMATRIX&) const;
 
+	// Imgui
+	void SpawnControlWindow();
+	void Reset();
+
 private:
 	void CreateProjectionAndOrthoMatrix(int, int, float, float);
 
 private:
 	DX::XMFLOAT3 m_position;
 	DX::XMFLOAT3 m_rotation;
+	DX::XMFLOAT2 m_positionAroundOrigin;
+
 	DX::XMMATRIX m_viewMatrix;
 	DX::XMMATRIX m_projectionMatrix;
 	DX::XMMATRIX m_orthoMatrix;
+
 };
 

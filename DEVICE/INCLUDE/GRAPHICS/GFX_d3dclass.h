@@ -16,7 +16,7 @@ class D3DClass
 {
 public:
 	D3DClass(int, int, bool, HWND, bool, float, float);
-	~D3DClass() = default;
+	~D3DClass();
 
 private:
 	void GetVideoCardInformation(int, int, int&, int&);
@@ -53,6 +53,10 @@ public:
 	void EnableAlphaBlending();
 	void DisableAlphaBlending();
 
+	void EnableImgui();
+	void DisableImGui();
+	bool IsImguiEnabled();
+
 private:
 	Microsoft::WRL::ComPtr <IDXGISwapChain> m_swapChain;
 
@@ -70,14 +74,16 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11BlendState> m_alphaEnableBlendingState;
 	Microsoft::WRL::ComPtr<ID3D11BlendState> m_alphaDisableBlendingState;
 
-	Camera* m_Camera;
-
-	XMMATRIX m_worldMatrix;
-
 	D3D11_VIEWPORT m_viewport;
-
+	
 	bool m_vsync_enabled;
 	int m_videoCardMemory;
 	char m_videoCardDescription[128];
+
+	bool imguiEnabled = true;
+
+private:
+	Camera* m_Camera;
+
 };
 

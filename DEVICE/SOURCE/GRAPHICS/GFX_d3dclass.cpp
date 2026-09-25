@@ -1,8 +1,10 @@
 #include "GFX_d3dclass.h"
-#include "SYS_d3d_exception.h"
-
 #include <vector>
 #include <memory>
+
+#include "SYS_d3d_exception.h"
+#include "IMGUI/imgui_impl_dx11.h"
+#include "IMGUI/imgui_impl_win32.h"
 
 using namespace Microsoft::WRL;
 
@@ -39,6 +41,20 @@ D3DClass::D3DClass(int screenWidth, int screenHeight, bool vysnc, HWND hwnd, boo
 
 	CreateViewport(screenWidth, screenHeight);
 
+	// Init ImGui Win32 Impl
+	ImGui_ImplWin32_Init(hwnd);
+
+	// Init imgui D3D Impl.
+	ImGui_ImplDX11_Init(m_device.Get(), m_deviceContext.Get());
+}
+
+D3DClass::~D3DClass()
+{
+	// Shutdown imgui D3D Impl.
+	ImGui_ImplDX11_Shutdown();
+
+	// Shutdown ImGui
+	ImGui_ImplWin32_Shutdown();
 }
 
 void D3DClass::GetVideoCardInformation(int screenWidth, int screenHeight, int& numerator, int& denominator)
@@ -396,16 +412,31 @@ void D3DClass::CreateViewport(int screenWidth, int screenHeight)
 
 void D3DClass::BeginScene(float red, float green, float blue, float alpha)
 {
+	// imgui begin frame
+	if (imguiEnabled)
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+
 	const float color[4]{ red, green, blue, alpha };
 
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
 
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0, 0);
+
 }
 
 // Present the back buffer to the screen since rendering is complete.
 void D3DClass::EndScene()
 {
+	if (imguiEnabled)
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
 	if (m_vsync_enabled)
 		m_swapChain->Present(1, 0); // Lock to screen refresh rate.
 	else
@@ -419,11 +450,6 @@ ID3D11Device* D3DClass::GetDevice() const {
 
 ID3D11DeviceContext* D3DClass::GetDeviceContext() const {
 	return m_deviceContext.Get();
-}
-
-void D3DClass::GetWorldMatrix(XMMATRIX& worldMatrix) const {
-	worldMatrix = m_worldMatrix;
-	return;
 }
 
 const Camera* D3DClass::GetCamera() const
@@ -484,4 +510,19 @@ void D3DClass::DisableAlphaBlending()
 
 	// Turn off alpha blending.
 	m_deviceContext->OMSetBlendState(m_alphaDisableBlendingState.Get(), blendFactor, 0xffffffff);
+}
+
+void D3DClass::EnableImgui()
+{
+	imguiEnabled = true;
+}
+
+void D3DClass::DisableImGui()
+{
+	imguiEnabled = false;
+}
+
+bool D3DClass::IsImguiEnabled()
+{
+	return imguiEnabled;
 }

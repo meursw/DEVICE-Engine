@@ -1,4 +1,5 @@
 #include "GFX_camera.h"
+#include "IMGUI/imgui.h"
 
 using namespace DirectX;
 
@@ -6,6 +7,8 @@ Camera::Camera(int screenWidth, int screenHeight, float screenDepth, float scree
 {
 	m_position = XMFLOAT3{};
 	m_rotation = XMFLOAT3{};
+	m_positionAroundOrigin = XMFLOAT2{};
+
 	m_viewMatrix = XMMATRIX{};
 
 	CreateProjectionAndOrthoMatrix(screenWidth, screenHeight, screenDepth, screenNear);
@@ -15,19 +18,21 @@ void Camera::UpdateViewMatrix()
 {
 	// Construct a view matrix based on the position and rotation.
 	
-	XMFLOAT3 up{ 0.0f, 1.0f, 0.0 };
-	XMFLOAT3 position = m_position;
-	XMFLOAT3 lookAt{ 0.0f, 0.0f, 1.0f };
+	// Initialize vectors.
+	XMVECTOR upVector = XMVectorSet(0.0f, 1.0f, 0.0, 0.0f);
+	XMVECTOR lookAtVector = XMVectorSet(0.0f, 0.0f, 1.0, 0.0f);
+	XMVECTOR positionVector = XMLoadFloat3(&m_position);
 
-	XMVECTOR upVector = XMLoadFloat3(&up);
-	XMVECTOR positionVector = XMLoadFloat3(&position);
-	XMVECTOR lookAtVector = XMLoadFloat3(&lookAt);
-
+	// Calculate rotation matrix.
 	float pitch = XMConvertToRadians(m_rotation.x);
 	float yaw = XMConvertToRadians(m_rotation.y);
 	float roll = XMConvertToRadians(m_rotation.z);
-
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+	// Calculate rotation around the origin matrix.
+	/*float phi = XMConvertToRadians(m_positionAroundOrigin.x);
+	float theta = XMConvertToRadians(m_positionAroundOrigin.y);
+	XMMATRIX originRotationMatrix = XMMatrixRotationRollPitchYaw(phi, -theta, 0.0f);*/
 
 	// Transform the lookAt and up vectors by the rotation matrix so the view is correctly rotated at the origin.
 	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
@@ -88,4 +93,32 @@ void Camera::CreateProjectionAndOrthoMatrix(int screenWidth, int screenHeight, f
 
 	// Create an orthographic projection matrix for 2D rendering.
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
+}
+
+// imgui
+void Camera::SpawnControlWindow()
+{
+	if (ImGui::Begin("Camera Controller"))
+	{
+		ImGui::Text("Position");
+		ImGui::SliderFloat("Pos Z", &m_position.z, -100.0, 100.0);
+		ImGui::SliderFloat("Phi", &m_positionAroundOrigin.x, -89.0f, 89.0f);
+		ImGui::SliderFloat("Theta", &m_positionAroundOrigin.y, -180.0f, 180.0f);
+
+		ImGui::Text("Orientation");
+		ImGui::SliderFloat("Roll", &m_rotation.z, -180.0f, 180.0f);
+		ImGui::SliderFloat("Pitch", &m_rotation.x, -180.0f, 180.0f);
+		ImGui::SliderFloat("Yaw", &m_rotation.y, -180.0f, 180.0f);
+
+		if (ImGui::Button("Reset"))
+			Reset();
+	}
+	ImGui::End();
+}
+
+void Camera::Reset()
+{
+	m_position = { 0.0f,0.0f,-10.0f };
+	m_rotation = {};
+	m_positionAroundOrigin = {};
 }

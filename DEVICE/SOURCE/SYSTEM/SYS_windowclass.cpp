@@ -1,5 +1,7 @@
 #include "SYS_windowclass.h"
 
+#include "IMGUI/imgui_impl_win32.h"
+
 WindowClass::WindowClass(int& screenWidth, int& screenHeight, bool FULL_SCREEN)
 {
 	// Create window class.
@@ -52,17 +54,17 @@ WindowClass::WindowClass(int& screenWidth, int& screenHeight, bool FULL_SCREEN)
 	}
 
 	// Create an instance of the window and get a handle to it.
-	/*m_hwnd = CreateWindowEx(
+	m_hwnd = CreateWindowEx(
 		WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL
-	);*/
+	);
 
-	m_hwnd = CreateWindowEx(
+	/*m_hwnd = CreateWindowEx(
 		WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL
-	);
+	);*/
 
 	// Bring the window up on the screen and set it as main focus.
 	ShowWindow(m_hwnd, SW_SHOW);
@@ -115,6 +117,9 @@ bool WindowClass::ProcessMessages()
 // Here we handle the messages concerned with destroying the window or closing the window
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
+		return true;
+
 	switch (uMsg)
 	{
 	// Check if window is being destroyed and close the application.

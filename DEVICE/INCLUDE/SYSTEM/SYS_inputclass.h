@@ -22,8 +22,12 @@ public:
 
 	void Frame();
 
-	bool IsEscapePressed();
 	void GetMouseLocation(int&, int&);
+	
+public:
+	bool IsEscapePressed() const;
+	bool IsSpacePressed() const;
+	
 	bool IsMousePressed();
 
 private:

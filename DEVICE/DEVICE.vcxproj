@@ -19,6 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EXTERNAL\IMGUI\imgui.cpp" />
+    <ClCompile Include="EXTERNAL\IMGUI\imgui_demo.cpp" />
+    <ClCompile Include="EXTERNAL\IMGUI\imgui_draw.cpp" />
+    <ClCompile Include="EXTERNAL\IMGUI\imgui_impl_dx11.cpp" />
+    <ClCompile Include="EXTERNAL\IMGUI\imgui_impl_win32.cpp" />
+    <ClCompile Include="EXTERNAL\IMGUI\imgui_tables.cpp" />
+    <ClCompile Include="EXTERNAL\IMGUI\imgui_widgets.cpp" />
     <ClCompile Include="EXTERNAL\WICTextureLoader11.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_sampler.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_texture.cpp" />
@@ -36,6 +43,7 @@
     <ClCompile Include="SOURCE\GRAPHICS\GFX_d3dclass.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_d3d_exception.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_DEVICE_exception.cpp" />
+    <ClCompile Include="SOURCE\SYSTEM\SYS_imgui_manager.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_inputclass.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_systemclass.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_timerclass.cpp" />
@@ -43,6 +51,14 @@
     <ClCompile Include="SOURCE\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EXTERNAL\IMGUI\imconfig.h" />
+    <ClInclude Include="EXTERNAL\IMGUI\imgui.h" />
+    <ClInclude Include="EXTERNAL\IMGUI\imgui_impl_dx11.h" />
+    <ClInclude Include="EXTERNAL\IMGUI\imgui_impl_win32.h" />
+    <ClInclude Include="EXTERNAL\IMGUI\imgui_internal.h" />
+    <ClInclude Include="EXTERNAL\IMGUI\imstb_rectpack.h" />
+    <ClInclude Include="EXTERNAL\IMGUI\imstb_textedit.h" />
+    <ClInclude Include="EXTERNAL\IMGUI\imstb_truetype.h" />
     <ClInclude Include="EXTERNAL\WICTextureLoader11.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_sampler.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_texture.h" />
@@ -66,6 +82,7 @@
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_d3dclass.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_d3d_exception.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_DEVICE_exception.h" />
+    <ClInclude Include="INCLUDE\SYSTEM\SYS_imgui_manager.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_inputclass.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_systemclass.h" />
     <ClInclude Include="INCLUDE\SYSTEM\SYS_timerclass.h" />

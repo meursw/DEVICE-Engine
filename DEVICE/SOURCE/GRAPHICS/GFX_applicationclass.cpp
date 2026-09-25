@@ -1,5 +1,7 @@
 #include "GFX_applicationclass.h"
 
+#include "IMGUI/imgui.h"
+
 ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 {
 	// Initialize the direct 3D object.
@@ -35,7 +37,7 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Frame(InputClass* m_Input, float delta)
 {
-	Render(delta);
+	Render(delta * speed_factor);
 }
 
 void ApplicationClass::Render(float delta)
@@ -52,7 +54,10 @@ void ApplicationClass::Render(float delta)
 		m_Boxes[i]->Update(delta);
 		m_Boxes[i]->Draw(m_Direct3D.get());
 	}
-
+	
+	m_Camera->SpawnControlWindow();
+	        
+	// Present.
 	m_Direct3D->EndScene();
 }
 

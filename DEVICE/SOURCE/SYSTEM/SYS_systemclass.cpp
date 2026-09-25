@@ -2,13 +2,13 @@
 
 SystemClass::SystemClass() 
 {
-	// Create window.
-	int screenWidth{ 800 }, screenHeight{ 600 };
-	m_Window = std::make_unique<WindowClass>(screenWidth, screenHeight, FULL_SCREEN);
-
 	// Initialize for WIC functionality
 	HRESULT hr;
 	D3D_THROW(CoInitializeEx(nullptr, COINIT_MULTITHREADED));
+
+	// Create window.
+	int screenWidth{ (int)(800 * 1.5) }, screenHeight{ (int)(600 * 1.5) };
+	m_Window = std::make_unique<WindowClass>(screenWidth, screenHeight, FULL_SCREEN);
 
 	// Create application class.
 	m_Application = std::make_unique<ApplicationClass>(screenWidth, screenHeight, m_Window->GetHwnd());
