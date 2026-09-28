@@ -135,14 +135,41 @@ bool InputClass::IsSpacePressed() const
 	return false;
 }
 
-void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
+bool InputClass::IsTabPressed() const
 {
-	mouseX = m_mouseX;
-	mouseY = m_mouseY;
-	return;
+	if (m_keyboardState[DIK_TAB] & 0x80)
+		return true;
+
+	return false;
 }
 
-bool InputClass::IsMousePressed()
+DirectX::XMINT2 InputClass::GetMouseLocation() const
+{
+	return { m_mouseX, m_mouseY };
+}
+
+bool InputClass::IsKeyPressed(char key) const
+{
+	switch (key)
+	{
+	case 'W':
+		return (m_keyboardState[DIK_W] & 0x80);
+	case 'A':
+		return (m_keyboardState[DIK_A] & 0x80);
+	case 'S':
+		return (m_keyboardState[DIK_S] & 0x80);
+	case 'D':
+		return (m_keyboardState[DIK_D] & 0x80);
+	case 'E':
+		return (m_keyboardState[DIK_E] & 0x80);
+	case 'Q':
+		return (m_keyboardState[DIK_Q] & 0x80);
+	}
+
+	return false;
+}
+
+bool InputClass::IsMousePressed() const
 {
 	// Check the left mouse button state.
 	if (m_mouseState.rgbButtons[0] & 0x80)

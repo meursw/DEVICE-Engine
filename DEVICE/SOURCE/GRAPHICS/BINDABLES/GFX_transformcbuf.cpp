@@ -3,12 +3,12 @@
 using namespace DirectX;
 
 
-TransformCbuf::TransformCbuf(ID3D11Device* device, const Drawable& parent)
+TransformCbuf::TransformCbuf(ID3D11Device* device, const Drawable& parent, UINT slot)
 	: 
 	parent(parent)
 {
 	if (!m_transformBuffer)
-		m_transformBuffer = std::make_unique<VertexConstantBuffer<TransformsBuffer>>(device);
+		m_transformBuffer = std::make_unique<VertexConstantBuffer<TransformsBuffer>>(device, slot);
 }
 
 void TransformCbuf::Bind(D3DClass* d3d)

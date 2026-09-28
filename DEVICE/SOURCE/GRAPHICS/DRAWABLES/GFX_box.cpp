@@ -2,7 +2,8 @@
 
 #include "GFX_box.h"
 #include "GFX_BindableInc.h"
-#include "GFX_cube.h"
+#include "GFX_modelclass.h"
+
 
 using namespace DirectX;
 
@@ -13,7 +14,8 @@ Box::Box(D3DClass* d3d,
 	std::uniform_real_distribution<float>& b,
 	std::uniform_real_distribution<float>& c,
 	std::uniform_real_distribution<float>& d,
-	std::uniform_real_distribution<float>& scale
+	std::uniform_real_distribution<float>& scale,
+	DirectX::XMFLOAT4 materialColor
 )
 	:
 	r(d(rng)),
@@ -39,27 +41,30 @@ Box::Box(D3DClass* d3d,
 	{
 		SetIndexFromStatic();
 		AddBind(std::make_unique<TransformCbuf>(device, *this));
+		
+		struct MaterialCbuf
+		{
+			DirectX::XMFLOAT4 color;
+		} materialBuf;
+
+		materialBuf.color = materialColor;
+
+		AddBind(std::make_unique<PixelConstantBuffer<MaterialCbuf>>(device, materialBuf, 1));
 		return;
 	}
 
-	struct VertexType
-	{
-		XMFLOAT3 pos;
-		XMFLOAT2 tex;
-	};
+	ModelClass model(L"../DEVICE/ASSETS/MODELS/drybones.obj");
 
-	auto cube = Cube::MakeSkinned<VertexType>();
+	AddStaticBind(std::make_unique<VertexBuffer>(device, model.m_vertices));
 
-	AddStaticBind(std::make_unique<VertexBuffer>(device, cube.vertices));
-
-	AddStaticIndexBuffer(std::make_unique<IndexBuffer>(device, cube.indices));
+	AddStaticIndexBuffer(std::make_unique<IndexBuffer>(device, model.m_indices));
 
 	auto vertexShader = std::make_unique<VertexShader>(
 		ShaderType::VERTEX_SHADER,
 		device,
 		hwnd,
-		L"SHADERS/texturedcube.vs",
-		"TexCubeVertexEntry"
+		L"SHADERS/phong.vs",
+		"PhongVertexEntry"
 	);
 
 	auto vsByteCode = vertexShader->GetBytecode();
@@ -68,8 +73,8 @@ Box::Box(D3DClass* d3d,
 		ShaderType::PIXEL_SHADER,
 		device,
 		hwnd,
-		L"SHADERS/texturedcube.ps",
-		"TexCubePixelEntry")
+		L"SHADERS/phong.ps",
+		"PhongPixelEntry")
 	);
 
 	AddStaticBind(std::move(vertexShader));
@@ -77,14 +82,15 @@ Box::Box(D3DClass* d3d,
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> polygonLayout =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD",0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"TEXCOORD",0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,0 , D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 	AddStaticBind(std::make_unique<InputLayout>(device, polygonLayout, vsByteCode));
 
 	AddBind(std::make_unique<TransformCbuf>(device, *this));
 
-	AddStaticBind(std::make_unique<Texture>(d3d, L"../DEVICE/ASSETS/IMAGE_DEPTHS_CUBE.png", hwnd));
+	AddStaticBind(std::make_unique<Texture>(d3d, L"../DEVICE/ASSETS/TEXTURES/drybones.png", hwnd));
 	AddStaticBind(std::make_unique<Sampler>(device));
 }
 

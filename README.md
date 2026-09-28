@@ -2,6 +2,12 @@
 
 ## PROGRESS (newest -> latest)
 
+### 04. LIGHTS CAMERA ACTION
+![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/lca.gif)
+|:--:|
+Directional and point light calculations.
+Moving the camera with the keyboard and mouse.
+
 ### 03. TEXTURES
 ![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/IMAGE_DEPTHS_CUBES.gif)
 |:--:|

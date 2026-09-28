@@ -10,7 +10,7 @@ struct VertexInputType
     float4 position : POSITION;
 };
 
-float4 FlatCubeVertexEntry(VertexInputType input) : SV_Position
+float4 FlatVertexEntry(VertexInputType input) : SV_Position
 {
     float4 output;
     

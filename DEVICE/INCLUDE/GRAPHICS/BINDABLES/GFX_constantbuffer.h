@@ -6,7 +6,7 @@ template<typename C>
 class ConstantBuffer : public Bindable
 {
 public:
-	ConstantBuffer(ID3D11Device* device)
+	ConstantBuffer(ID3D11Device* device, UINT slot) : m_slot(slot)
 	{
 		HRESULT hr;
 
@@ -24,7 +24,7 @@ public:
 		));
 	}
 
-	ConstantBuffer(ID3D11Device* device, const C& consts)
+	ConstantBuffer(ID3D11Device* device, const C& consts, UINT slot) : m_slot(slot)
 	{
 		HRESULT hr;
 
@@ -63,19 +63,21 @@ public:
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
+	UINT m_slot;
 };
 
 template<typename C>
 class VertexConstantBuffer : public ConstantBuffer<C>
 {
 	using ConstantBuffer<C>::m_constantBuffer;
+	using ConstantBuffer<C>::m_slot;
 
 public:
 	using ConstantBuffer<C>::ConstantBuffer;
 
 	void Bind(D3DClass* d3d) override
 	{
-		d3d->GetDeviceContext()->VSSetConstantBuffers(0u, 1u, m_constantBuffer.GetAddressOf());
+		d3d->GetDeviceContext()->VSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 	}
 };
 
@@ -83,12 +85,13 @@ template<typename C>
 class PixelConstantBuffer : public ConstantBuffer<C>
 {
 	using ConstantBuffer<C>::m_constantBuffer;
+	using ConstantBuffer<C>::m_slot;
 
 public:
 	using ConstantBuffer<C>::ConstantBuffer;
 
 	void Bind(D3DClass* d3d) override
 	{
-		d3d->GetDeviceContext()->PSSetConstantBuffers(0u, 1u, m_constantBuffer.GetAddressOf());
+		d3d->GetDeviceContext()->PSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 	}
 };

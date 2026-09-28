@@ -14,6 +14,8 @@
 
 #include "SYS_d3d_exception.h"
 
+#include <DirectXMath.h>
+
 class InputClass
 {
 public:
@@ -22,13 +24,15 @@ public:
 
 	void Frame();
 
-	void GetMouseLocation(int&, int&);
+	DirectX::XMINT2 GetMouseLocation() const;
 	
 public:
 	bool IsEscapePressed() const;
 	bool IsSpacePressed() const;
+	bool IsTabPressed() const;
+	bool IsKeyPressed(char) const;
 	
-	bool IsMousePressed();
+	bool IsMousePressed() const;
 
 private:
 	void ReadKeyboard();
@@ -36,9 +40,9 @@ private:
 	void ProcessInput();
 
 private:
-	Microsoft::WRL::ComPtr<IDirectInput8> m_directInput;
-	Microsoft::WRL::ComPtr<IDirectInputDevice8> m_keyboard;
-	Microsoft::WRL::ComPtr<IDirectInputDevice8> m_mouse;
+	Microsoft::WRL::ComPtr<IDirectInput8> m_directInput = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInputDevice8> m_keyboard = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInputDevice8> m_mouse = nullptr;
 
 	unsigned char m_keyboardState[256];
 	DIMOUSESTATE m_mouseState;

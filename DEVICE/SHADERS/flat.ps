@@ -1,0 +1,9 @@
+cbuffer ColorBuf
+{
+    float4 color;
+};
+
+float4 FlatPixelEntry() : SV_TARGET
+{
+    return color;
+}

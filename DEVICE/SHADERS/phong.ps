@@ -1,0 +1,99 @@
+Texture2D tex : register(t0);
+SamplerState sampleType : register(s0);
+
+cbuffer PointLightCbuf
+{
+    float3 lightPosition;
+    float4 pointDiffuseColor;
+    float4 pointAmbientColor;
+    
+    float diffuseIntensity;
+    float attConst;
+    float attLin;
+    float attQuad;
+};
+
+cbuffer ObjectCbuf
+{
+    float4 materialColor;
+};
+
+cbuffer DirLightCbuf
+{
+    float3 lightDirection;
+    float4 dirDiffuseColor;
+    float4 dirAmbientColor;
+    float4 specularColor;
+    float specularPower;
+};
+    
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+    float3 normal : NORMAL;
+    float4 worldPosition : TEXCOORD1;
+    float3 viewDirection : TEXCOORD2;
+};
+
+float4 CalculateDirectionalLight(PixelInputType input)
+{
+    // Ambient
+    float4 color;
+    
+    float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    
+    float3 lightDir = -normalize(lightDirection);
+    
+    // Diffuse
+    float lightIntensity = saturate(dot(input.normal, lightDir));
+    
+    // If diffuse is > 0 then calculate specular.
+    if (lightIntensity > 0.0f)
+    {
+        // Add diffuse color.
+        color = saturate((dirDiffuseColor * lightIntensity * materialColor));
+        
+        // Calculate halfway vector instead of reflection vector.
+        float3 halfwayVector = normalize(lightDir + input.viewDirection);
+        
+        // Calculate specular highlight based on normal and halfway vector.
+        specular = pow(saturate(dot(input.normal, halfwayVector)), specularPower);
+        specular *= specularColor;
+    }
+    
+    color = saturate(color + dirAmbientColor + specular);
+    
+    return color;
+}
+
+float4 CalculatePointLight(PixelInputType input)
+{
+    float3 lightPos = normalize(lightPosition - input.worldPosition.xyz);
+    
+    // Diffuse.
+    float3 lightIntensity = saturate(dot(input.normal, lightPos));
+    
+    // Attenuation.
+    float dist = length(distance(lightPos, input.worldPosition.xyz));
+    
+    float attenuation = 1.0f / (attConst + attLin * dist + attQuad * (dist * dist));
+    
+    float4 color = saturate(pointDiffuseColor * diffuseIntensity * float4(lightIntensity * attenuation, 1.0f) * materialColor);
+    
+    return saturate(color + pointAmbientColor);
+}
+
+float4 PhongPixelEntry(PixelInputType input) : SV_TARGET
+{
+    float4 textureColor = tex.Sample(sampleType, input.tex);
+    
+    float4 color;
+    
+    color = CalculateDirectionalLight(input);
+    
+    color += CalculatePointLight(input);
+    
+    return saturate(color);
+
+}

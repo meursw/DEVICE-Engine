@@ -19,10 +19,21 @@ public:
 
 public:
 	void Draw(D3DClass*) const;
-	virtual void Update(float) = 0;
 	virtual DirectX::XMMATRIX GetTransformXM() const = 0;
 
 protected:
+	template<class T>
+	T* QueryBindable()
+	{
+		for (auto& bind : binds)
+		{
+			if ( auto p = dynamic_cast<T*>(bind.get()) )
+				return p;
+		}
+
+		return nullptr;
+	}
+
 	void AddBind(std::unique_ptr<Bindable>);
 	void AddIndexBuffer(std::unique_ptr<class IndexBuffer>);
 

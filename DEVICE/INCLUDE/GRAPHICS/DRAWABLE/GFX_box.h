@@ -13,10 +13,11 @@ public:
 		std::uniform_real_distribution<float>& b,
 		std::uniform_real_distribution<float>& c,
 		std::uniform_real_distribution<float>& d,
-		std::uniform_real_distribution<float>& scale
+		std::uniform_real_distribution<float>& scale,
+		DirectX::XMFLOAT4
 	);
 	
-	void Update(float delta) override;
+	void Update(float delta);
 	DirectX::XMMATRIX GetTransformXM() const override;
 
 private:
