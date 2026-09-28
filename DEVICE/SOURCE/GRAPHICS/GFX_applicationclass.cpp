@@ -2,6 +2,10 @@
 
 #include "IMGUI/imgui.h"
 
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+
 ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	:
 	// Initialize the direct 3D object.
@@ -27,7 +31,7 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 
 	for (int i = 0; i < 300; i++)
 	{
-		DirectX::XMFLOAT4 materialColor = { color(rng), color(rng), color(rng), 1.0f };
+		DirectX::XMFLOAT4 materialColor = {1.0f,1.0f, 1.0f, 1.0f};
 
 		m_Boxes.push_back(std::make_unique<Box>(
 			m_Direct3D.get(),
@@ -36,6 +40,13 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 			a, b, c, d, scale, materialColor
 		));
 	}
+
+	Assimp::Importer imp;
+	auto model = imp.ReadFile("../DEVICE/ASSETS/MODELS/drybones.obj",
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices
+	);
+
 }
 
 void ApplicationClass::Frame(InputClass* m_Input, float delta, bool m_cursorLocked)

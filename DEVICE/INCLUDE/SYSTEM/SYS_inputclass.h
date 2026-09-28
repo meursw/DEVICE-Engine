@@ -22,7 +22,7 @@ public:
 	InputClass(HINSTANCE, HWND, int, int);
 	~InputClass() = default;
 
-	void Frame();
+	void Frame(bool);
 
 	DirectX::XMINT2 GetMouseLocation() const;
 	
@@ -37,7 +37,7 @@ public:
 private:
 	void ReadKeyboard();
 	void ReadMouse();
-	void ProcessInput();
+	void ProcessInput(bool);
 
 private:
 	Microsoft::WRL::ComPtr<IDirectInput8> m_directInput = nullptr;

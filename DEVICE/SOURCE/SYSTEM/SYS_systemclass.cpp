@@ -37,7 +37,7 @@ void SystemClass::Start()
 void SystemClass::Frame()
 {
 	// First do the input frame processing.
-	m_Input->Frame();
+	m_Input->Frame(m_cursorLocked);
 
 	// Check if the user wants to close the application.
 	if (m_Input->IsEscapePressed())

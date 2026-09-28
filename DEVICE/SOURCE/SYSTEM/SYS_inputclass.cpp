@@ -55,7 +55,7 @@ InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int screenWidth, int scre
 	// END OF MOUSE CREATION
 }
 
-void InputClass::Frame()
+void InputClass::Frame(bool cursorLocked)
 {
 	// Read the current state of the keyboard.
 	ReadKeyboard();
@@ -64,7 +64,7 @@ void InputClass::Frame()
 	ReadMouse();
 
 	// Process the changes in the mouse and keyboard.
-	ProcessInput();
+	ProcessInput(cursorLocked);
 }
 
 void InputClass::ReadKeyboard()
@@ -108,11 +108,14 @@ void InputClass::ReadMouse()
 	}
 }
 
-void InputClass::ProcessInput()
+void InputClass::ProcessInput(bool cursorLocked)
 {
-	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
-	m_mouseX += m_mouseState.lX;
-	m_mouseY += m_mouseState.lY;
+	if (cursorLocked)
+	{
+		// Update the location of the mouse cursor based on the change of the mouse location during the frame.
+		m_mouseX += m_mouseState.lX;
+		m_mouseY += m_mouseState.lY;
+	}
 
 	return;
 }
