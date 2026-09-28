@@ -7,6 +7,7 @@
 |:--:|
 Directional and point light calculations.
 Moving the camera with the keyboard and mouse.
+Loading models from OBJ files.
 
 ### 03. TEXTURES
 ![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/IMAGE_DEPTHS_CUBES.gif)
