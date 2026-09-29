@@ -36,7 +36,7 @@ PixelInputType PhongVertexEntry(VertexInputType input)
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
     
-    output.tex = float2(input.tex.x, 1.0f - input.tex.y);
+    output.tex = input.tex;
     
     float4 worldPosition;
     

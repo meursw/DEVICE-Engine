@@ -1,6 +1,6 @@
 #include "GFX_modelclass.h"
 #include <fstream>
-#include <strstream>
+#include <sstream>
 
 using namespace DirectX;
 using namespace std;
@@ -39,7 +39,7 @@ void ModelClass::ParseObjFileAndLoadModel(const wstring& objfile)
 	while (fin.getline(line, sizeof line))
 	{
 		// Use stringstream to get the data.
-		strstream s;
+		stringstream s;
 		// Used to get rid of junk data like "v", etc.
 		char junk;
 

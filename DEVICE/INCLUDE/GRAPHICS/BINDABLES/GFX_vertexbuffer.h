@@ -1,8 +1,9 @@
 #pragma once
-
-#include "GFX_bindable.h"
 #include <directxmath.h>
 #include <vector>
+
+#include "GFX_bindable.h"
+#include "GFX_vertex.h"
 
 class VertexBuffer : public Bindable
 {
@@ -40,6 +41,32 @@ public:
 			&vertexBufferDesc, &vertexData, m_vertexBuffer.GetAddressOf()
 		));
 	}
+
+	VertexBuffer(ID3D11Device* device, const DEVICE_VERTEX::VertexBuffer& vbuf)
+		:
+		m_stride((UINT)vbuf.GetLayout().Size())
+	{
+		HRESULT hr;
+
+		D3D11_BUFFER_DESC vertexBufferDesc{};
+
+		m_vertexCount = UINT(vbuf.Size());
+
+		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		vertexBufferDesc.ByteWidth = UINT(vbuf.SizeBytes());
+		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDesc.CPUAccessFlags = 0;
+		vertexBufferDesc.MiscFlags = 0;
+		vertexBufferDesc.StructureByteStride = m_stride;
+
+		D3D11_SUBRESOURCE_DATA vertexData{};
+		vertexData.pSysMem = vbuf.GetData();
+
+		D3D_THROW(device->CreateBuffer(
+			&vertexBufferDesc, &vertexData, m_vertexBuffer.GetAddressOf()
+		));
+	}
+
 	~VertexBuffer() = default;
 
 	int GetVertexCount() const;

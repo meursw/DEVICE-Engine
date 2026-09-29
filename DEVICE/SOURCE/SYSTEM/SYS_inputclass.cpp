@@ -7,7 +7,7 @@ InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int screenWidth, int scre
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
 
-	m_mouseX = 0; m_mouseY = 0;
+	m_mouseX = 0; m_mouseY = 0; m_scrollWheel = 0;
 
 	// KEYBOARD CREATION //
 	// Initialize the main direct input interface
@@ -116,6 +116,7 @@ void InputClass::ProcessInput(bool cursorLocked)
 		m_mouseX += m_mouseState.lX;
 		m_mouseY += m_mouseState.lY;
 	}
+	m_scrollWheel += m_mouseState.lZ;
 
 	return;
 }
@@ -149,6 +150,11 @@ bool InputClass::IsTabPressed() const
 DirectX::XMINT2 InputClass::GetMouseLocation() const
 {
 	return { m_mouseX, m_mouseY };
+}
+
+int InputClass::GetScrollWheelLocation() const
+{
+	return m_scrollWheel;
 }
 
 bool InputClass::IsKeyPressed(char key) const

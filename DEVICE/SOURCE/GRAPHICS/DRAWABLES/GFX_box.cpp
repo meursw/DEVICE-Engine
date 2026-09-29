@@ -2,8 +2,11 @@
 
 #include "GFX_box.h"
 #include "GFX_BindableInc.h"
-#include "GFX_modelclass.h"
+#include "GFX_vertex.h"
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 using namespace DirectX;
 
@@ -53,11 +56,45 @@ Box::Box(D3DClass* d3d,
 		return;
 	}
 
-	ModelClass model(L"../DEVICE/ASSETS/MODELS/drybones.obj");
+	Assimp::Importer imp;
+	const auto pModel = imp.ReadFile("../DEVICE/ASSETS/MODELS/SLUGCAT.obj",
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices
+	);
 
-	AddStaticBind(std::make_unique<VertexBuffer>(device, model.m_vertices));
+	using DEVICE_VERTEX::VertexLayout;
+	DEVICE_VERTEX::VertexBuffer vbuf(std::move(
+		VertexLayout{}
+		.Append(VertexLayout::Position3D)
+		.Append(VertexLayout::Texture2D)
+		.Append(VertexLayout::Normal)
+	));
 
-	AddStaticIndexBuffer(std::make_unique<IndexBuffer>(device, model.m_indices));
+	const auto pMesh = pModel->mMeshes[0];
+
+	for (UINT i = 0; i < pMesh->mNumVertices; i++)
+	{
+		vbuf.EmplaceBack(
+			XMFLOAT3{pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z},
+			*reinterpret_cast<XMFLOAT2*>(&pMesh->mTextureCoords[i]),
+			*reinterpret_cast<XMFLOAT3*>(&pMesh->mNormals[i])
+		);
+	}
+
+	AddStaticBind(std::make_unique<VertexBuffer>(device, vbuf));
+
+	std::vector<unsigned short> indices;
+	indices.reserve(pMesh->mNumFaces * 3);
+	for (UINT i = 0; i < pMesh->mNumFaces; i++)
+	{
+		const auto& face = pMesh->mFaces[i];
+		assert(face.mNumIndices == 3);
+		indices.push_back(face.mIndices[0]);
+		indices.push_back(face.mIndices[1]);
+		indices.push_back(face.mIndices[2]);
+	}
+
+	AddStaticIndexBuffer(std::make_unique<IndexBuffer>(device, indices));
 
 	auto vertexShader = std::make_unique<VertexShader>(
 		ShaderType::VERTEX_SHADER,
@@ -79,14 +116,7 @@ Box::Box(D3DClass* d3d,
 
 	AddStaticBind(std::move(vertexShader));
 
-	const std::vector<D3D11_INPUT_ELEMENT_DESC> polygonLayout =
-	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD",0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,0 , D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-
-	AddStaticBind(std::make_unique<InputLayout>(device, polygonLayout, vsByteCode));
+	AddStaticBind(std::make_unique<InputLayout>(device, vbuf.GetLayout().GetD3DLayout(), vsByteCode));
 
 	AddBind(std::make_unique<TransformCbuf>(device, *this));
 

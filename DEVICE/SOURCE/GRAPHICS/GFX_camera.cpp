@@ -5,27 +5,39 @@
 using namespace DirectX;
 
 Camera::Camera(int screenWidth, int screenHeight, float screenDepth, float screenNear)
+	:
+	m_screenWidth(screenWidth), m_screenHeight(screenHeight),
+	m_screenDepth(screenDepth), m_screenNear(screenNear),
+	m_position({ 0.0f,0.0f,0.0f }),
+	m_rotation({}),
+	m_prevMousePos(XMINT2{}),
+	m_prevScrollPos(0),
+	m_viewMatrix(XMMATRIX{})
 {
-	m_position = XMFLOAT3{};
-	m_rotation = {};
-	m_prevMousePos = {};
+	CreateProjectionAndOrthoMatrix();
 
-	m_viewMatrix = XMMATRIX{};
-
-	CreateProjectionAndOrthoMatrix(screenWidth, screenHeight, screenDepth, screenNear);
-
-	m_mouseSens = 200.0f;
+	m_mouseSens = 0.2f;
 	m_movementSpeed = 20.0f;
+	m_fov = 90.0f;
 }
 
-void Camera::UpdateRotation(XMINT2 mousePos, float delta)
+void Camera::Update(InputClass* Input, float delta, bool cursorLocked)
+{
+	if(cursorLocked)
+		UpdateRotation(Input->GetMouseLocation());
+	UpdatePosition(Input, delta);
+	UpdateFov(Input, delta);
+	UpdateViewMatrix();
+}
+
+void Camera::UpdateRotation(XMINT2 mousePos)
 {
 	XMINT2 offset{ m_prevMousePos.x - mousePos.x, m_prevMousePos.y - mousePos.y};
 	
 	m_prevMousePos = mousePos;
 
-	m_rotation.yaw += offset.x * m_mouseSens * delta;
-	m_rotation.pitch += offset.y * m_mouseSens * delta;
+	m_rotation.yaw += offset.x * m_mouseSens;
+	m_rotation.pitch += offset.y * m_mouseSens;
 
 	if (m_rotation.pitch > 89.0f)
 		m_rotation.pitch = 89.0f;
@@ -87,6 +99,23 @@ void Camera::UpdatePosition(InputClass* Input, float delta)
 	XMStoreFloat3(&m_position, positionVector);
 }
 
+void Camera::UpdateFov(InputClass* Input, float delta)
+{
+	int scrollWhellPos = Input->GetScrollWheelLocation();
+	float offset = m_prevScrollPos - scrollWhellPos;
+
+	m_prevScrollPos = scrollWhellPos;
+
+	m_fov -= (float)offset * 0.01f;
+
+	if (m_fov < 1.0f)
+		m_fov = 1.0f;
+	if (m_fov > 140.0f)
+		m_fov = 140.0f;
+
+	UpdatePerspectiveMatrix();
+}
+
 void Camera::UpdateViewMatrix()
 {
 	// Construct a view matrix based on the position and rotation.
@@ -132,18 +161,25 @@ void Camera::GetOrthoMatrix(XMMATRIX& ortho) const
 	ortho = m_orthoMatrix;
 }
 
-void Camera::CreateProjectionAndOrthoMatrix(int screenWidth, int screenHeight, float screenDepth, float screenNear)
+void Camera::CreateProjectionAndOrthoMatrix()
 {
 	// The projection matrix is used to translate the 3D scene into the 2D viewport space that we previously created. 
 	// We will need to keep a copy of this matrix so that we can pass it to our shaders that will be used to render our scenes.
+	float fieldOfView = XMConvertToRadians(m_fov);
+	float screenAspect = (float)m_screenWidth / (float)m_screenHeight;
 
-	float fieldOfView = 3.141592654f / 3.0f;
-	float screenAspect = (float)screenWidth / (float)screenHeight;
-
-	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
+	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, m_screenNear, m_screenDepth);
 
 	// Create an orthographic projection matrix for 2D rendering.
-	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
+	m_orthoMatrix = XMMatrixOrthographicLH((float)m_screenWidth, (float)m_screenHeight, m_screenNear, m_screenDepth);
+}
+
+void Camera::UpdatePerspectiveMatrix()
+{
+	float fieldOfView = XMConvertToRadians(m_fov);
+	float screenAspect = (float)m_screenWidth / (float)m_screenHeight;
+
+	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, m_screenNear, m_screenDepth);
 }
 
 // imgui
@@ -152,8 +188,9 @@ void Camera::SpawnControlWindow()
 	if (ImGui::Begin("Camera Controller"))
 	{
 		ImGui::Text("Mouse");
-		ImGui::SliderFloat("Sensitivity", &m_mouseSens, 1.0, 500.0);
-		ImGui::SliderFloat("Speed", &m_movementSpeed, 1.0, 100.0);
+		ImGui::SliderFloat("Sensitivity", &m_mouseSens, 0.05f, 1.0f);
+		ImGui::SliderFloat("Speed", &m_movementSpeed, 1.0f, 100.0f);
+		ImGui::SliderFloat("FOV", &m_fov, 1.0f, 140.0f);
 		if (ImGui::Button("Reset"))
 			Reset();
 	}
@@ -166,6 +203,7 @@ void Camera::Reset()
 	m_rotation = { 0.0f, 0.0f, 0.0f };
 	m_mouseSens = 200.0f;
 	m_movementSpeed = 20.0f;
+	m_fov = 60.0f;
 }
 
 

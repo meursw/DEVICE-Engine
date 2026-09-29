@@ -34,8 +34,10 @@ public:
 	void GetProjectionMatrix(DX::XMMATRIX&) const;
 	void GetOrthoMatrix(DX::XMMATRIX&) const;
 
-	void UpdateRotation(DX::XMINT2, float delta);
+	void Update(InputClass*, float delta, bool);
+	void UpdateRotation(DX::XMINT2);
 	void UpdatePosition(InputClass*, float delta);
+	void UpdateFov(InputClass*, float delta);
 
 	// Imgui
 	void SpawnControlWindow();
@@ -44,8 +46,8 @@ public:
 private:
 	void UpdateVectors();
 
-private:
-	void CreateProjectionAndOrthoMatrix(int, int, float, float);
+	void CreateProjectionAndOrthoMatrix();
+	void UpdatePerspectiveMatrix();
 
 private:
 	DX::XMFLOAT3 m_position;
@@ -72,6 +74,14 @@ private:
 private:
 	float m_mouseSens = 400.0f;
 	float m_movementSpeed = 400.0f;
+	float m_fov;
+
 	DX::XMINT2 m_prevMousePos;
+	int m_prevScrollPos;
+
+	int m_screenWidth; 
+	int m_screenHeight;
+	float m_screenDepth;
+	float m_screenNear;
 };
 

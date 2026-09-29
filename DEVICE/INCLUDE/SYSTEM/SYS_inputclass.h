@@ -25,6 +25,7 @@ public:
 	void Frame(bool);
 
 	DirectX::XMINT2 GetMouseLocation() const;
+	int GetScrollWheelLocation() const;
 	
 public:
 	bool IsEscapePressed() const;
@@ -47,5 +48,6 @@ private:
 	unsigned char m_keyboardState[256];
 	DIMOUSESTATE m_mouseState;
 
-	int m_screenWidth, m_screenHeight, m_mouseX, m_mouseY;
+	int m_screenWidth, m_screenHeight;
+	int m_mouseX, m_mouseY, m_scrollWheel;
 };

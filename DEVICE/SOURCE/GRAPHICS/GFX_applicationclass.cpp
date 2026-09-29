@@ -29,7 +29,7 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	std::uniform_real_distribution<float> scale(0.5f, 3.0f);
 	std::uniform_real_distribution<float> color(0.0f, 1.0f);
 
-	for (int i = 0; i < 300; i++)
+	for (int i = 0; i < 1300; i++)
 	{
 		DirectX::XMFLOAT4 materialColor = {1.0f,1.0f, 1.0f, 1.0f};
 
@@ -40,20 +40,11 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 			a, b, c, d, scale, materialColor
 		));
 	}
-
-	Assimp::Importer imp;
-	auto model = imp.ReadFile("../DEVICE/ASSETS/MODELS/drybones.obj",
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices
-	);
-
 }
 
 void ApplicationClass::Frame(InputClass* m_Input, float delta, bool m_cursorLocked)
 {
-	if(m_cursorLocked)
-		m_Camera->UpdateRotation(m_Input->GetMouseLocation(), delta);
-	m_Camera->UpdatePosition(m_Input, delta);
+	m_Camera->Update(m_Input, delta, m_cursorLocked);
 	Render(delta * m_simulationSpeed);
 }
 
@@ -61,8 +52,6 @@ void ApplicationClass::Render(float delta)
 {
 	static float elapsedTime{ 0.0 };
 	elapsedTime += delta;
-
-	m_Direct3D->UpdateCurrentCamera();
 
 	m_Direct3D->BeginScene(0.0, 0.0, 0.0, 1.0);
 
@@ -90,6 +79,9 @@ void ApplicationClass::SpawnControlWindow()
 	{
 		ImGui::Text("Simulation");
 		ImGui::SliderFloat("Speed Factor", &m_simulationSpeed, 0.0f, 2.0f);
+		ImGui::Text("Performance");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+			1000.0 / double(ImGui::GetIO().Framerate), double(ImGui::GetIO().Framerate));
 	}
 	ImGui::End();
 }

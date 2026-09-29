@@ -257,6 +257,9 @@
     <ClInclude Include="INCLUDE\GRAPHICS\LIGHTS\GFX_pointlight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SHADERS\flat.ps">

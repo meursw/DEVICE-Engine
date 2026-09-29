@@ -8,7 +8,7 @@
 
 class ModelClass
 {
-private:
+public:
 	struct VertexType
 	{
 		DirectX::XMFLOAT3 pos;
