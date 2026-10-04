@@ -55,7 +55,7 @@ InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int screenWidth, int scre
 	// END OF MOUSE CREATION
 }
 
-void InputClass::Frame(bool cursorLocked)
+void InputClass::Frame(bool cursorEnabled)
 {
 	// Read the current state of the keyboard.
 	ReadKeyboard();
@@ -64,7 +64,7 @@ void InputClass::Frame(bool cursorLocked)
 	ReadMouse();
 
 	// Process the changes in the mouse and keyboard.
-	ProcessInput(cursorLocked);
+	ProcessInput(cursorEnabled);
 }
 
 void InputClass::ReadKeyboard()
@@ -72,6 +72,7 @@ void InputClass::ReadKeyboard()
 	HRESULT hr;
 
 	// Read the keyboard device.
+	memcpy(m_lastKeyboardState, m_keyboardState, sizeof(m_keyboardState));
 	hr = m_keyboard->GetDeviceState(sizeof(m_keyboardState), (LPVOID)&m_keyboardState);
 	
 	if (FAILED(hr))
@@ -108,9 +109,9 @@ void InputClass::ReadMouse()
 	}
 }
 
-void InputClass::ProcessInput(bool cursorLocked)
+void InputClass::ProcessInput(bool cursorEnabled)
 {
-	if (cursorLocked)
+	if (!cursorEnabled)
 	{
 		// Update the location of the mouse cursor based on the change of the mouse location during the frame.
 		m_mouseX += m_mouseState.lX;
@@ -125,26 +126,17 @@ void InputClass::ProcessInput(bool cursorLocked)
 bool InputClass::IsEscapePressed() const
 {
 	// Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.
-	if (m_keyboardState[DIK_ESCAPE] & 0x80)
-		return true;
-
-	return false;
+	return m_keyboardState[DIK_ESCAPE] & 0x80;
 }
 
 bool InputClass::IsSpacePressed() const
 {
-	if (m_keyboardState[DIK_SPACE] & 0x80)
-		return true;
-
-	return false;
+	return (!m_lastKeyboardState[DIK_SPACE] && m_keyboardState[DIK_SPACE] & 0x80);
 }
 
 bool InputClass::IsTabPressed() const
 {
-	if (m_keyboardState[DIK_TAB] & 0x80)
-		return true;
-
-	return false;
+	return (!m_lastKeyboardState[DIK_TAB] && m_keyboardState[DIK_TAB] & 0x80);
 }
 
 DirectX::XMINT2 InputClass::GetMouseLocation() const

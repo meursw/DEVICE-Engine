@@ -72,7 +72,8 @@ WindowClass::WindowClass(int& screenWidth, int& screenHeight, bool FULL_SCREEN)
 	SetFocus(m_hwnd);
 
 	// Hide the mouse cursor.
-	//ShowCursor(false);
+	m_cursorEnabled = false;
+	ShowCursor(false);
 	CenterCursor();
 }
 
@@ -146,8 +147,25 @@ HINSTANCE WindowClass::GetInstance() const
 	return m_hinstance;
 }
 
+void WindowClass::ToggleCursor() 
+{
+	m_cursorEnabled = !m_cursorEnabled;
+
+	if (m_cursorEnabled)
+		while (ShowCursor(true) < 0);
+	else
+		while (ShowCursor(false) >= 0);
+}
+
+bool WindowClass::IsCursorEnabled() const
+{
+	return m_cursorEnabled;
+}
+
 void WindowClass::CenterCursor() const
 {
+	if (m_cursorEnabled)
+		return;
 	// First get the client rect size
 	RECT clientRect;
 	GetClientRect(m_hwnd, &clientRect);

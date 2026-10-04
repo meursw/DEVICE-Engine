@@ -15,6 +15,9 @@ public:
 	HINSTANCE GetInstance() const;
 
 	void CenterCursor() const;
+	void ToggleCursor();
+
+	bool IsCursorEnabled() const;
 
 private:
 	// Application name.
@@ -27,6 +30,8 @@ private:
 	HWND m_hwnd;
 
 	bool m_fullscreen;
+
+	bool m_cursorEnabled;
 };
 
 // Window procedure that processes messages sent to a window.

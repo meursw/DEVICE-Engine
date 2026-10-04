@@ -21,9 +21,9 @@ Camera::Camera(int screenWidth, int screenHeight, float screenDepth, float scree
 	m_fov = 90.0f;
 }
 
-void Camera::Update(InputClass* Input, float delta, bool cursorLocked)
+void Camera::Update(InputClass* Input, float delta, bool cursorEnabled)
 {
-	if(cursorLocked)
+	if(!cursorEnabled)
 		UpdateRotation(Input->GetMouseLocation());
 	UpdatePosition(Input, delta);
 	UpdateFov(Input, delta);

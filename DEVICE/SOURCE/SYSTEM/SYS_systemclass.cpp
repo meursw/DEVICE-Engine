@@ -39,7 +39,7 @@ void SystemClass::Start()
 void SystemClass::Frame()
 {
 	// First do the input frame processing.
-	m_Input->Frame(m_cursorLocked);
+	m_Input->Frame(m_Window->IsCursorEnabled());
 
 	// Check if the user wants to close the application.
 	if (m_Input->IsEscapePressed())
@@ -50,18 +50,15 @@ void SystemClass::Frame()
 
 	if (m_Input->IsTabPressed())
 	{
-		m_cursorLocked = !m_cursorLocked;
+		m_Window->ToggleCursor();
 	}
 
 	// Update timer status.
 	m_Timer->Frame();
 
 	// Do the frame processing of the application class.
-	m_Application->Frame(m_Input.get(), m_Timer->GetDeltaTime(), m_cursorLocked);
+	m_Application->Frame(m_Input.get(), m_Timer->GetDeltaTime(), m_Window->IsCursorEnabled());
 
-	if (m_cursorLocked)
-	{
-		m_Window->CenterCursor();
-	}
+	m_Window->CenterCursor();
 
 }

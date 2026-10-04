@@ -46,6 +46,7 @@ private:
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> m_mouse = nullptr;
 
 	unsigned char m_keyboardState[256];
+	unsigned char m_lastKeyboardState[256];
 	DIMOUSESTATE m_mouseState;
 
 	int m_screenWidth, m_screenHeight;

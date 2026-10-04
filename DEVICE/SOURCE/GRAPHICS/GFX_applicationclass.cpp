@@ -24,9 +24,9 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	m_Direct3D->SetCamera(m_Camera.get());
 }
 
-void ApplicationClass::Frame(InputClass* m_Input, float delta, bool m_cursorLocked)
+void ApplicationClass::Frame(InputClass* m_Input, float delta, bool cursorEnabled)
 {
-	m_Camera->Update(m_Input, delta, m_cursorLocked);
+	m_Camera->Update(m_Input, delta, cursorEnabled);
 	Render(delta * m_simulationSpeed);
 }
 
