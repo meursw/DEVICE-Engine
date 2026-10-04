@@ -4,7 +4,9 @@ SystemClass::SystemClass()
 {
 	// Initialize for WIC functionality
 	HRESULT hr;
-	D3D_THROW(CoInitializeEx(nullptr, COINIT_MULTITHREADED));
+	hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (FAILED(hr))
+		throw DEVICE_Exception(__LINE__, __FILE__);
 
 	// Create window.
 	int screenWidth{ (int)(800 * 1.5) }, screenHeight{ (int)(600 * 1.5) };

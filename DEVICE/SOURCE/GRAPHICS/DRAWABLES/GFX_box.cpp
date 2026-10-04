@@ -81,8 +81,6 @@ Box::Box(D3DClass* d3d,
 		);
 	}
 
-	AddStaticBind(std::make_unique<VertexBuffer>(device, vbuf));
-
 	std::vector<unsigned short> indices;
 	indices.reserve(pMesh->mNumFaces * 3);
 	for (UINT i = 0; i < pMesh->mNumFaces; i++)
@@ -94,7 +92,11 @@ Box::Box(D3DClass* d3d,
 		indices.push_back(face.mIndices[2]);
 	}
 
+	// ADD BINDS
+
+	AddStaticBind(std::make_unique<VertexBuffer>(device, vbuf));
 	AddStaticIndexBuffer(std::make_unique<IndexBuffer>(device, indices));
+	AddStaticBind(std::make_unique<Topology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	auto vertexShader = std::make_unique<VertexShader>(
 		ShaderType::VERTEX_SHADER,

@@ -3,10 +3,10 @@
 
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	SystemClass system;
 
 	try
 	{
+		SystemClass system;
 		system.Start();
 	}
 	// Handle exceptions.

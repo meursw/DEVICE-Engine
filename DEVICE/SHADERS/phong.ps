@@ -94,6 +94,6 @@ float4 PhongPixelEntry(PixelInputType input) : SV_TARGET
     
     color += CalculatePointLight(input);
     
-    return saturate(color);
+    return saturate(color*textureColor);
 
 }

@@ -6,7 +6,7 @@
 
 #include "GFX_d3dclass.h"
 #include "GFX_camera.h"
-#include "GFX_box.h"
+#include "GFX_model.h"
 #include "GFX_pointlight.h"
 #include "GFX_directional_light.h"
 
@@ -31,10 +31,9 @@ private:
 	ImguiManager imgui;
 
 	void SpawnControlWindow();
-
 private:
 	std::unique_ptr<D3DClass> m_Direct3D;
-	std::vector<std::unique_ptr<Box>> m_Boxes;
+	Model m_nano;
 	
 	std::unique_ptr<Camera> m_Camera;
 	PointLight m_pointlight;

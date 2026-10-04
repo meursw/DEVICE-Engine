@@ -2,6 +2,13 @@
 
 ## PROGRESS (newest -> latest)
 
+
+### 05. ASSIMP / SCENE GRAPH
+![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/APART.gif)
+|:--:|
+Loading models with assimp.
+Scene graph for models with multiple meshes.
+
 ### 04. LIGHTS CAMERA ACTION
 ![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/lca.gif)
 |:--:|

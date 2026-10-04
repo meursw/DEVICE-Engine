@@ -293,9 +293,17 @@ namespace DEVICE_VERTEX
 		}
 
 	private:
+		// enables parameter pack setting of multiple parameters by element index
+		template<typename First, typename ...Rest>
+		void SetAttributeByIndex(size_t i, First&& first, Rest&&... rest) noexcept
+		{
+			SetAttributeByIndex(i, std::forward<First>(first));
+			SetAttributeByIndex(i + 1, std::forward<Rest>(rest)...);
+		}
+
 		// helper to reduce code duplication in SetAttributeByIndex
 		template<VertexLayout::ElementType DestLayoutType, typename SrcType>
-		void SetAttribute(char* pAttribute, SrcType&& val)
+		void SetAttribute(char* pAttribute, SrcType&& val) noexcept
 		{
 			using Dest = typename VertexLayout::Map<DestLayoutType>::SysType;
 			if constexpr (std::is_assignable<Dest, SrcType>::value)
@@ -307,15 +315,6 @@ namespace DEVICE_VERTEX
 				assert("Parameter attribute type mismatch" && false);
 			}
 		}
-
-		template<typename First, typename ...Rest>
-		// enables parameter pack setting of multiple parameters by element index
-		void SetAttributeByIndex(size_t i, First&& first, Rest&&... rest)
-		{
-			SetAttributeByIndex(i, std::forward<First>(first));
-			SetAttributeByIndex(i + 1, std::forward<Rest>(rest)...);
-		}
-
 	private:
 		// A pointer to the data of a SINGLE vertex inside the VertexBuffer.
 		char* pData = nullptr;

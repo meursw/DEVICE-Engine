@@ -3,6 +3,7 @@
 #include "GFX_vertexbuffer.h"
 #include "GFX_indexbuffer.h"
 #include "GFX_inputlayout.h"
+#include "GFX_topology.h"
 
 #include "GFX_transformcbuf.h"
 #include "GFX_constantbuffer.h"
