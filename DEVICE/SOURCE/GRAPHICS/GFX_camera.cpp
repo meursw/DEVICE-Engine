@@ -39,10 +39,10 @@ void Camera::UpdateRotation(XMINT2 mousePos)
 	m_rotation.yaw += offset.x * m_mouseSens;
 	m_rotation.pitch += offset.y * m_mouseSens;
 
-	if (m_rotation.pitch > 89.0f)
-		m_rotation.pitch = 89.0f;
-	if (m_rotation.pitch < -89.0f)
-		m_rotation.pitch = -89.0f;
+	if (m_rotation.pitch > 90.0f * 0.995f)
+		m_rotation.pitch = 90.0f * 0.995f;
+	if (m_rotation.pitch < -90.0f * 0.995f)
+		m_rotation.pitch = -90.0f * 0.995f;
 
 	UpdateVectors();
 }

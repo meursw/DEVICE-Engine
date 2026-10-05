@@ -3,8 +3,6 @@
 #include "GFX_BindableInc.h"
 #include "GFX_vertex.h"
 
-#include <optional>
-
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -46,15 +44,16 @@ class Node
 	// The Model if a friend of Node since
 	// it is going to be adding nodes to it.
 	friend class Model;
-	friend class ModelWindow;
 public:
-	Node(const std::string&, std::vector<Mesh*>, const DirectX::XMMATRIX& transform);
+	Node(int id, const std::string&, std::vector<Mesh*>, const DirectX::XMMATRIX&);
 	void Draw(D3DClass*, DirectX::FXMMATRIX) const;
 	void SetAppliedTransform(DirectX::FXMMATRIX);
+	int GetId() const noexcept;
 private:
 	void AddChild(std::unique_ptr<Node>);
 private:
 	std::string m_name;
+	int id;
 	std::vector<std::unique_ptr<Node>> m_childNodes;
 	std::vector<Mesh*> m_meshPtrs;
 	// The transform loaded from the file.
@@ -64,7 +63,7 @@ private:
 
 // IMGUI
 public:
-	void ShowTree(int&, std::optional<int>&, Node*& pSelectedNode) const;
+	void ShowTree(Node*& pSelectedNode) const;
 };
 
 class Model
@@ -76,7 +75,7 @@ public:
 
 private:
 	static std::unique_ptr<Mesh> ParseMesh(D3DClass*, const aiMesh& mesh, HWND);
-	std::unique_ptr<Node> ParseNode(const aiNode& node);
+	std::unique_ptr<Node> ParseNode(int& nextId, const aiNode& node);
 
 private:
 	std::unique_ptr<Node> m_Root;

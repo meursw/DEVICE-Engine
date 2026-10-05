@@ -12,7 +12,7 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	m_Direct3D(std::make_unique<D3DClass>(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR)),
 	m_pointlight(m_Direct3D.get()),
 	m_dirLight(m_Direct3D.get()),
-	m_nano(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/DRYBONES.glb", hwnd),
+	m_nano(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nano.gltf", hwnd),
 	m_simulationSpeed(1.0f)
 {
 	// Create the camera.
