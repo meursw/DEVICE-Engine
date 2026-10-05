@@ -122,7 +122,7 @@ Box::Box(D3DClass* d3d,
 
 	AddBind(std::make_unique<TransformCbuf>(device, *this));
 
-	AddStaticBind(std::make_unique<Texture>(d3d, L"../DEVICE/ASSETS/TEXTURES/drybones.png", hwnd));
+	AddStaticBind(std::make_unique<Texture>(d3d, "../DEVICE/ASSETS/TEXTURES/drybones.png", hwnd));
 	AddStaticBind(std::make_unique<Sampler>(device));
 }
 

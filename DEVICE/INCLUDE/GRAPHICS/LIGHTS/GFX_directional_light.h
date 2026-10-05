@@ -8,11 +8,11 @@ class DirectionalLight
 private:
 	struct DirLightCbuf
 	{
-		alignas(16) DirectX::XMFLOAT3 lightDir;
-		alignas(16) DirectX::XMFLOAT4 dirDiffuseColor;
-		alignas(16) DirectX::XMFLOAT4 dirAmbientColor;
-		alignas(16) DirectX::XMFLOAT4 specularColor;
+		DirectX::XMFLOAT3 lightDirection;
 		float specularPower;
+		DirectX::XMFLOAT4 dirDiffuseColor;
+		DirectX::XMFLOAT4 dirAmbientColor;
+		DirectX::XMFLOAT4 specularColor;
 	};
 
 	struct CameraCbuf

@@ -74,7 +74,7 @@ public:
 	~Model();
 
 private:
-	static std::unique_ptr<Mesh> ParseMesh(D3DClass*, const aiMesh& mesh, HWND);
+	static std::unique_ptr<Mesh> ParseMesh(D3DClass*, const aiMesh& mesh, HWND, const aiMaterial* const*);
 	std::unique_ptr<Node> ParseNode(int& nextId, const aiNode& node);
 
 private:

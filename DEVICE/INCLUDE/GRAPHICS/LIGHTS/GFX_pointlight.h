@@ -11,7 +11,7 @@ private:
 	{
 		alignas(16) DirectX::XMFLOAT3 lightPos;
 		alignas(16) DirectX::XMFLOAT4 pointDiffuseColor;
-		DirectX::XMFLOAT4 ambientColor;
+		alignas(16) DirectX::XMFLOAT4 ambientColor;
 
 		float diffuseIntensity;
 		float attConst;

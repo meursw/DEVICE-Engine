@@ -40,11 +40,11 @@ PixelInputType PhongVertexEntry(VertexInputType input)
     
     float4 worldPosition;
     
-    worldPosition = mul(input.position, worldMatrix);
-    output.worldPosition = worldPosition;
-    
     output.normal = mul(input.normal, (float3x3) worldMatrix);
     output.normal = normalize(output.normal);
+    
+    worldPosition = mul(input.position, worldMatrix);
+    output.worldPosition = worldPosition;
     
     output.viewDirection = normalize(cameraPosition - worldPosition.xyz);
     

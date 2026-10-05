@@ -8,12 +8,24 @@
 
 #include "WICTextureLoader11.h"
 
-Texture::Texture(D3DClass* d3d, const std::wstring& path, HWND hwnd)
+static std::wstring StringToWString(const std::string& str)
 {
+	std::wstring wstr;
+	size_t size;
+	wstr.resize(str.length());
+	mbstowcs_s(&size, &wstr[0], wstr.size() + 1, str.c_str(), str.size());
+	return wstr;
+}
+
+Texture::Texture(D3DClass* d3d, const std::string& path, HWND hwnd, UINT slot)
+	:
+	m_slot(slot)
+{
+	const auto wpath = StringToWString(path);
 	std::ifstream fin(path);
 	if (!fin)
 	{
-		std::wstring error = L"Could not load file: " + path;
+		std::wstring error = L"Could not load file: " + wpath;
 		MessageBox(hwnd, error.c_str(), L"ERROR", MB_OK);
 		throw DEVICE_Exception(__LINE__, __FILE__);
 	}
@@ -28,7 +40,7 @@ Texture::Texture(D3DClass* d3d, const std::wstring& path, HWND hwnd)
 	D3D_THROW(DirectX::CreateWICTextureFromFile(
 		device, 
 		deviceContext,
-		path.c_str(),
+		wpath.c_str(),
 		resource.ReleaseAndGetAddressOf(),
 		m_textureView.ReleaseAndGetAddressOf()
 	));
@@ -36,5 +48,6 @@ Texture::Texture(D3DClass* d3d, const std::wstring& path, HWND hwnd)
 
 void Texture::Bind(D3DClass* d3d)
 {
-	d3d->GetDeviceContext()->PSSetShaderResources(0u, 1u, m_textureView.GetAddressOf());
+	d3d->GetDeviceContext()->PSSetShaderResources(m_slot, 1u, m_textureView.GetAddressOf());
 }
+

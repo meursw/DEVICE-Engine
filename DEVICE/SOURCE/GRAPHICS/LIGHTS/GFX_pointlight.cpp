@@ -3,7 +3,7 @@
 
 PointLight::PointLight(D3DClass* d3d, float radius)
 	:
-	m_pointLightCbuf(d3d->GetDevice(), 0),
+	m_pointLightCbuf(d3d->GetDevice(), 1u),
 	m_mesh(d3d, NULL, radius)
 {
 	Reset();
@@ -39,8 +39,8 @@ void PointLight::SpawnControlWindow()
 
 		ImGui::Text("Attenuation");
 		ImGui::SliderFloat("Constant", &cbData.attConst, 1.0f, 5.0f, "%.1f");
-		ImGui::SliderFloat("Linear", &cbData.attLin, 0.0f, 0.01f, "%.3f");
-		ImGui::SliderFloat("Quadratic", &cbData.attQuad, 0.0f, 0.005f, "%.4f");
+		ImGui::SliderFloat("Linear", &cbData.attLin, 0.0f, 1.0f, "%.3f");
+		ImGui::SliderFloat("Quadratic", &cbData.attQuad, 0.0f, 1.0f, "%.4f");
 
 		if (ImGui::Button("Reset"))
 			Reset();
@@ -51,12 +51,12 @@ void PointLight::SpawnControlWindow()
 void PointLight::Reset()
 {
 	cbData = {
-		{0.0f,0.0f,0.0f},
+		{7.0f,14.0f,-2.0f},
 		{1.0f,1.0f,1.0f,1.0f},
 		{0.05f, 0.05f, 0.05f, 1.0f},
 		1.0f,
 		1.0f,
-		0.0015f,
-		0.00075f
+		0.1f,
+		0.075f
 	};
 }

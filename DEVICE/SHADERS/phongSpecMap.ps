@@ -1,4 +1,5 @@
 Texture2D tex : register(t0);
+Texture2D texSpec : register(t1);
 SamplerState sampleType : register(s0);
 
 cbuffer DirLightCbuf
@@ -21,7 +22,6 @@ cbuffer PointLightCbuf
     float attLin;
     float attQuad;
 };
-
     
 struct PixelInputType
 {
@@ -32,13 +32,18 @@ struct PixelInputType
     float3 viewDirection : TEXCOORD2;
 };
 
-float4 CalculateSpecular(float3 diffuseFactor, float3 normal, float3 lightDir, float3 viewDirection)
+float4 CalculateSpecular(float3 lightDir, float3 diffuseFactor, PixelInputType input, float att)
 {
-    float3 reflectDir = normalize(2.0f * diffuseFactor * normal - lightDir);
+    // Get specular color and power from texture.
+    float4 specSample = texSpec.Sample(sampleType, input.tex);
+    float3 specColor = specSample.rgb;
+    float specPower = pow(2.0f, specSample.a * 13.0f);
+    
+    float3 reflectDir = normalize(2.0f * diffuseFactor * input.normal - lightDir);
         
-    float specularFactor = pow(saturate(dot(reflectDir, viewDirection)), specularPower);
+    float specularFactor = pow(saturate(dot(reflectDir, input.viewDirection)), specPower);
         
-    return saturate(specularFactor * specularColor * pointDiffuseColor);
+    return float4(saturate(specularFactor * specColor * att), 0.0f);
 }
 
 float4 CalculateDirectionalLight(PixelInputType input, float4 diffuseTex)
@@ -54,7 +59,7 @@ float4 CalculateDirectionalLight(PixelInputType input, float4 diffuseTex)
     // If diffuse is > 0 then calculate specular.
     if (diffuseFactor > 0.0f)
     {
-        specular = CalculateSpecular(diffuseFactor, input.normal, lightDir, input.viewDirection.xyz);
+        specular = CalculateSpecular(lightDir, diffuseFactor, input, 1.0f);
     }
 
     return saturate((dirAmbientColor + diffuse)) * diffuseTex + specular;
@@ -81,7 +86,7 @@ float4 CalculatePointLight(PixelInputType input, float4 diffuseTex)
     float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
     if (diffuseFactor > 0.0f)
     {
-        specular = CalculateSpecular(diffuseFactor, input.normal, lightDir, input.viewDirection.xyz);
+        specular = CalculateSpecular(lightDir, diffuseFactor, input, attenuation);
     }
     
     return saturate((pointAmbientColor + diffuse) * diffuseTex + specular);
@@ -95,9 +100,9 @@ float4 PhongPixelEntry(PixelInputType input) : SV_TARGET
     
     float4 color ;
     
-    color = CalculatePointLight(input, diffuseTex);
+    color = CalculateDirectionalLight(input, diffuseTex);
     
-    color += CalculateDirectionalLight(input, diffuseTex);
+    color += CalculatePointLight(input, diffuseTex);
     
     return saturate(color);
 

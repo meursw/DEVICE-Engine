@@ -17,19 +17,6 @@ Mesh::Mesh(D3DClass* d3d, std::vector<std::unique_ptr<Bindable>> bindPtrs)
 	if (!IsStaticInitialized())
 	{
 		AddStaticBind(std::make_unique<Topology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-		std::mt19937 rng(std::random_device{}());
-		std::uniform_real_distribution<float> color(1.0f, 1.0f);
-
-		DirectX::XMFLOAT4 materialColor = { color(rng), color(rng), color(rng), color(rng) };
-		struct MaterialCbuf
-		{
-			DirectX::XMFLOAT4 color;
-		} materialBuf;
-
-		materialBuf.color = materialColor;
-		AddStaticBind(std::make_unique<PixelConstantBuffer<MaterialCbuf>>(d3d->GetDevice(), materialBuf, 1));
-		AddStaticBind(std::make_unique<Texture>(d3d, L"../DEVICE/ASSETS/TEXTURES/drybones.png", nullptr));
-		AddStaticBind(std::make_unique<Sampler>(d3d->GetDevice()));
 	}
 
 	// Per mesh Binds.
@@ -187,7 +174,7 @@ public:
 	}
 
 private:
-	Node* pSelectedNode;
+	Node* pSelectedNode = nullptr;
 	struct TransformParameters
 	{
 		float roll = 0.0f;
@@ -215,7 +202,6 @@ Model::Model(D3DClass* d3d, const std::string fileName, HWND hwnd)
 	Assimp::Importer imp;
 	const auto pScene = imp.ReadFile(fileName.c_str(),
 		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
 		aiProcess_ConvertToLeftHanded |
 		aiProcess_GenNormals
 	);
@@ -225,14 +211,14 @@ Model::Model(D3DClass* d3d, const std::string fileName, HWND hwnd)
 
 	for (size_t i = 0; i < pScene->mNumMeshes; i++)
 	{
-		m_meshPtrs.push_back(ParseMesh(d3d, *pScene->mMeshes[i], hwnd));
+		m_meshPtrs.push_back(ParseMesh(d3d, *pScene->mMeshes[i], hwnd, pScene->mMaterials));
 	}
 
 	int nextId = 0;
 	m_Root = ParseNode(nextId, *pScene->mRootNode);
 }
 
-std::unique_ptr<Mesh> Model::ParseMesh(D3DClass* d3d, const aiMesh& mesh, HWND hwnd)
+std::unique_ptr<Mesh> Model::ParseMesh(D3DClass* d3d, const aiMesh& mesh, HWND hwnd, const aiMaterial* const* pMaterials)
 {
 	using DEVICE_VERTEX::VertexLayout;
 
@@ -265,6 +251,30 @@ std::unique_ptr<Mesh> Model::ParseMesh(D3DClass* d3d, const aiMesh& mesh, HWND h
 
 	std::vector<std::unique_ptr<Bindable>> bindablePtrs;
 
+	bool hasSpecularMap = false;
+	// Check if the mesh has a material
+	if (mesh.mMaterialIndex >= 0)
+	{
+		using namespace std::string_literals;
+		// pMaterial is an array of materials inside the assimp scene.
+		auto& material = *pMaterials[mesh.mMaterialIndex];
+		
+		const auto base = "../DEVICE/ASSETS/TEXTURES/NANOSUIT/"s;
+
+		aiString texFilename;
+		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFilename);
+		bindablePtrs.push_back(std::make_unique<Texture>(d3d, base + texFilename.C_Str(), hwnd));
+
+		if (material.GetTexture(aiTextureType_SPECULAR, 0, &texFilename) == aiReturn_SUCCESS)
+		{
+			bindablePtrs.push_back(std::make_unique<Texture>(d3d, base + texFilename.C_Str(), hwnd, 1));
+			hasSpecularMap = true;
+		}
+
+		bindablePtrs.push_back(std::make_unique<Sampler>(d3d->GetDevice()));
+
+	}
+
 	auto device = d3d->GetDevice();
 
 	bindablePtrs.push_back(std::make_unique<VertexBuffer>(device, vbuf));
@@ -280,16 +290,25 @@ std::unique_ptr<Mesh> Model::ParseMesh(D3DClass* d3d, const aiMesh& mesh, HWND h
 
 	auto vsByteCode = vertexShader->GetBytecode();
 
-	bindablePtrs.push_back(std::make_unique<PixelShader>(
-		ShaderType::PIXEL_SHADER,
-		device,
-		hwnd,
-		L"SHADERS/phong.ps",
-		"PhongPixelEntry"
-	));
+	if (hasSpecularMap)
+		bindablePtrs.push_back(std::make_unique<PixelShader>(
+			ShaderType::PIXEL_SHADER,
+			device,
+			hwnd,
+			L"SHADERS/phongSpecMap.ps",
+			"PhongPixelEntry"
+		));
+	else
+		bindablePtrs.push_back(std::make_unique<PixelShader>(
+			ShaderType::PIXEL_SHADER,
+			device,
+			hwnd,
+			L"SHADERS/phong.ps",
+			"PhongPixelEntry"
+		));
+
 
 	bindablePtrs.push_back(std::move(vertexShader));
-
 	bindablePtrs.push_back(std::make_unique<InputLayout>(device, vbuf.GetLayout().GetD3DLayout(), vsByteCode));
 
 	return std::make_unique<Mesh>(d3d, std::move(bindablePtrs));
