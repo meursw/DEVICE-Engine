@@ -7,11 +7,13 @@
 
 #include "GFX_bindable.h"
 
+// Every class that inherits from Drawable needs a number of bindables so it can be drawn.
+// These bindables are created as shared_ptr and are shared between each drawable/mesh.
+// "BindableCodex" is a class that stores all of the bindables that have been created
+// and enables sharing bindables between drawables.
+
 class Drawable
 {
-	template<class T>
-	friend class DrawableBase;
-
 public:
 	Drawable();
 	Drawable(const Drawable&) = delete;
@@ -25,7 +27,7 @@ protected:
 	template<class T>
 	T* QueryBindable()
 	{
-		for (auto& bind : binds)
+		for (auto& bind : m_binds)
 		{
 			if ( auto p = dynamic_cast<T*>(bind.get()) )
 				return p;
@@ -34,14 +36,10 @@ protected:
 		return nullptr;
 	}
 
-	void AddBind(std::unique_ptr<Bindable>);
-	void AddIndexBuffer(std::unique_ptr<class IndexBuffer>);
+	void AddBind(std::shared_ptr<Bindable>);
 
 private:
-	virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const = 0;
-
-private:
-	std::vector<std::unique_ptr<Bindable>> binds;
+	std::vector<std::shared_ptr<Bindable>> m_binds;
 	const class IndexBuffer* m_indexBuffer = nullptr;
 };
 

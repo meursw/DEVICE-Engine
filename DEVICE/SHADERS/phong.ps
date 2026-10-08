@@ -1,7 +1,7 @@
 Texture2D tex : register(t0);
 SamplerState sampleType : register(s0);
 
-cbuffer DirLightCbuf
+cbuffer DirLightCbuf : register(b0)
 {
     float3 lightDirection;
     float specularPower;
@@ -10,11 +10,10 @@ cbuffer DirLightCbuf
     float4 specularColor;
 };
 
-cbuffer PointLightCbuf
+cbuffer PointLightCbuf : register(b1)
 {
     float3 lightPosition;
     float4 pointDiffuseColor;
-    float4 pointAmbientColor;
     
     float diffuseIntensity;
     float attConst;
@@ -84,7 +83,7 @@ float4 CalculatePointLight(PixelInputType input, float4 diffuseTex)
         specular = CalculateSpecular(diffuseFactor, input.normal, lightDir, input.viewDirection.xyz);
     }
     
-    return saturate((pointAmbientColor + diffuse) * diffuseTex + specular);
+    return saturate(diffuse * diffuseTex + specular);
 }
 
 float4 PhongPixelEntry(PixelInputType input) : SV_TARGET

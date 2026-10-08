@@ -1,14 +1,15 @@
 #include "GFX_transformcbuf.h"
+#include "GFX_bindablecodex.h"
 
 using namespace DirectX;
 
 
-TransformCbuf::TransformCbuf(ID3D11Device* device, const Drawable& parent, UINT slot)
+TransformCbuf::TransformCbuf(D3DClass* d3d, const Drawable& parent, UINT slot)
 	: 
 	parent(parent)
 {
 	if (!m_transformBuffer)
-		m_transformBuffer = std::make_unique<VertexConstantBuffer<TransformsBuffer>>(device, slot);
+		m_transformBuffer = std::make_unique<VertexConstantBuffer<TransformsBuffer>>(d3d, slot);
 }
 
 void TransformCbuf::Bind(D3DClass* d3d)

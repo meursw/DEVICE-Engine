@@ -4,7 +4,7 @@
 #include <string>
 
 #include "GFX_texture.h"
-#include "SYS_d3d_exception.h"
+#include "GFX_bindablecodex.h"
 
 #include "WICTextureLoader11.h"
 
@@ -19,6 +19,7 @@ static std::wstring StringToWString(const std::string& str)
 
 Texture::Texture(D3DClass* d3d, const std::string& path, HWND hwnd, UINT slot)
 	:
+	m_path(path),
 	m_slot(slot)
 {
 	const auto wpath = StringToWString(path);
@@ -44,6 +45,22 @@ Texture::Texture(D3DClass* d3d, const std::string& path, HWND hwnd, UINT slot)
 		resource.ReleaseAndGetAddressOf(),
 		m_textureView.ReleaseAndGetAddressOf()
 	));
+}
+
+std::shared_ptr<Bindable> Texture::Resolve(D3DClass* d3d, const std::string& path, HWND hwnd, UINT slot)
+{
+	return BindableCodex::Resolve<Texture>(d3d, path, hwnd, slot);
+}
+
+std::string Texture::GenerateUID(const std::string& path, HWND hwnd, UINT slot)
+{
+	using namespace std::string_literals;
+	return typeid(Texture).name() + "#"s + path + std::to_string(slot);
+}
+
+std::string Texture::GetUID() const
+{
+	return GenerateUID(m_path, nullptr, m_slot);
 }
 
 void Texture::Bind(D3DClass* d3d)

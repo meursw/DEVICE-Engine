@@ -1,7 +1,7 @@
 #pragma once
-#include "GFX_drawablebase.h"
+#include "GFX_drawable.h"
 
-class Sphere : public DrawableBase<Sphere>
+class Sphere : public Drawable
 {
 private:
 	struct PSColorBuf

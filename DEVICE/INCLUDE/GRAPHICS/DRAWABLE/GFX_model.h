@@ -1,5 +1,4 @@
 #pragma once
-#include "GFX_drawablebase.h"
 #include "GFX_BindableInc.h"
 #include "GFX_vertex.h"
 
@@ -28,10 +27,10 @@ private:
 
 // A single mesh of a scene. It inherits from the Drawable class so that
 // it can call its methods for drawing.
-class Mesh : public DrawableBase<Mesh>
+class Mesh : public Drawable
 {
 public:
-	Mesh(D3DClass*, std::vector<std::unique_ptr<Bindable>>);
+	Mesh(D3DClass*, std::vector<std::shared_ptr<Bindable>>);
 	void Draw(D3DClass*, DirectX::FXMMATRIX) const;
 	DirectX::XMMATRIX GetTransformXM() const override;
 	

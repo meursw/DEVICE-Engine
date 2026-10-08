@@ -31,7 +31,6 @@
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_sampler.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_texture.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_transformcbuf.cpp" />
-    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_box.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_baseshaderclass.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_indexbuffer.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_inputlayout.cpp" />
@@ -65,12 +64,12 @@
     <ClInclude Include="EXTERNAL\IMGUI\imstb_textedit.h" />
     <ClInclude Include="EXTERNAL\IMGUI\imstb_truetype.h" />
     <ClInclude Include="EXTERNAL\WICTextureLoader11.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_bindablecodex.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_topology.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_sampler.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_texture.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_transformcbuf.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_BindableInc.h" />
-    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_box.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_baseshaderclass.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_bindable.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_constantbuffer.h" />
@@ -80,7 +79,6 @@
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexbuffer.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawable.h" />
-    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawablebase.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_model.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_sphere.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h" />

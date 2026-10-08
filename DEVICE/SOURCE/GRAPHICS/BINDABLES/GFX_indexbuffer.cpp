@@ -1,13 +1,20 @@
 #include "GFX_indexbuffer.h"
+#include "GFX_bindablecodex.h"
 #include <vector>
 
-IndexBuffer::IndexBuffer(ID3D11Device* device, const std::vector<unsigned short>& indices)
+IndexBuffer::IndexBuffer(D3DClass* d3d, const std::vector<unsigned short>& indices)
+	:
+	IndexBuffer(d3d, "?", indices)
+{}
+
+IndexBuffer::IndexBuffer(D3DClass* d3d, std::string tag, const std::vector<unsigned short>& indices)
+	:
+	m_tag(tag),
+	m_indexCount((UINT)indices.size())
 {
 	HRESULT hr;
 
 	D3D11_BUFFER_DESC indexBufferDesc{};
-
-	m_indexCount = indices.size();
 
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = sizeof(unsigned short) * m_indexCount;
@@ -21,7 +28,7 @@ IndexBuffer::IndexBuffer(ID3D11Device* device, const std::vector<unsigned short>
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
-	D3D_THROW(device->CreateBuffer(
+	D3D_THROW(d3d->GetDevice()->CreateBuffer(
 		&indexBufferDesc, &indexData, m_indexBuffer.GetAddressOf()
 	));
 }
@@ -34,4 +41,22 @@ void IndexBuffer::Bind(D3DClass* d3d)
 UINT IndexBuffer::GetIndexCount() const
 {
 	return m_indexCount;
+}
+
+std::shared_ptr<IndexBuffer> IndexBuffer::Resolve(D3DClass* d3d, const std::string& tag,
+	const std::vector<unsigned short>& indices)
+{
+	assert(tag != "?");
+	return BindableCodex::Resolve<IndexBuffer>(d3d, tag, indices);
+}
+
+std::string IndexBuffer::GenerateUID_(const std::string& tag)
+{
+	using namespace std::string_literals;
+	return typeid(IndexBuffer).name() + "#"s + tag;
+}
+
+std::string IndexBuffer::GetUID() const
+{
+	return GenerateUID_(m_tag);
 }

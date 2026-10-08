@@ -3,7 +3,7 @@
 
 PointLight::PointLight(D3DClass* d3d, float radius)
 	:
-	m_pointLightCbuf(d3d->GetDevice(), 1u),
+	m_pointLightCbuf(d3d, 1u),
 	m_mesh(d3d, NULL, radius)
 {
 	Reset();
@@ -34,7 +34,6 @@ void PointLight::SpawnControlWindow()
 
 		ImGui::Text("Color/Intensity");
 		ImGui::ColorEdit4("Diffuse Color", &cbData.pointDiffuseColor.x);
-		ImGui::ColorEdit4("Ambient Color", &cbData.ambientColor.x);
 		ImGui::SliderFloat("Intensity", &cbData.diffuseIntensity, 0.0f, 3.0f, "%.1f");
 
 		ImGui::Text("Attenuation");
@@ -52,11 +51,11 @@ void PointLight::Reset()
 {
 	cbData = {
 		{7.0f,14.0f,-2.0f},
+		0.0f,
 		{1.0f,1.0f,1.0f,1.0f},
-		{0.05f, 0.05f, 0.05f, 1.0f},
 		1.0f,
 		1.0f,
-		0.1f,
-		0.075f
+		0.001f,
+		0.00075f
 	};
 }

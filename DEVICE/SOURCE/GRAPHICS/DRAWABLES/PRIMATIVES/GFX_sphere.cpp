@@ -9,15 +9,6 @@
 
 Sphere::Sphere(D3DClass* d3d, HWND hwnd, float radius)
 {
-	auto device = d3d->GetDevice();
-
-	if (IsStaticInitialized())
-	{
-		SetIndexFromStatic();
-		AddBind(std::make_unique<TransformCbuf>(device, *this));
-		return;
-	}
-
 	Assimp::Importer imp;
 	const auto pModel = imp.ReadFile("../DEVICE/ASSETS/MODELS/sphere.obj",
 		aiProcess_Triangulate |
@@ -50,37 +41,39 @@ Sphere::Sphere(D3DClass* d3d, HWND hwnd, float radius)
 		indices.push_back(face.mIndices[2]);
 	}
 
-	auto vertexShader = std::make_unique<VertexShader>(
+	// ADD BINDS
+	AddBind(std::make_shared<TransformCbuf>(d3d, *this));
+
+	auto vertexShader = VertexShader::Resolve(
+		d3d,
 		ShaderType::VERTEX_SHADER,
-		device,
 		hwnd,
-		L"SHADERS/flat.vs",
+		"SHADERS/flat.vs",
 		"FlatVertexEntry"
 	);
 
 	auto vsByteCode = vertexShader->GetBytecode();
+	AddBind(std::move(vertexShader));
 
-	// ADD BINDS
-
-	AddStaticBind(std::make_unique<VertexBuffer>(device, vbuf));
-	AddStaticIndexBuffer(std::make_unique<IndexBuffer>(device, indices));
-	AddStaticBind(std::make_unique<Topology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-	
-	AddStaticBind(std::make_unique<PixelShader>(
+	AddBind(PixelShader::Resolve(
+		d3d,
 		ShaderType::PIXEL_SHADER,
-		device,
 		hwnd,
-		L"SHADERS/flat.ps",
+		"SHADERS/flat.ps",
 		"FlatPixelEntry")
 	);
 
-	AddStaticBind(std::move(vertexShader));
+	const auto meshTag = "SPHERE";
 
-	AddStaticBind(std::make_unique<InputLayout>(device, vbuf.GetLayout().GetD3DLayout(), vsByteCode));
+	AddBind(VertexBuffer::Resolve(d3d, meshTag, vbuf));
+	AddBind(IndexBuffer::Resolve(d3d, meshTag, indices));
+	AddBind(Topology::Resolve(d3d, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-	AddBind(std::make_unique<TransformCbuf>(device, *this));
+	AddBind(InputLayout::Resolve(d3d, vbuf.GetLayout(), vsByteCode));
 
-	AddBind(std::make_unique<PixelConstantBuffer<PSColorBuf>>(device, 0));
+	AddBind(PixelConstantBuffer<PSColorBuf>::Resolve(d3d, 0));
+
+	AddBind(std::make_shared<TransformCbuf>(d3d, *this));
 }
 
 void Sphere::Update(D3DClass* d3d, DirectX::XMFLOAT4 color)

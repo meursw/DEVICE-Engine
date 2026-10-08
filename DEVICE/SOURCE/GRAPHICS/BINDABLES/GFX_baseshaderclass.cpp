@@ -5,9 +5,11 @@ using namespace Microsoft::WRL;
 BaseShaderClass::BaseShaderClass(
 	ShaderType shaderType,
 	HWND hwnd,
-	const wchar_t* shaderFilename,
-	const char* shaderEntryPoint
+	const std::string& shaderFilename,
+	const std::string& shaderEntryPoint
 )
+	:
+	m_path(shaderFilename)
 {
 	switch (shaderType)
 	{
@@ -28,16 +30,16 @@ BaseShaderClass::BaseShaderClass(
 	CompileShader(hwnd, shaderFilename, shaderEntryPoint);
 }
 
-void BaseShaderClass::CompileShader(HWND hwnd, const wchar_t* shaderFilename,const char* shaderEntryPoint)
+void BaseShaderClass::CompileShader(HWND hwnd, const std::string& shaderFilename, const std::string& shaderEntryPoint)
 {
 	HRESULT hr;
 	ComPtr<ID3D10Blob> errorMessage;
 
 	hr = D3DCompileFromFile
 	(
-		shaderFilename,
+		std::wstring{ shaderFilename.begin(), shaderFilename.end() }.c_str(),
 		NULL, NULL,
-		shaderEntryPoint,
+		shaderEntryPoint.c_str(),
 		m_shaderTarget,
 		D3D10_SHADER_ENABLE_STRICTNESS,
 		0,
@@ -49,14 +51,14 @@ void BaseShaderClass::CompileShader(HWND hwnd, const wchar_t* shaderFilename,con
 		if (errorMessage)
 			OutputShaderErrorMessage(errorMessage.Get(), hwnd, shaderFilename);
 		else
-			MessageBox(hwnd, shaderFilename, L"Missing Shader File", MB_OK);
+			MessageBoxA(hwnd, shaderFilename.c_str(), "Missing Shader File", MB_OK);
 
 		D3D_THROW(hr);
 	}
 }
 
 
-void BaseShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const wchar_t* shaderFilename)
+void BaseShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, const std::string& shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize;
@@ -72,5 +74,5 @@ void BaseShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hw
 	
 	fout.close();
 
-	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
+	MessageBoxA(hwnd, "Error compiling shader.  Check shader-error.txt for message.", shaderFilename.c_str(), MB_OK);
 }

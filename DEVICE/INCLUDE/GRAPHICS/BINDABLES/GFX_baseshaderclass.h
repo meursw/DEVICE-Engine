@@ -23,11 +23,11 @@ public:
 	virtual void Bind(D3DClass*) = 0;
 
 public:
-	BaseShaderClass(ShaderType, HWND, const wchar_t*, const char*);
+	BaseShaderClass(ShaderType, HWND, const std::string&, const std::string&);
 	virtual ~BaseShaderClass() = default;
 
-	void CompileShader(HWND, const wchar_t*, const char*);
-	void OutputShaderErrorMessage(ID3D10Blob*, HWND, const wchar_t*);
+	void CompileShader(HWND, const std::string&, const std::string&);
+	void OutputShaderErrorMessage(ID3D10Blob*, HWND, const std::string&);
 
 protected:
 	virtual void CreateShader(ID3D11Device*) = 0;
@@ -35,5 +35,6 @@ protected:
 protected:
 	Microsoft::WRL::ComPtr<ID3D10Blob> m_shaderBuffer;
 	const char* m_shaderTarget = nullptr;
+	std::string m_path;
 };
 

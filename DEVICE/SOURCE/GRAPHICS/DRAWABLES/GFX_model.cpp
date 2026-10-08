@@ -11,30 +11,18 @@ using namespace DirectX;
 // This means that some place else provides these bindables,
 // and that this method doesn't haved a fixed set of bindables. 
 // With this dependency injection, we are making the method more dynamic.
-Mesh::Mesh(D3DClass* d3d, std::vector<std::unique_ptr<Bindable>> bindPtrs)
+Mesh::Mesh(D3DClass* d3d, std::vector<std::shared_ptr<Bindable>> bindPtrs)
 {
-	// Add a static Bind for all meshes.
-	if (!IsStaticInitialized())
-	{
-		AddStaticBind(std::make_unique<Topology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-	}
+	AddBind(Topology::Resolve(d3d,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	// Per mesh Binds.
 	for (auto& pb : bindPtrs)
 	{
-		if (auto pi = dynamic_cast<IndexBuffer*>(pb.get()))
-		{
-			AddIndexBuffer(std::unique_ptr<IndexBuffer>{pi});
-			pb.release();
-		}
-		else
-		{
-			AddBind(std::move(pb));
-		}
+		AddBind(std::move(pb));
 	}
 
 	// Transform bind.
-	AddBind(std::make_unique<TransformCbuf>(d3d->GetDevice(), *this));
+	AddBind(std::make_shared<TransformCbuf>(d3d, *this));
 }
 
 void Mesh::Draw(D3DClass* d3d, FXMMATRIX accumulatedTransform) const
@@ -152,9 +140,9 @@ public:
 				ImGui::SliderAngle("Pitch", &transform.pitch, -180.0f, 180.0f);
 				ImGui::SliderAngle("Yaw", &transform.yaw, -180.0f, 180.0f);
 				ImGui::Text("Position");
-				ImGui::SliderFloat("X", &transform.x, -2.0f, 2.0f);
-				ImGui::SliderFloat("Y", &transform.y, -2.0f, 2.0f);
-				ImGui::SliderFloat("Z", &transform.z, -2.0f, 2.0f);
+				ImGui::SliderFloat("X", &transform.x, -20.0f, 20.0f);
+				ImGui::SliderFloat("Y", &transform.y, -20.0f, 20.0f);
+				ImGui::SliderFloat("Z", &transform.z, -20.0f, 20.0f);
 			}
 		}
 		ImGui::End();
@@ -249,67 +237,69 @@ std::unique_ptr<Mesh> Model::ParseMesh(D3DClass* d3d, const aiMesh& mesh, HWND h
 		indices.push_back(face.mIndices[2]);
 	}
 
-	std::vector<std::unique_ptr<Bindable>> bindablePtrs;
+	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
 
+	using namespace std::string_literals;
+	
 	bool hasSpecularMap = false;
 	// Check if the mesh has a material
 	if (mesh.mMaterialIndex >= 0)
 	{
-		using namespace std::string_literals;
 		// pMaterial is an array of materials inside the assimp scene.
 		auto& material = *pMaterials[mesh.mMaterialIndex];
 		
 		const auto base = "../DEVICE/ASSETS/TEXTURES/NANOSUIT/"s;
 
 		aiString texFilename;
+
 		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFilename);
-		bindablePtrs.push_back(std::make_unique<Texture>(d3d, base + texFilename.C_Str(), hwnd));
+		bindablePtrs.push_back(Texture::Resolve(d3d, base + texFilename.C_Str(), hwnd));
 
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &texFilename) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(std::make_unique<Texture>(d3d, base + texFilename.C_Str(), hwnd, 1));
+			bindablePtrs.push_back(Texture::Resolve(d3d, base + texFilename.C_Str(), hwnd, 1));
 			hasSpecularMap = true;
 		}
 
-		bindablePtrs.push_back(std::make_unique<Sampler>(d3d->GetDevice()));
+		bindablePtrs.push_back(Sampler::Resolve(d3d));
 
 	}
 
-	auto device = d3d->GetDevice();
+	const auto meshBase = "../DEVICE/ASSETS/MODELS";
+	auto meshTag = meshBase + "%"s + mesh.mName.C_Str();
 
-	bindablePtrs.push_back(std::make_unique<VertexBuffer>(device, vbuf));
-	bindablePtrs.push_back(std::make_unique<IndexBuffer>(device, indices));
+	bindablePtrs.push_back(VertexBuffer::Resolve(d3d, meshTag, vbuf));
+	bindablePtrs.push_back(IndexBuffer::Resolve(d3d, meshTag, indices));
 
-	auto vertexShader = std::make_unique<VertexShader>(
+	auto vertexShader = VertexShader::Resolve(
+		d3d,
 		ShaderType::VERTEX_SHADER,
-		device,
 		hwnd,
-		L"SHADERS/phong.vs",
+		"SHADERS/phong.vs",
 		"PhongVertexEntry"
 	);
 
 	auto vsByteCode = vertexShader->GetBytecode();
+	bindablePtrs.push_back(std::move(vertexShader));
+
+	bindablePtrs.push_back(InputLayout::Resolve(d3d, vbuf.GetLayout(), vsByteCode));
 
 	if (hasSpecularMap)
-		bindablePtrs.push_back(std::make_unique<PixelShader>(
-			ShaderType::PIXEL_SHADER,
-			device,
-			hwnd,
-			L"SHADERS/phongSpecMap.ps",
+	{
+		bindablePtrs.push_back(PixelShader::Resolve(
+			d3d,ShaderType::PIXEL_SHADER,hwnd,
+			"SHADERS/phongSpecMap.ps",
 			"PhongPixelEntry"
 		));
+	}
 	else
-		bindablePtrs.push_back(std::make_unique<PixelShader>(
-			ShaderType::PIXEL_SHADER,
-			device,
-			hwnd,
-			L"SHADERS/phong.ps",
+	{
+		bindablePtrs.push_back(PixelShader::Resolve(
+			d3d, ShaderType::PIXEL_SHADER, hwnd,
+			"SHADERS/phong.ps",
 			"PhongPixelEntry"
 		));
-
-
-	bindablePtrs.push_back(std::move(vertexShader));
-	bindablePtrs.push_back(std::make_unique<InputLayout>(device, vbuf.GetLayout().GetD3DLayout(), vsByteCode));
+	}
 
 	return std::make_unique<Mesh>(d3d, std::move(bindablePtrs));
 

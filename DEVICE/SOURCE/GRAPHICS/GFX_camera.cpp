@@ -102,7 +102,7 @@ void Camera::UpdatePosition(InputClass* Input, float delta)
 void Camera::UpdateFov(InputClass* Input, float delta)
 {
 	int scrollWhellPos = Input->GetScrollWheelLocation();
-	float offset = m_prevScrollPos - scrollWhellPos;
+	int offset = m_prevScrollPos - scrollWhellPos;
 
 	m_prevScrollPos = scrollWhellPos;
 

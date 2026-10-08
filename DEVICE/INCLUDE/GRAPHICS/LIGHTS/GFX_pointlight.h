@@ -9,9 +9,9 @@ class PointLight
 private:
 	struct PointLightCbuf
 	{
-		alignas(16) DirectX::XMFLOAT3 lightPos;
-		alignas(16) DirectX::XMFLOAT4 pointDiffuseColor;
-		alignas(16) DirectX::XMFLOAT4 ambientColor;
+		DirectX::XMFLOAT3 lightPos;
+		float padding;
+		DirectX::XMFLOAT4 pointDiffuseColor;
 
 		float diffuseIntensity;
 		float attConst;

@@ -13,6 +13,7 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	m_pointlight(m_Direct3D.get()),
 	m_dirLight(m_Direct3D.get()),
 	m_nano(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nanosuit.obj", hwnd),
+	m_nano2(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nanosuit.obj", hwnd),
 	m_simulationSpeed(1.0f)
 {
 	// Create the camera.
@@ -43,6 +44,7 @@ void ApplicationClass::Render(float delta)
 	m_dirLight.Bind(d3d, m_Camera.get());
 
 	m_nano.Draw(d3d);
+	m_nano2.Draw(d3d);
 
 	m_pointlight.Draw(d3d);
 	
@@ -50,6 +52,7 @@ void ApplicationClass::Render(float delta)
 	m_pointlight.SpawnControlWindow();
 	m_dirLight.SpawnControlWindow();
 	m_nano.ShowWindow("Model");
+	m_nano2.ShowWindow("Model2");
 	SpawnControlWindow();
 
 	// Present.

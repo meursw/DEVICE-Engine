@@ -11,70 +11,32 @@ public:
 	void Bind(D3DClass*) override;
 
 public:
-	template<class V>
-	VertexBuffer(ID3D11Device* device, const std::vector<V>& vertices)
-		:
-		m_stride(sizeof(V))
-	{
-		HRESULT hr;
-
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-		
-		m_vertexCount = vertices.size();
-		
-		// Fill vertex buffer desc.
-		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.ByteWidth = sizeof(V) * m_vertexCount;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDesc.CPUAccessFlags = 0;
-		vertexBufferDesc.MiscFlags = 0;
-		vertexBufferDesc.StructureByteStride = sizeof(V);
-
-		D3D11_SUBRESOURCE_DATA vertexData{};
-		// Fill vertex data.
-		vertexData.pSysMem = vertices.data();
-		vertexData.SysMemPitch = 0;
-		vertexData.SysMemSlicePitch = 0;
-
-		// Create vertex buffer.
-		D3D_THROW(device->CreateBuffer(
-			&vertexBufferDesc, &vertexData, m_vertexBuffer.GetAddressOf()
-		));
-	}
-
-	VertexBuffer(ID3D11Device* device, const DEVICE_VERTEX::VertexBuffer& vbuf)
-		:
-		m_stride((UINT)vbuf.GetLayout().Size())
-	{
-		HRESULT hr;
-
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-
-		m_vertexCount = UINT(vbuf.Size());
-
-		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.ByteWidth = UINT(vbuf.SizeBytes());
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDesc.CPUAccessFlags = 0;
-		vertexBufferDesc.MiscFlags = 0;
-		vertexBufferDesc.StructureByteStride = m_stride;
-
-		D3D11_SUBRESOURCE_DATA vertexData{};
-		vertexData.pSysMem = vbuf.GetData();
-
-		D3D_THROW(device->CreateBuffer(
-			&vertexBufferDesc, &vertexData, m_vertexBuffer.GetAddressOf()
-		));
-	}
-
+	VertexBuffer(D3DClass* d3d, const DEVICE_VERTEX::VertexBuffer& vbuf);
+	VertexBuffer(D3DClass* d3d, const std::string& tag, const DEVICE_VERTEX::VertexBuffer& vbuf);
 	~VertexBuffer() = default;
 
 	int GetVertexCount() const;
+
+public:
+	static std::shared_ptr<VertexBuffer> Resolve(D3DClass* d3d, const std::string& tag,
+		const DEVICE_VERTEX::VertexBuffer& vbuf);
+	
+	template<typename ...Ignore>
+	static std::string GenerateUID(const std::string& tag, Ignore&&...ignore)
+	{
+		return GenerateUID_(tag);
+	}
+
+	std::string GetUID() const;
+
+private:
+	static std::string GenerateUID_(const std::string& tag);
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
 
 	UINT m_vertexCount;
 	UINT m_stride;
+	std::string m_tag;
 };
 

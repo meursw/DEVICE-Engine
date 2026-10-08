@@ -1,12 +1,13 @@
 #pragma once
-#include "GFX_bindable.h"
 #include <directxmath.h>
+#include "GFX_bindable.h"
+#include "GFX_bindablecodex.h"
 
 template<typename C>
 class ConstantBuffer : public Bindable
 {
 public:
-	ConstantBuffer(ID3D11Device* device, UINT slot) : m_slot(slot)
+	ConstantBuffer(D3DClass* d3d, UINT slot) : m_slot(slot)
 	{
 		HRESULT hr;
 
@@ -19,12 +20,12 @@ public:
 		cBufferDesc.MiscFlags = 0;
 		cBufferDesc.StructureByteStride = 0;
 
-		D3D_THROW(device->CreateBuffer(
+		D3D_THROW(d3d->GetDevice()->CreateBuffer(
 			&cBufferDesc, NULL, m_constantBuffer.GetAddressOf()
 		));
 	}
 
-	ConstantBuffer(ID3D11Device* device, const C& consts, UINT slot) : m_slot(slot)
+	ConstantBuffer(D3DClass* d3d, const C& consts, UINT slot) : m_slot(slot)
 	{
 		HRESULT hr;
 
@@ -40,7 +41,7 @@ public:
 		D3D11_SUBRESOURCE_DATA cBufferData{};
 		cBufferData.pSysMem = &consts;
 		
-		D3D_THROW(device->CreateBuffer(
+		D3D_THROW(d3d->GetDevice()->CreateBuffer(
 			&cBufferDesc, &cBufferData, m_constantBuffer.GetAddressOf()
 		));
 	}
@@ -79,6 +80,33 @@ public:
 	{
 		d3d->GetDeviceContext()->VSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 	}
+
+	static std::shared_ptr<VertexConstantBuffer> Resolve(D3DClass* d3d, const C& consts, UINT slot = 0)
+	{
+		return BindableCodex::Resolve<VertexConstantBuffer>(d3d, consts, slot);
+	}
+
+	static std::shared_ptr<VertexConstantBuffer> Resolve(D3DClass* d3d, UINT slot = 0)
+	{
+		return BindableCodex::Resolve<VertexConstantBuffer>(d3d, slot);
+	}
+
+	static std::string GenerateUID(const C&, UINT slot)
+	{
+		return GenerateUID(slot);
+	}
+
+	static std::string GenerateUID(UINT slot = 0)
+	{
+		using namespace std::string_literals;
+		return typeid(VertexConstantBuffer).name() + "#"s + std::to_string(slot);
+	}
+
+	std::string GetUID() const noexcept override
+	{
+		return GenerateUID(m_slot);
+	}
+
 };
 
 template<typename C>
@@ -93,5 +121,31 @@ public:
 	void Bind(D3DClass* d3d) override
 	{
 		d3d->GetDeviceContext()->PSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+	}
+
+	static std::shared_ptr<PixelConstantBuffer> Resolve(D3DClass* d3d, const C& consts, UINT slot = 0)
+	{
+		return BindableCodex::Resolve<PixelConstantBuffer>(d3d, consts, slot);
+	}
+
+	static std::shared_ptr<PixelConstantBuffer> Resolve(D3DClass* d3d, UINT slot = 0)
+	{
+		return BindableCodex::Resolve<PixelConstantBuffer>(d3d, slot);
+	}
+
+	static std::string GenerateUID(const C&, UINT slot)
+	{
+		return GenerateUID(slot);
+	}
+
+	static std::string GenerateUID(UINT slot = 0)
+	{
+		using namespace std::string_literals;
+		return typeid(PixelConstantBuffer).name() + "#"s + std::to_string(slot);
+	}
+
+	std::string GetUID() const noexcept override
+	{
+		return GenerateUID(m_slot);
 	}
 };

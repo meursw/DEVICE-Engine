@@ -1,4 +1,5 @@
 #pragma once
+
 #include "GFX_constantbuffer.h"
 #include "GFX_drawable.h"
 #include <DirectXMath.h>
@@ -17,7 +18,7 @@ public:
 	void Bind(D3DClass*) override;
 
 public:
-	TransformCbuf(ID3D11Device*, const Drawable& parent, UINT slot = 0);
+	TransformCbuf(D3DClass*, const Drawable& parent, UINT slot = 0);
 
 private:
 	static std::unique_ptr<VertexConstantBuffer<TransformsBuffer>> m_transformBuffer;

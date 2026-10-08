@@ -8,26 +8,19 @@ Drawable::Drawable() : m_indexBuffer(nullptr) {}
 
 void Drawable::Draw(D3DClass* d3d) const
 {
-	for (auto& b : binds)
+	for (auto& b : m_binds)
 		b->Bind(d3d);
-
-	for (auto& b : GetStaticBinds())
-	{
-		b->Bind(d3d);
-	}
 
 	d3d->GetDeviceContext()->DrawIndexed(m_indexBuffer->GetIndexCount(), 0u, 0u);
 }
 
-void Drawable::AddBind(std::unique_ptr<Bindable> bind)
-{
-	assert("*MUST* use AddIndexBuffer to bind index buffer" && typeid(*bind) != typeid(IndexBuffer));
-	binds.push_back(std::move(bind));
-}
-
-void Drawable::AddIndexBuffer(std::unique_ptr<IndexBuffer> ibuf)
-{
-	assert("Attempting to add index buffer a second time" && m_indexBuffer == nullptr);
-	m_indexBuffer = ibuf.get();
-	binds.push_back(std::move(ibuf));
+void Drawable::AddBind(std::shared_ptr<Bindable> bind)
+{	 
+	// Take a pointer to the index buffer.
+	if (typeid(*bind) == typeid(IndexBuffer))
+	{
+		assert("Binding multiple index buffers is not allowed" && m_indexBuffer == nullptr);
+		m_indexBuffer = &static_cast<IndexBuffer&>(*bind);
+	}
+	m_binds.push_back(std::move(bind));
 }

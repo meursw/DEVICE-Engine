@@ -34,6 +34,7 @@ private:
 private:
 	std::unique_ptr<D3DClass> m_Direct3D;
 	Model m_nano;
+	Model m_nano2;
 	
 	std::unique_ptr<Camera> m_Camera;
 	PointLight m_pointlight;
