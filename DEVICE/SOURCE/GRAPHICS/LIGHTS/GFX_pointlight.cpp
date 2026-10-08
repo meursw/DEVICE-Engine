@@ -28,9 +28,9 @@ void PointLight::SpawnControlWindow()
 	if (ImGui::Begin("Point Light"))
 	{
 		ImGui::Text("Position");
-		ImGui::SliderFloat("X", &cbData.lightPos.x, -50.0f, 50.0f, "%.1f");
-		ImGui::SliderFloat("Y", &cbData.lightPos.y, -50.0f, 50.0f, "%.1f");
-		ImGui::SliderFloat("Z", &cbData.lightPos.z, -50.0f, 50.0f, "%.1f");
+		ImGui::SliderFloat("X", &cbData.lightPos.x, -5.0f, 5.0f, "%.1f");
+		ImGui::SliderFloat("Y", &cbData.lightPos.y, -5.0f, 5.0f, "%.1f");
+		ImGui::SliderFloat("Z", &cbData.lightPos.z, -5.0f, 5.0f, "%.1f");
 
 		ImGui::Text("Color/Intensity");
 		ImGui::ColorEdit4("Diffuse Color", &cbData.pointDiffuseColor.x);
@@ -50,7 +50,7 @@ void PointLight::SpawnControlWindow()
 void PointLight::Reset()
 {
 	cbData = {
-		{7.0f,14.0f,-2.0f},
+		{1.0f,1.0f,-2.0f},
 		0.0f,
 		{1.0f,1.0f,1.0f,1.0f},
 		1.0f,

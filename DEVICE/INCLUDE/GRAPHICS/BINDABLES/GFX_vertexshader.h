@@ -18,7 +18,7 @@ private:
 
 public:
 	static std::shared_ptr<VertexShader> Resolve(
-		D3DClass* d3d, ShaderType, HWND, const std::string&, const std::string&
+		D3DClass* d3d, ShaderType, HWND hwnd, const std::string&, const std::string&
 	);
 
 	static std::string GenerateUID(ShaderType type, HWND hwnd, const std::string& path, const std::string& entry)

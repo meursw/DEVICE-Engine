@@ -7,6 +7,7 @@
 #include "GFX_d3dclass.h"
 #include "GFX_camera.h"
 #include "GFX_model.h"
+#include "GFX_plane.h"
 #include "GFX_pointlight.h"
 #include "GFX_directional_light.h"
 
@@ -33,10 +34,11 @@ private:
 	void SpawnControlWindow();
 private:
 	std::unique_ptr<D3DClass> m_Direct3D;
-	Model m_nano;
-	Model m_nano2;
-	
 	std::unique_ptr<Camera> m_Camera;
+	
+	Model m_nano;
+	Plane m_plane;
+	
 	PointLight m_pointlight;
 	DirectionalLight m_dirLight;
 

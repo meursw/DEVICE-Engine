@@ -8,17 +8,12 @@ Camera::Camera(int screenWidth, int screenHeight, float screenDepth, float scree
 	:
 	m_screenWidth(screenWidth), m_screenHeight(screenHeight),
 	m_screenDepth(screenDepth), m_screenNear(screenNear),
-	m_position({ 0.0f,0.0f,0.0f }),
-	m_rotation({}),
 	m_prevMousePos(XMINT2{}),
 	m_prevScrollPos(0),
 	m_viewMatrix(XMMATRIX{})
 {
 	CreateProjectionAndOrthoMatrix();
-
-	m_mouseSens = 0.2f;
-	m_movementSpeed = 20.0f;
-	m_fov = 90.0f;
+	Reset();
 }
 
 void Camera::Update(InputClass* Input, float delta, bool cursorEnabled)
@@ -199,10 +194,10 @@ void Camera::SpawnControlWindow()
 
 void Camera::Reset()
 {
-	m_position = { 0.0f,0.0f,-10.0f };
+	m_position = { 0.0f,0.0f,-3.0f };
 	m_rotation = { 0.0f, 0.0f, 0.0f };
-	m_mouseSens = 200.0f;
-	m_movementSpeed = 20.0f;
+	m_mouseSens = 0.2f;
+	m_movementSpeed = 3.0f;
 	m_fov = 60.0f;
 }
 

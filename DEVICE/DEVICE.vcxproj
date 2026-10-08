@@ -39,6 +39,7 @@
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexshader.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_drawable.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_model.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\PRIMATIVES\GFX_plane.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\PRIMATIVES\GFX_sphere.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_applicationclass.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_camera.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawable.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_model.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_plane.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_sphere.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_camera.h" />

@@ -10,16 +10,15 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	:
 	// Initialize the direct 3D object.
 	m_Direct3D(std::make_unique<D3DClass>(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR)),
+	m_nano(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nanosuit.obj", hwnd),
+	m_plane(m_Direct3D.get(), 4.0, 4.0f, 1.0f),
 	m_pointlight(m_Direct3D.get()),
 	m_dirLight(m_Direct3D.get()),
-	m_nano(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nanosuit.obj", hwnd),
-	m_nano2(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nanosuit.obj", hwnd),
 	m_simulationSpeed(1.0f)
 {
 	// Create the camera.
 	m_Camera = std::make_unique<Camera>(screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR);
-	m_Camera->SetPosition({ 0.0, 0.0, 12.0f });
-	m_Camera->SetRotation({ 0.0f, 0.0f, 0.0f });
+	m_Camera->SetRotation({ 0.0f,90.0f,0.0f });
 	m_Camera->UpdateViewMatrix();
 
 	m_Direct3D->SetCamera(m_Camera.get());
@@ -40,19 +39,18 @@ void ApplicationClass::Render(float delta)
 
 	auto d3d = m_Direct3D.get();
 
-	m_pointlight.Bind(d3d);
 	m_dirLight.Bind(d3d, m_Camera.get());
+	m_pointlight.Bind(d3d);
 
+	m_plane.Draw(d3d);
 	m_nano.Draw(d3d);
-	m_nano2.Draw(d3d);
-
 	m_pointlight.Draw(d3d);
 	
 	m_Camera->SpawnControlWindow();
-	m_pointlight.SpawnControlWindow();
 	m_dirLight.SpawnControlWindow();
+	m_pointlight.SpawnControlWindow();
 	m_nano.ShowWindow("Model");
-	m_nano2.ShowWindow("Model2");
+	m_plane.SpawnControlWindow(d3d);
 	SpawnControlWindow();
 
 	// Present.

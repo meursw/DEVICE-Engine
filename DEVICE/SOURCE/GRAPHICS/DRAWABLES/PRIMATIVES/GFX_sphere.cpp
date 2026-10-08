@@ -19,6 +19,8 @@ Sphere::Sphere(D3DClass* d3d, HWND hwnd, float radius)
 	DEVICE_VERTEX::VertexBuffer vbuf(std::move(
 		VertexLayout{}
 		.Append(VertexLayout::Position3D)
+		.Append(VertexLayout::Texture2D)
+		.Append(VertexLayout::Normal)
 	));
 
 	const auto pMesh = pModel->mMeshes[0];
@@ -26,7 +28,9 @@ Sphere::Sphere(D3DClass* d3d, HWND hwnd, float radius)
 	for (UINT i = 0; i < pMesh->mNumVertices; i++)
 	{
 		vbuf.EmplaceBack(
-			XMFLOAT3{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z }
+			XMFLOAT3{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z },
+			XMFLOAT2{ 0.0f,0.0f },
+			XMFLOAT3{0.0f,0.0,0.0f}
 		);
 	}
 

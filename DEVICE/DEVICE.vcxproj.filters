@@ -138,6 +138,9 @@
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_drawable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\PRIMATIVES\GFX_plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="INCLUDE\SYSTEM\SYS_d3d_exception.h">
@@ -258,6 +261,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_bindablecodex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

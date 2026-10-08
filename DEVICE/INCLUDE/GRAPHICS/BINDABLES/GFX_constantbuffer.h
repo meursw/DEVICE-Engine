@@ -7,7 +7,7 @@ template<typename C>
 class ConstantBuffer : public Bindable
 {
 public:
-	ConstantBuffer(D3DClass* d3d, UINT slot) : m_slot(slot)
+	ConstantBuffer(D3DClass* d3d, UINT slot = 0u) : m_slot(slot)
 	{
 		HRESULT hr;
 
@@ -25,7 +25,7 @@ public:
 		));
 	}
 
-	ConstantBuffer(D3DClass* d3d, const C& consts, UINT slot) : m_slot(slot)
+	ConstantBuffer(D3DClass* d3d, const C& consts, UINT slot = 0u) : m_slot(slot)
 	{
 		HRESULT hr;
 

@@ -13,6 +13,7 @@ cbuffer DirLightCbuf : register(b0)
 cbuffer PointLightCbuf : register(b1)
 {
     float3 lightPosition;
+    float padding;
     float4 pointDiffuseColor;
     
     float diffuseIntensity;
@@ -36,8 +37,8 @@ float4 CalculateSpecular(float3 diffuseFactor, float3 normal, float3 lightDir, f
     float3 reflectDir = normalize(2.0f * diffuseFactor * normal - lightDir);
         
     float specularFactor = pow(saturate(dot(reflectDir, viewDirection)), specularPower);
-        
-    return saturate(specularFactor * specularColor * pointDiffuseColor);
+    
+    return saturate(specularFactor * specularColor);
 }
 
 float4 CalculateDirectionalLight(PixelInputType input, float4 diffuseTex)

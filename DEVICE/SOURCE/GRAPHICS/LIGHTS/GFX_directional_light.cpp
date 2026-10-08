@@ -4,7 +4,7 @@
 DirectionalLight::DirectionalLight(D3DClass* d3d) 
 	:
 	m_vertexCameraCbuf(d3d, 1u),
-	m_dirLightCbuf(d3d, 0u)
+	m_dirLightCbuf(d3d)
 {
 	Reset();
 }
