@@ -103,6 +103,7 @@
     <None Include="SHADERS\flat.vs" />
     <None Include="SHADERS\phong.ps" />
     <None Include="SHADERS\phong.vs" />
+    <None Include="SHADERS\phongNormalMap.ps" />
     <None Include="SHADERS\phongSpecMap.ps" />
     <None Include="SHADERS\texturedcube.ps" />
     <None Include="SHADERS\texturedcube.vs" />

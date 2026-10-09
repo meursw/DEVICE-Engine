@@ -39,5 +39,12 @@ private:
 	};
 	Rotation m_rot{};
 
+private:
+	struct NormalMapCbuf
+	{
+		bool normalMapEnabled = true;
+		float padding[3];
+	} cbData;
+
 };
 

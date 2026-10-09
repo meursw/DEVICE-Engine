@@ -1,5 +1,5 @@
 Texture2D tex : register(t0);
-Texture2D texSpec : register(t1);
+Texture2D texNormal: register(t1);
 SamplerState sampleType : register(s0);
 
 cbuffer DirLightCbuf : register(b0)
@@ -22,6 +22,12 @@ cbuffer PointLightCbuf : register(b1)
     float attLin;
     float attQuad;
 };
+
+cbuffer NormalMapCbuf : register(b2)
+{
+    bool normalMapEnabled;
+}
+
     
 struct PixelInputType
 {
@@ -35,15 +41,11 @@ struct PixelInputType
 float4 CalculateSpecular(float3 lightDir, float3 diffuseFactor, PixelInputType input, float att)
 {
     // Get specular color and power from texture.
-    float4 specSample = texSpec.Sample(sampleType, input.tex);
-    float3 specColor = specSample.rgb;
-    float specPower = pow(2.0f, specSample.a * 13.0f);
-    
     float3 reflectDir = normalize(2.0f * diffuseFactor * input.normal - lightDir);
         
-    float specularFactor = pow(saturate(dot(reflectDir, input.viewDirection)), specPower);
+    float specularFactor = pow(saturate(dot(reflectDir, input.viewDirection)), specularPower);
         
-    return float4(saturate(specularFactor * specColor * att), 0.0f);
+    return saturate(specularFactor * specularColor * att);
 }
 
 float4 CalculateDirectionalLight(PixelInputType input, float4 diffuseTex)
@@ -94,6 +96,17 @@ float4 CalculatePointLight(PixelInputType input, float4 diffuseTex)
 
 float4 PhongPixelEntry(PixelInputType input) : SV_TARGET
 {    
+    if(normalMapEnabled)
+    {
+        float3 normalSample = texNormal.Sample(sampleType, input.tex).rgb;
+        normalSample.x *= 2.0f - 1.0f;
+        normalSample.y *= -(2.0f - 1.0f);
+        normalSample.z = -normalSample.z;
+        input.normal = normalSample;
+        
+        
+    }
+    
     float4 diffuseTex = tex.Sample(sampleType, input.tex);
     
     float4 color ;
@@ -102,5 +115,5 @@ float4 PhongPixelEntry(PixelInputType input) : SV_TARGET
     
     color += CalculatePointLight(input, diffuseTex);
     
-    return float4(input.normal * 0.5 + 0.5, 1.0f);
+    return color;
 }

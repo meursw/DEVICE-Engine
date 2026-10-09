@@ -52,7 +52,7 @@ void Plane::AddBinds(D3DClass* d3d)
 		d3d, 
 		ShaderType::PIXEL_SHADER, 
 		nullptr,
-		"SHADERS/phong.ps",
+		"SHADERS/phongNormalMap.ps",
 		"PhongPixelEntry"
 	));
 
@@ -60,7 +60,10 @@ void Plane::AddBinds(D3DClass* d3d)
 	AddBind(Topology::Resolve(d3d, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/brickwall.jpg"));
+	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/brickwall_normal.jpg", nullptr, 1u));
 	AddBind(Sampler::Resolve(d3d));
+
+	AddBind(PixelConstantBuffer<NormalMapCbuf>::Resolve(d3d, cbData, 2u));
 	
 	AddBind(std::make_shared<TransformCbuf>(d3d, *this));
 
@@ -170,13 +173,23 @@ void Plane::SpawnControlWindow(D3DClass* d3d)
 	if (ImGui::Begin("Plane"))
 	{
 		ImGui::Text("Position");
-		ImGui::SliderFloat("X", &m_pos.x, -80.0f, 80.0f, "%.1f");
-		ImGui::SliderFloat("Y", &m_pos.y, -80.0f, 80.0f, "%.1f");
-		ImGui::SliderFloat("Z", &m_pos.z, -80.0f, 80.0f, "%.1f");
+		ImGui::SliderFloat("X", &m_pos.x, -10.0f, 10.0f, "%.1f");
+		ImGui::SliderFloat("Y", &m_pos.y, -10.0f, 10.0f, "%.1f");
+		ImGui::SliderFloat("Z", &m_pos.z, -10.0f, 10.0f, "%.1f");
 		ImGui::Text("Orientation");
 		ImGui::SliderAngle("Roll", &m_rot.roll, -180.0f, 180.0f);
 		ImGui::SliderAngle("Pitch", &m_rot.pitch, -180.0f, 180.0f);
 		ImGui::SliderAngle("Yaw", &m_rot.yaw, -180.0f, 180.0f);
+		ImGui::Text("Normal Mapping");
+		bool checkState = cbData.normalMapEnabled;
+		bool changed = ImGui::Checkbox("Enable Normal Map", &checkState);
+		cbData.normalMapEnabled = checkState ? true : false;
+
+		if (changed)
+		{
+			QueryBindable<PixelConstantBuffer<NormalMapCbuf>>()->Update(d3d->GetDeviceContext(), cbData);
+		}
+
 	}
 	ImGui::End();
 }
