@@ -28,20 +28,31 @@ cbuffer NormalMapCbuf : register(b2)
     bool normalMapEnabled;
 }
 
+cbuffer MatrixBufferPS : register(b3)
+{
+    matrix world;
+    matrix view;
+    matrix proj;
+}
+
     
 struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
+    
     float3 normal : NORMAL;
+    float3 tangent : TANGENT;
+    float3 bitangent : BITANGENT;
+    
     float4 worldPosition : TEXCOORD1;
     float3 viewDirection : TEXCOORD2;
 };
 
-float4 CalculateSpecular(float3 lightDir, float3 diffuseFactor, PixelInputType input, float att)
+float4 CalculateSpecular(float3 lightDir, float diffuseFactor, PixelInputType input, float att)
 {
     // Get specular color and power from texture.
-    float3 reflectDir = normalize(2.0f * diffuseFactor * input.normal - lightDir);
+    float3 reflectDir = reflect(-lightDir, input.normal);
         
     float specularFactor = pow(saturate(dot(reflectDir, input.viewDirection)), specularPower);
         
@@ -50,10 +61,10 @@ float4 CalculateSpecular(float3 lightDir, float3 diffuseFactor, PixelInputType i
 
 float4 CalculateDirectionalLight(PixelInputType input, float4 diffuseTex)
 {
-    float3 lightDir = -normalize(lightDirection);
+    float3 lightDir = -lightDirection;
     
     // Diffuse
-    float diffuseFactor = saturate(dot(lightDir, input.normal));
+    float diffuseFactor = saturate(dot(input.normal, lightDir));
     float4 diffuse = diffuseFactor * dirDiffuseColor;
     
     float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -98,22 +109,26 @@ float4 PhongPixelEntry(PixelInputType input) : SV_TARGET
 {    
     if(normalMapEnabled)
     {
-        float3 normalSample = texNormal.Sample(sampleType, input.tex).rgb;
-        normalSample.x *= 2.0f - 1.0f;
-        normalSample.y *= -(2.0f - 1.0f);
-        normalSample.z = -normalSample.z;
-        input.normal = normalSample;
+        // Create transform into tangent space.
+        float3x3 tanToWorld = float3x3(
+            normalize(input.tangent),
+            normalize(input.bitangent),
+            normalize(input.normal)
+        );
         
+        float3 normalSample = texNormal.Sample(sampleType, input.tex*2.0f).rgb;
+        input.normal = normalSample * 2.0f - 1.0f;
         
+        input.normal = normalize(mul(input.normal, tanToWorld));
     }
     
-    float4 diffuseTex = tex.Sample(sampleType, input.tex);
+    float4 diffuseTex = tex.Sample(sampleType, input.tex * 2.0f);
     
     float4 color ;
     
     color = CalculateDirectionalLight(input, diffuseTex);
     
-    color += CalculatePointLight(input, diffuseTex);
+    //color += CalculatePointLight(input, diffuseTex);
     
     return color;
 }

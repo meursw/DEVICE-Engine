@@ -32,14 +32,14 @@ struct PixelInputType
     float3 viewDirection : TEXCOORD2;
 };
 
-float4 CalculateSpecular(float3 lightDir, float3 diffuseFactor, PixelInputType input, float att)
+float4 CalculateSpecular(float3 lightDir, float diffuseFactor, PixelInputType input, float att)
 {
     // Get specular color and power from texture.
     float4 specSample = texSpec.Sample(sampleType, input.tex);
     float3 specColor = specSample.rgb;
     float specPower = pow(2.0f, specSample.a * 13.0f);
     
-    float3 reflectDir = normalize(2.0f * diffuseFactor * input.normal - lightDir);
+    float3 reflectDir = reflect(-lightDir, input.normal);
         
     float specularFactor = pow(saturate(dot(reflectDir, input.viewDirection)), specPower);
         
@@ -102,5 +102,5 @@ float4 PhongPixelEntry(PixelInputType input) : SV_TARGET
     
     color += CalculatePointLight(input, diffuseTex);
     
-    return float4(input.normal * 0.5 + 0.5, 1.0f);
+    return color;
 }

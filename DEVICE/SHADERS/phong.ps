@@ -31,9 +31,9 @@ struct PixelInputType
     float3 viewDirection : TEXCOORD2;
 };
 
-float4 CalculateSpecular(float3 diffuseFactor, float3 normal, float3 lightDir, float3 viewDirection)
+float4 CalculateSpecular(float diffuseFactor, float3 normal, float3 lightDir, float3 viewDirection)
 {
-    float3 reflectDir = normalize(2.0f * diffuseFactor * normal - lightDir);
+    float3 reflectDir = reflect(-lightDir, normal);
         
     float specularFactor = pow(saturate(dot(reflectDir, viewDirection)), specularPower);
     

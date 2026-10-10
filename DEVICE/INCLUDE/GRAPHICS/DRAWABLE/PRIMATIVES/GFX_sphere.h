@@ -13,7 +13,7 @@ public:
 	Sphere(D3DClass*, HWND, float radius);
 	void Update(D3DClass*, DirectX::XMFLOAT4);
 	void SetPos(DirectX::XMFLOAT3);
-	DirectX::XMMATRIX GetTransformXM() const;
+	DirectX::XMMATRIX GetTransformXM() const override;
 	
 private:
 	DirectX::XMFLOAT3 m_pos = {};

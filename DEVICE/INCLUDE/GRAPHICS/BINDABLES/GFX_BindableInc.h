@@ -6,6 +6,7 @@
 #include "GFX_topology.h"
 
 #include "GFX_transformcbuf.h"
+#include "GFX_transformcbufdouble.h"
 #include "GFX_constantbuffer.h"
 
 #include "GFX_texture.h"

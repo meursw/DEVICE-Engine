@@ -35,10 +35,12 @@
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_indexbuffer.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_inputlayout.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_pixelphader.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_transformcbufDouble.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexbuffer.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_vertexshader.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_drawable.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\GFX_model.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\PRIMATIVES\GFX_cube.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\PRIMATIVES\GFX_plane.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\PRIMATIVES\GFX_sphere.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_applicationclass.cpp" />
@@ -77,10 +79,12 @@
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_indexbuffer.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_inputlayout.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_pixelshader.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_transformcbufdouble.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexbuffer.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_vertexshader.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_drawable.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\GFX_model.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_cube.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_plane.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_sphere.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h" />
@@ -104,6 +108,7 @@
     <None Include="SHADERS\phong.ps" />
     <None Include="SHADERS\phong.vs" />
     <None Include="SHADERS\phongNormalMap.ps" />
+    <None Include="SHADERS\phongNormalMap.vs" />
     <None Include="SHADERS\phongSpecMap.ps" />
     <None Include="SHADERS\texturedcube.ps" />
     <None Include="SHADERS\texturedcube.vs" />

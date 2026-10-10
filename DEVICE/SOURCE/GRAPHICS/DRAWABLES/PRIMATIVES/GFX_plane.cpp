@@ -22,8 +22,6 @@ Plane::Plane(D3DClass* d3d, UINT div_x, UINT div_y, float size)
 	MakeVertices();
 	MakeIndices();
 	AddBinds(d3d);
-
-	m_rot = { 0.0f,0.0f,0.0f };
 }
 
 void Plane::AddBinds(D3DClass* d3d)
@@ -65,7 +63,7 @@ void Plane::AddBinds(D3DClass* d3d)
 
 	AddBind(PixelConstantBuffer<NormalMapCbuf>::Resolve(d3d, cbData, 2u));
 	
-	AddBind(std::make_shared<TransformCbuf>(d3d, *this));
+	AddBind(std::make_shared<TransformCbufDouble>(d3d, *this, 0u, 3u));
 
 }
 
@@ -109,6 +107,8 @@ void Plane::MakeVertices()
 			);
 		}
 	}
+
+	CalculateModelVectors();
 }
 
 void Plane::MakeIndices()
@@ -138,6 +138,106 @@ void Plane::MakeIndices()
 		}
 	}
 }
+
+void Plane::CalculateModelVectors()
+{
+	using DEVICE_VERTEX::VertexLayout;
+
+	UINT faceCount{ (UINT)(m_vertices.Size() / 3 )};
+	UINT index{ 0 };
+
+	VertexPosTex v1, v2, v3;
+
+	for (UINT i = 0; i < faceCount; i++)
+	{
+		// Get the three vertices of a face with position and texture data.
+
+		v1.pos = m_vertices[index].Attr<VertexLayout::Position3D>();
+		v1.tex = m_vertices[index].Attr<VertexLayout::Texture2D>();
+		index++;
+
+		v2.pos = m_vertices[index].Attr<VertexLayout::Position3D>();
+		v2.tex = m_vertices[index].Attr<VertexLayout::Texture2D>();
+		index++;
+
+		v3.pos = m_vertices[index].Attr<VertexLayout::Position3D>();
+		v3.tex = m_vertices[index].Attr<VertexLayout::Texture2D>();
+		index++;
+
+		// Pass in the face.
+		CalculateTangentBinormal(v1, v2, v3);
+	}
+}
+
+void Plane::CalculateTangentBinormal(VertexPosTex v1, VertexPosTex v2, VertexPosTex v3)
+{
+	XMFLOAT3 faceVector1, faceVector2;
+	XMFLOAT2 tuVec, tvVec;
+
+	// Calculate the vectors of the face.
+	faceVector1 =
+	{
+		v2.pos.x - v1.pos.x,
+		v2.pos.y - v1.pos.y,
+		v2.pos.z - v1.pos.z
+	};
+
+	faceVector2 =
+	{
+		v3.pos.x - v1.pos.x,
+		v3.pos.y - v1.pos.y,
+		v3.pos.z - v1.pos.z
+	};
+
+	tuVec =
+	{
+		v2.tex.x - v1.tex.x,
+		v3.tex.x - v1.tex.x
+	};
+
+	tvVec =
+	{
+		v2.tex.y - v1.tex.y,
+		v3.tex.y - v1.tex.y
+	};
+
+	// Calculate the denominator for the tangent/binoraml equation.
+	float den = 1.0f / (tuVec.x * tvVec.y - tuVec.y * tvVec.x);
+
+	// Calculate tangent and binormal vectors with the cross product of the faceVectors and the texture Vectors.
+
+	XMFLOAT3 tangent, binormal;
+
+	tangent =
+	{
+		tvVec.y * faceVector1.x - tvVec.x * faceVector2.x * den,
+		tvVec.y * faceVector1.y - tvVec.x * faceVector2.y * den,
+		tvVec.y * faceVector1.z - tvVec.x * faceVector2.z * den
+	};
+
+	binormal =
+	{
+		tuVec.x * faceVector2.x - tuVec.y * faceVector1.x * den,
+		tuVec.x * faceVector2.y - tuVec.y * faceVector1.y * den,
+		tuVec.x * faceVector2.z - tuVec.y * faceVector1.z * den
+	};
+
+	// Calculate the length of the vectors to normalize them.
+
+	float length = 0;
+
+	length = sqrt((tangent.x * tangent.x) + (tangent.y * tangent.y) + (tangent.z * tangent.z));
+	tangent.x /= length;
+	tangent.y /= length;
+	tangent.z /= length;
+
+	length = sqrt((binormal.x * binormal.x) + (binormal.y * binormal.y) + (binormal.z * binormal.z));
+	binormal.x /= length;
+	binormal.y /= length;
+	binormal.z /= length;
+
+}
+
  
 void Plane::SetPosition(XMFLOAT3 pos)
 {

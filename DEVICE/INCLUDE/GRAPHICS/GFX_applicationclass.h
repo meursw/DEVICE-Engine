@@ -8,6 +8,7 @@
 #include "GFX_camera.h"
 #include "GFX_model.h"
 #include "GFX_plane.h"
+#include "GFX_cube.h"
 #include "GFX_pointlight.h"
 #include "GFX_directional_light.h"
 
@@ -38,6 +39,7 @@ private:
 	
 	Model m_nano;
 	Plane m_plane;
+	Cube m_cube;
 	
 	PointLight m_pointlight;
 	DirectionalLight m_dirLight;

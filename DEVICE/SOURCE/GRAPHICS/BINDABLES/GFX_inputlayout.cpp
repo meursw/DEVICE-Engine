@@ -33,7 +33,7 @@ std::shared_ptr<InputLayout> InputLayout::Resolve(
 std::string InputLayout::GenerateUID(const DEVICE_VERTEX::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode)
 {
     using namespace std::string_literals;
-    return typeid(InputLayout).name() + "#"s + layout.GetCode();
+    return typeid(InputLayout).name() + "#"s + layout.GetCode() + std::to_string(pVertexShaderBytecode->GetBufferSize());
 }
 
 std::string InputLayout::GetUID() const

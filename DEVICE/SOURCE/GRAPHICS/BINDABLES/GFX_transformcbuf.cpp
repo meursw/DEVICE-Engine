@@ -8,11 +8,25 @@ TransformCbuf::TransformCbuf(D3DClass* d3d, const Drawable& parent, UINT slot)
 	: 
 	parent(parent)
 {
-	if (!m_transformBuffer)
-		m_transformBuffer = std::make_unique<VertexConstantBuffer<TransformsBuffer>>(d3d, slot);
+	if (!m_transformBufferVS)
+		m_transformBufferVS = std::make_unique<VertexConstantBuffer<TransformsBuffer>>(d3d, slot);
 }
 
 void TransformCbuf::Bind(D3DClass* d3d)
+{
+	UpdateBindImpl(d3d, GetTransforms(d3d));
+}
+
+
+void TransformCbuf::UpdateBindImpl(D3DClass* d3d, const TransformsBuffer& tf)
+{
+
+	m_transformBufferVS->Update(d3d->GetDeviceContext(), tf);
+
+	m_transformBufferVS->Bind(d3d);
+}
+
+TransformCbuf::TransformsBuffer TransformCbuf::GetTransforms(D3DClass* d3d)
 {
 	XMMATRIX world, view, projection;
 	world = XMMatrixTranspose(parent.GetTransformXM());
@@ -23,11 +37,7 @@ void TransformCbuf::Bind(D3DClass* d3d)
 	d3d->GetCamera()->GetProjectionMatrix(projection);
 	projection = XMMatrixTranspose(projection);
 
-	TransformsBuffer mvp{ world, view, projection };
-
-	m_transformBuffer->Update(d3d->GetDeviceContext(), mvp);
-
-	m_transformBuffer->Bind(d3d);
+	return { world, view, projection };
 }
 
-std::unique_ptr<VertexConstantBuffer<TransformCbuf::TransformsBuffer>> TransformCbuf::m_transformBuffer;
+std::unique_ptr<VertexConstantBuffer<TransformCbuf::TransformsBuffer>> TransformCbuf::m_transformBufferVS;

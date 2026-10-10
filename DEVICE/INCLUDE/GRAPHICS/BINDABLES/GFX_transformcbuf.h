@@ -6,7 +6,7 @@
 
 class TransformCbuf : public Bindable
 {
-public:
+protected:
 	struct TransformsBuffer
 	{
 		DirectX::XMMATRIX world;
@@ -20,8 +20,12 @@ public:
 public:
 	TransformCbuf(D3DClass*, const Drawable& parent, UINT slot = 0);
 
+protected:
+	void UpdateBindImpl(D3DClass*, const TransformsBuffer& tf);
+	TransformsBuffer GetTransforms(D3DClass*);
+
 private:
-	static std::unique_ptr<VertexConstantBuffer<TransformsBuffer>> m_transformBuffer;
+	static std::unique_ptr<VertexConstantBuffer<TransformsBuffer>> m_transformBufferVS;
 	const Drawable& parent;
 };
 

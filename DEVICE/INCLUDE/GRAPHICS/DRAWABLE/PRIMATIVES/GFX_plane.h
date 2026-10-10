@@ -6,9 +6,20 @@ class Plane : public Drawable
 {
 public:
 	Plane(D3DClass* d3d, UINT subdiv_x, UINT subdiv_y, float size);
+	
+private:
+	struct VertexPosTex
+	{
+		XMFLOAT3 pos;
+		XMFLOAT2 tex;
+	};
+
+private:
 	void AddBinds(D3DClass* d3d);
 	void MakeVertices();
 	void MakeIndices();
+	void CalculateModelVectors();
+	void CalculateTangentBinormal(VertexPosTex v1, VertexPosTex v2, VertexPosTex v3);
 	
 public:
 	void SetPosition(DirectX::XMFLOAT3 pos);
@@ -43,7 +54,7 @@ private:
 	struct NormalMapCbuf
 	{
 		bool normalMapEnabled = true;
-		float padding[3];
+		float padding[3] = {};
 	} cbData;
 
 };
