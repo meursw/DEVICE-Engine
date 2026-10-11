@@ -23,7 +23,7 @@ public:
 	void Draw(D3DClass*) const;
 	virtual DirectX::XMMATRIX GetTransformXM() const = 0;
 
-protected:
+public:
 	template<class T>
 	T* QueryBindable()
 	{
@@ -36,6 +36,7 @@ protected:
 		return nullptr;
 	}
 
+protected:
 	void AddBind(std::shared_ptr<Bindable>);
 
 private:

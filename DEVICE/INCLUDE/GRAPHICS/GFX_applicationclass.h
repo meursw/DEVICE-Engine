@@ -37,7 +37,7 @@ private:
 	std::unique_ptr<D3DClass> m_Direct3D;
 	std::unique_ptr<Camera> m_Camera;
 	
-	//Model m_nano;
+	Model m_goblin;
 	Plane m_plane;
 	Cube m_cube;
 	

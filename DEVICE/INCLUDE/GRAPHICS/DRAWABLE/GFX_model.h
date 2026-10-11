@@ -82,7 +82,7 @@ private:
 
 // IMGUI 
 public:
-	void ShowWindow(const char*);
+	void ShowWindow(D3DClass* d3d, const char*);
 private:
 	std::unique_ptr<class ModelWindow> m_pWindow;
 };

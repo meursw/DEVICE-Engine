@@ -299,6 +299,9 @@
     <None Include="SHADERS\phongSpecMap.ps" />
     <None Include="SHADERS\phongNormalMap.ps" />
     <None Include="SHADERS\phongNormalMap.vs" />
+    <None Include="SHADERS\phongSpecNormalMap.ps" />
+    <None Include="SHADERS\phongNoTex.ps" />
+    <None Include="SHADERS\phongNoTex.vs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ASSETS\IMAGE_DEPTHS_CUBE.png">

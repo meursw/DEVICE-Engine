@@ -111,7 +111,10 @@
     <None Include="SHADERS\phong.vs" />
     <None Include="SHADERS\phongNormalMap.ps" />
     <None Include="SHADERS\phongNormalMap.vs" />
+    <None Include="SHADERS\phongNoTex.ps" />
+    <None Include="SHADERS\phongNoTex.vs" />
     <None Include="SHADERS\phongSpecMap.ps" />
+    <None Include="SHADERS\phongSpecNormalMap.ps" />
     <None Include="SHADERS\texturedcube.ps" />
     <None Include="SHADERS\texturedcube.vs" />
   </ItemGroup>

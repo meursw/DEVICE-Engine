@@ -120,7 +120,7 @@ int Node::GetId() const noexcept
 class ModelWindow
 {
 public:
-	void Show(const char* windowName, const Node& root)
+	void Show(D3DClass* d3d, const char* windowName, const Node& root)
 	{
 		windowName = windowName ? windowName : "Model";
 		
@@ -172,11 +172,12 @@ private:
 		float y = 0.0f;
 		float z = 0.0f;
 	};
+
+public:
 	// Map node indices to structs of transform parameters.
 	// Keeps track of the transform parameters of each node.
 	std::unordered_map<int, TransformParameters> transforms;
 };
-
 
 // This class handles:
 //	1. Loading a model from a file name and getting an assimp scene
@@ -190,8 +191,10 @@ Model::Model(D3DClass* d3d, const std::string fileName, HWND hwnd)
 	Assimp::Importer imp;
 	const auto pScene = imp.ReadFile(fileName.c_str(),
 		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
 		aiProcess_ConvertToLeftHanded |
-		aiProcess_GenNormals
+		aiProcess_GenNormals |
+		aiProcess_CalcTangentSpace
 	);
 
 	if (pScene == nullptr)
@@ -208,101 +211,303 @@ Model::Model(D3DClass* d3d, const std::string fileName, HWND hwnd)
 
 std::unique_ptr<Mesh> Model::ParseMesh(D3DClass* d3d, const aiMesh& mesh, HWND hwnd, const aiMaterial* const* pMaterials)
 {
+	using namespace std::string_literals;
 	using DEVICE_VERTEX::VertexLayout;
 
-	DEVICE_VERTEX::VertexBuffer vbuf(std::move(
-		VertexLayout{}
-		.Append(VertexLayout::Position3D)
-		.Append(VertexLayout::Texture2D)
-		.Append(VertexLayout::Normal)
-	));
+	// Holds the bindables for this mesh.
+	std::vector<std::shared_ptr<Bindable>> bindables;
 
-	for (UINT i = 0; i < mesh.mNumVertices; i++)
-	{
-		vbuf.EmplaceBack(
-			*reinterpret_cast<XMFLOAT3*>(&mesh.mVertices[i]),
-			*reinterpret_cast<XMFLOAT2*>(&mesh.mTextureCoords[0][i]),
-			*reinterpret_cast<XMFLOAT3*>(&mesh.mNormals[i])
-		);
-	}
+	// Base path for all the textures. 
+	// The texture filename that gets found from the mesh will append to base.
+	const auto base = "../DEVICE/ASSETS/TEXTURES/GOBLIN/"s;
 
-	std::vector<unsigned short> indices;
-	indices.reserve(mesh.mNumFaces * 3);
-	for (UINT i = 0; i < mesh.mNumFaces; i++)
-	{
-		const auto& face = mesh.mFaces[i];
-		assert(face.mNumIndices == 3);
-		indices.push_back(face.mIndices[0]);
-		indices.push_back(face.mIndices[1]);
-		indices.push_back(face.mIndices[2]);
-	}
-
-	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
-
-	using namespace std::string_literals;
-	
 	bool hasSpecularMap = false;
-	// Check if the mesh has a material
+	bool hasAlphaGloss = false;
+	bool hasNormalMap = false;
+	bool hasDiffuseMap = false;
+
+	// Check if the mesh has a material assigned to it.
 	if (mesh.mMaterialIndex >= 0)
 	{
-		// pMaterial is an array of materials inside the assimp scene.
+		// Get the material.
 		auto& material = *pMaterials[mesh.mMaterialIndex];
-		
-		const auto base = "../DEVICE/ASSETS/TEXTURES/NANOSUIT/"s;
 
 		aiString texFilename;
 
-		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFilename);
-		bindablePtrs.push_back(Texture::Resolve(d3d, base + texFilename.C_Str(), hwnd));
+		// Check if this mesh has a diffuse map.
+		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &texFilename) == aiReturn_SUCCESS)
+		{
+			bindables.push_back(Texture::Resolve(d3d, base + texFilename.C_Str(), hwnd, 0));
+			hasDiffuseMap = true;
+		}
 
+		// Check if this mesh has a specular map.
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &texFilename) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(Texture::Resolve(d3d, base + texFilename.C_Str(), hwnd, 1));
+			bindables.push_back(Texture::Resolve(d3d, base + texFilename.C_Str(), hwnd, 1));
 			hasSpecularMap = true;
 		}
 
-		bindablePtrs.push_back(Sampler::Resolve(d3d));
+		// Check if this mesh has a normal map.
+		if (material.GetTexture(aiTextureType_NORMALS, 0, &texFilename) == aiReturn_SUCCESS)
+		{
+			bindables.push_back(Texture::Resolve(d3d, base + texFilename.C_Str(), hwnd, 2));
+			hasNormalMap = true;
+		}
+
+		if (hasDiffuseMap || hasSpecularMap || hasNormalMap)
+			bindables.push_back(Sampler::Resolve(d3d));
 
 	}
 
-	const auto meshBase = "../DEVICE/ASSETS/MODELS";
-	auto meshTag = meshBase + "%"s + mesh.mName.C_Str();
+	// Tag for the vertex and index buffers.
+	const auto meshTag = "../DEVICE/ASSETS/MODELS/GOBLIN"s + "%" + mesh.mName.C_Str();
 
-	bindablePtrs.push_back(VertexBuffer::Resolve(d3d, meshTag, vbuf));
-	bindablePtrs.push_back(IndexBuffer::Resolve(d3d, meshTag, indices));
-
-	auto vertexShader = VertexShader::Resolve(
-		d3d,
-		ShaderType::VERTEX_SHADER,
-		hwnd,
-		"SHADERS/phong.vs",
-		"PhongVertexEntry"
-	);
-
-	auto vsByteCode = vertexShader->GetBytecode();
-	bindablePtrs.push_back(std::move(vertexShader));
-
-	bindablePtrs.push_back(InputLayout::Resolve(d3d, vbuf.GetLayout(), vsByteCode));
-
-	if (hasSpecularMap)
+	// Load different type of vertex buffers, shaders, etc. based on the mesh data.
+	// This needs to be seperated and generalized.
+	if (hasDiffuseMap && hasNormalMap && hasSpecularMap)
 	{
-		bindablePtrs.push_back(PixelShader::Resolve(
-			d3d,ShaderType::PIXEL_SHADER,hwnd,
-			"SHADERS/phongSpecMap.ps",
+		// Create vertex layout.
+		DEVICE_VERTEX::VertexBuffer vbuf(std::move(
+			VertexLayout{}
+			.Append(VertexLayout::Position3D)
+			.Append(VertexLayout::Texture2D)
+			.Append(VertexLayout::Normal)
+			.Append(VertexLayout::Tangent)
+			.Append(VertexLayout::Bitangent)
+		));
+
+		// Load vertices.
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			vbuf.EmplaceBack(
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mVertices[i]),
+				*reinterpret_cast<XMFLOAT2*>(&mesh.mTextureCoords[0][i]),
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mNormals[i]),
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mTangents[i]),
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mBitangents[i])
+			);
+		}
+
+		// Load indices.
+		std::vector<unsigned short> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+		for (unsigned int i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3);
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		// Add vertex and index buffer binds.
+		bindables.push_back(VertexBuffer::Resolve(d3d, meshTag, vbuf));
+		bindables.push_back(IndexBuffer::Resolve(d3d, meshTag, indices));
+
+		// Add vertex shader and get byte code for input layout.
+		auto vertexShader = VertexShader::Resolve(
+			d3d,
+			ShaderType::VERTEX_SHADER,
+			hwnd,
+			"SHADERS/phongNormalMap.vs",
+			"PhongVertexEntry"
+		);
+
+		auto vsBytecode = vertexShader->GetBytecode();
+		bindables.push_back(std::move(vertexShader));
+
+		// Add pixel shader.
+		bindables.push_back(PixelShader::Resolve(
+			d3d,
+			ShaderType::PIXEL_SHADER,
+			hwnd,
+			"SHADERS/phongSpecNormalMap.ps",
 			"PhongPixelEntry"
 		));
+
+		bindables.push_back(InputLayout::Resolve(d3d, vbuf.GetLayout(), vsBytecode));
+
 	}
-	else
+	else if (hasDiffuseMap && hasNormalMap)
 	{
-		bindablePtrs.push_back(PixelShader::Resolve(
-			d3d, ShaderType::PIXEL_SHADER, hwnd,
+		// Create vertex layout.
+		DEVICE_VERTEX::VertexBuffer vbuf(std::move(
+			VertexLayout{}
+			.Append(VertexLayout::Position3D)
+			.Append(VertexLayout::Texture2D)
+			.Append(VertexLayout::Normal)
+			.Append(VertexLayout::Tangent)
+			.Append(VertexLayout::Bitangent)
+		));
+
+		// Load vertices.
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			vbuf.EmplaceBack(
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mVertices[i]),
+				*reinterpret_cast<XMFLOAT2*>(&mesh.mTextureCoords[0][i]),
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mNormals[i]),
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mTangents[i]),
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mBitangents[i])
+			);
+		}
+
+		// Load indices.
+		std::vector<unsigned short> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+		for (unsigned int i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3);
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		// Add vertex and index buffer binds.
+		bindables.push_back(VertexBuffer::Resolve(d3d, meshTag, vbuf));
+		bindables.push_back(IndexBuffer::Resolve(d3d, meshTag, indices));
+
+		// Add vertex shader and get byte code for input layout.
+		auto vertexShader = VertexShader::Resolve(
+			d3d,
+			ShaderType::VERTEX_SHADER,
+			hwnd,
+			"SHADERS/phongNormalMap.vs",
+			"PhongVertexEntry"
+		);
+
+		auto vsBytecode = vertexShader->GetBytecode();
+		bindables.push_back(std::move(vertexShader));
+
+		// Add pixel shader.
+		bindables.push_back(PixelShader::Resolve(
+			d3d,
+			ShaderType::PIXEL_SHADER,
+			hwnd,
+			"SHADERS/phongNormalMap.ps",
+			"PhongPixelEntry"
+		));
+
+		bindables.push_back(InputLayout::Resolve(d3d, vbuf.GetLayout(), vsBytecode));
+
+	}
+	else if (hasDiffuseMap)
+	{
+		DEVICE_VERTEX::VertexBuffer vbuf(std::move(
+			VertexLayout{}
+			.Append(VertexLayout::Position3D)
+			.Append(VertexLayout::Texture2D)
+			.Append(VertexLayout::Normal)
+		));
+
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			vbuf.EmplaceBack(
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mVertices[i]),
+				*reinterpret_cast<XMFLOAT2*>(&mesh.mTextureCoords[0][i]),
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mNormals[i])
+			);
+		}
+
+		std::vector<unsigned short> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+		for (unsigned int i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3);
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		// Add vertex and index buffer binds.
+		bindables.push_back(VertexBuffer::Resolve(d3d, meshTag, vbuf));
+		bindables.push_back(IndexBuffer::Resolve(d3d, meshTag, indices));
+
+		// Add vertex shader and get byte code for input layout.
+		auto vertexShader = VertexShader::Resolve(
+			d3d,
+			ShaderType::VERTEX_SHADER,
+			hwnd,
+			"SHADERS/phong.vs",
+			"PhongVertexEntry"
+		);
+
+		auto vsBytecode = vertexShader->GetBytecode();
+		bindables.push_back(std::move(vertexShader));
+
+		// Add pixel shader.
+		bindables.push_back(PixelShader::Resolve(
+			d3d,
+			ShaderType::PIXEL_SHADER,
+			hwnd,
 			"SHADERS/phong.ps",
 			"PhongPixelEntry"
 		));
+
+		bindables.push_back(InputLayout::Resolve(d3d, vbuf.GetLayout(), vsBytecode));
 	}
+	else if (!hasDiffuseMap && !hasNormalMap && !hasSpecularMap)
+	{
+		DEVICE_VERTEX::VertexBuffer vbuf(std::move(
+			VertexLayout{}
+			.Append(VertexLayout::Position3D)
+			.Append(VertexLayout::Normal)
+		));
 
-	return std::make_unique<Mesh>(d3d, std::move(bindablePtrs));
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			vbuf.EmplaceBack(
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mVertices[i]),
+				*reinterpret_cast<XMFLOAT3*>(&mesh.mNormals[i])
+			);
+		}
 
+		std::vector<unsigned short> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+		for (unsigned int i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3);
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		// Add vertex and index buffer binds.
+		bindables.push_back(VertexBuffer::Resolve(d3d, meshTag, vbuf));
+		bindables.push_back(IndexBuffer::Resolve(d3d, meshTag, indices));
+
+		// Add vertex shader and get byte code for input layout.
+		auto vertexShader = VertexShader::Resolve(
+			d3d,
+			ShaderType::VERTEX_SHADER,
+			hwnd,
+			"SHADERS/phongNoTex.vs",
+			"PhongVertexEntry"
+		);
+
+		auto vsBytecode = vertexShader->GetBytecode();
+		bindables.push_back(std::move(vertexShader));
+
+		// Add pixel shader.
+		bindables.push_back(PixelShader::Resolve(
+			d3d,
+			ShaderType::PIXEL_SHADER,
+			hwnd,
+			"SHADERS/phongNoTex.ps",
+			"PhongPixelEntry"
+		));
+
+		bindables.push_back(InputLayout::Resolve(d3d, vbuf.GetLayout(), vsBytecode));
+
+	}
+	else
+		throw std::runtime_error("something went wrong with the textures in the material");
+
+	return std::make_unique<Mesh>(d3d, std::move(bindables));
 }
 
 std::unique_ptr<Node> Model::ParseNode(int& nextId, const aiNode& node)
@@ -331,9 +536,9 @@ std::unique_ptr<Node> Model::ParseNode(int& nextId, const aiNode& node)
 	return pNode;
 }
 
-void Model::ShowWindow(const char* windowName)
+void Model::ShowWindow(D3DClass* d3d, const char* windowName)
 {
-	m_pWindow->Show(windowName, *m_Root);
+	m_pWindow->Show(d3d, windowName, *m_Root);
 }
 
 void Model::Draw(D3DClass* d3d) const

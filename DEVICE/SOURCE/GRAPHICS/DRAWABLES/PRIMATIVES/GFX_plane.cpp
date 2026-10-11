@@ -123,7 +123,7 @@ void Plane::LoadWithAssimp(D3DClass* d3d)
 		AddBind(Texture::Resolve(d3d, base + texFilename.C_Str(), nullptr, 0));
 
 		material->GetTexture(aiTextureType_NORMALS, 0, &texFilename);
-		AddBind(Texture::Resolve(d3d, base + texFilename.C_Str(), nullptr, 1));
+		AddBind(Texture::Resolve(d3d, base + texFilename.C_Str(), nullptr, 2));
 
 		AddBind(Sampler::Resolve(d3d));
 	}

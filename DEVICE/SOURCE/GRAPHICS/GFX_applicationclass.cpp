@@ -10,9 +10,9 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	:
 	// Initialize the direct 3D object.
 	m_Direct3D(std::make_unique<D3DClass>(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR)),
-	//m_nano(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nanosuit.obj", hwnd),
 	m_plane(m_Direct3D.get(), 2.0, 2.0f, 2.0f),
 	m_cube(m_Direct3D.get()),
+	m_goblin(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/GoblinX.obj", hwnd),
 	m_pointlight(m_Direct3D.get()),
 	m_dirLight(m_Direct3D.get()),
 	m_simulationSpeed(1.0f)
@@ -40,17 +40,20 @@ void ApplicationClass::Render(float delta)
 
 	auto d3d = m_Direct3D.get();
 	
+	// Bind light cbuffers.
 	m_dirLight.Bind(d3d, m_Camera.get());
 	m_pointlight.Bind(d3d);
 
+	// Draw Objects
+	m_plane.Draw(d3d); 
 	m_cube.Draw(d3d);
-	m_plane.Draw(d3d);
-	//m_nano.Draw(d3d);
+	m_goblin.Draw(d3d);
 	m_pointlight.Draw(d3d);
 	
+	// Imgui
 	m_plane.SpawnControlWindow(d3d);
-	//m_nano.ShowWindow("Model");
 	m_cube.SpawnControlWindow(d3d);
+	m_goblin.ShowWindow(d3d,"Model");
 
 	m_Camera->SpawnControlWindow();
 	m_dirLight.SpawnControlWindow();

@@ -59,7 +59,7 @@ float4 CalculateDirectionalLight(PixelInputType input, float4 diffuseTex)
     // If diffuse is > 0 then calculate specular.
     if (diffuseFactor > 0.0f)
     {
-        specular = CalculateSpecular(lightDir, diffuseFactor, input, 1.0f);
+        //specular = CalculateSpecular(lightDir, diffuseFactor, input, 1.0f);
     }
 
     return saturate((dirAmbientColor + diffuse)) * diffuseTex + specular;
@@ -86,7 +86,7 @@ float4 CalculatePointLight(PixelInputType input, float4 diffuseTex)
     float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
     if (diffuseFactor > 0.0f)
     {
-        specular = CalculateSpecular(lightDir, diffuseFactor, input, attenuation);
+        //specular = CalculateSpecular(lightDir, diffuseFactor, input, attenuation);
     }
     
     return diffuse * diffuseTex + specular;

@@ -85,7 +85,7 @@ Cube::Cube(D3DClass* d3d)
 	AddBind(Topology::Resolve(d3d, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/BRICKWALL/brick_wall_diffuse.jpg"));
-	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/BRICKWALL/brick_wall_normal.jpg", nullptr, 1u));
+	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/BRICKWALL/brick_wall_normal.jpg", nullptr, 2u));
 	AddBind(Sampler::Resolve(d3d));
 
 	AddBind(PixelConstantBuffer<NormalMapCbuf>::Resolve(d3d, cbData, 2u));

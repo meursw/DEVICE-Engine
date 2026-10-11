@@ -1,0 +1,43 @@
+# Blender 4.0.2 MTL File: 'None'
+# www.blender.org
+
+newmtl GoblinEye
+Ns 29.999998
+Ka 1.000000 1.000000 1.000000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd GoblinEye.jpg
+
+newmtl GoblinIris
+Ns 79.999985
+Ka 1.000000 1.000000 1.000000
+Ks 0.200000 0.200000 0.200000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd GoblinEye.jpg
+
+newmtl Gold
+Ns 3.249997
+Ka 1.000000 1.000000 1.000000
+Kd 0.819608 0.576471 0.274510
+Ks 0.798693 0.798693 0.798693
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl SkinGoblinA
+Ns 3.100001
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd MDif.tif
+map_Ks MSpec.tif
+map_Kn MNorm.tif

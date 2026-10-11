@@ -2,6 +2,9 @@
 
 ## PROGRESS (newest -> latest)
 
+### 06. NORMAL MAPPING
+![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/NORMAL_MAPPING.gif)
+|:--:|
 
 ### 05. ASSIMP / SCENE GRAPH
 ![Image](https://github.com/meursw/DEVICE-Engine/blob/main/PROGRESS/APART.gif)
