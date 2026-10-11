@@ -17,7 +17,8 @@ private:
 
 	struct CameraCbuf
 	{
-		alignas(16) DirectX::XMFLOAT3 cameraPosition;
+		DirectX::XMFLOAT3 cameraPosition;
+		float padding = 0;
 	};
 
 public:

@@ -10,7 +10,7 @@ ApplicationClass::ApplicationClass(int screenWidth, int screenHeight, HWND hwnd)
 	:
 	// Initialize the direct 3D object.
 	m_Direct3D(std::make_unique<D3DClass>(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR)),
-	m_nano(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nanosuit.obj", hwnd),
+	//m_nano(m_Direct3D.get(), "../DEVICE/ASSETS/MODELS/nanosuit.obj", hwnd),
 	m_plane(m_Direct3D.get(), 2.0, 2.0f, 2.0f),
 	m_cube(m_Direct3D.get()),
 	m_pointlight(m_Direct3D.get()),
@@ -44,11 +44,11 @@ void ApplicationClass::Render(float delta)
 	m_pointlight.Bind(d3d);
 
 	m_cube.Draw(d3d);
-	//m_plane.Draw(d3d);
+	m_plane.Draw(d3d);
 	//m_nano.Draw(d3d);
 	m_pointlight.Draw(d3d);
 	
-	//m_plane.SpawnControlWindow(d3d);
+	m_plane.SpawnControlWindow(d3d);
 	//m_nano.ShowWindow("Model");
 	m_cube.SpawnControlWindow(d3d);
 

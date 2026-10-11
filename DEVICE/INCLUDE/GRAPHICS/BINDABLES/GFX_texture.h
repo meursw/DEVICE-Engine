@@ -1,5 +1,6 @@
 #pragma once
 #include "GFX_bindable.h"
+#include "GFX_imageloader.h"
 
 class Texture :public Bindable
 {
@@ -8,6 +9,9 @@ public:
 
 public:
 	Texture(D3DClass*, const std::string&, HWND, UINT slot = 0);
+
+private:
+	void LoadTexture(const std::string& path, HWND hwnd);
 
 public:
 	static std::shared_ptr<Bindable> Resolve(D3DClass* d3d, const std::string& path, HWND hwnd = nullptr, UINT slot = 0);
@@ -20,4 +24,5 @@ private:
 protected:
 	std::string m_path;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_textureView;
+	ImageLoader::ImageData m_imageData;
 };

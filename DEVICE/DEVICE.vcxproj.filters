@@ -90,9 +90,6 @@
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EXTERNAL\WICTextureLoader11.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SOURCE\GRAPHICS\BINDABLES\GFX_sampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -145,6 +142,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SOURCE\GRAPHICS\DRAWABLES\PRIMATIVES\GFX_cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_imageloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EXTERNAL\WICTextureLoader11.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -215,9 +218,6 @@
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EXTERNAL\WICTextureLoader11.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="INCLUDE\GRAPHICS\BINDABLES\GFX_sampler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -276,6 +276,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="INCLUDE\GRAPHICS\DRAWABLE\PRIMATIVES\GFX_cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_imageloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EXTERNAL\WICTextureLoader11.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

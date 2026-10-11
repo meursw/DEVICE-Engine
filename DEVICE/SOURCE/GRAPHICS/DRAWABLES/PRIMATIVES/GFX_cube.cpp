@@ -84,13 +84,13 @@ Cube::Cube(D3DClass* d3d)
 	AddBind(InputLayout::Resolve(d3d, vbuf.GetLayout(), vBytecode));
 	AddBind(Topology::Resolve(d3d, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/brickwall.jpg"));
-	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/brickwall_normal.jpg", nullptr, 1u));
+	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/BRICKWALL/brick_wall_diffuse.jpg"));
+	AddBind(Texture::Resolve(d3d, "../DEVICE/ASSETS/TEXTURES/BRICKWALL/brick_wall_normal.jpg", nullptr, 1u));
 	AddBind(Sampler::Resolve(d3d));
 
 	AddBind(PixelConstantBuffer<NormalMapCbuf>::Resolve(d3d, cbData, 2u));
 
-	AddBind(std::make_shared<TransformCbufDouble>(d3d, *this, 0u, 3u));
+	AddBind(std::make_shared<TransformCbuf>(d3d, *this));
 }
 
 DirectX::XMMATRIX Cube::GetTransformXM() const

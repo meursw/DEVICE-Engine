@@ -46,6 +46,7 @@
     <ClCompile Include="SOURCE\GRAPHICS\GFX_applicationclass.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_camera.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\GFX_d3dclass.cpp" />
+    <ClCompile Include="SOURCE\GRAPHICS\GFX_imageloader.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\LIGHTS\GFX_directional_light.cpp" />
     <ClCompile Include="SOURCE\GRAPHICS\LIGHTS\GFX_pointlight.cpp" />
     <ClCompile Include="SOURCE\SYSTEM\SYS_d3d_exception.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_applicationclass.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_camera.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_d3dclass.h" />
+    <ClInclude Include="INCLUDE\GRAPHICS\GFX_imageloader.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\GFX_vertex.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\LIGHTS\GFX_directional_light.h" />
     <ClInclude Include="INCLUDE\GRAPHICS\LIGHTS\GFX_pointlight.h" />

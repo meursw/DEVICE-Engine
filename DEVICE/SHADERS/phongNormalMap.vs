@@ -8,6 +8,7 @@ cbuffer MatrixBuffer : register(b0)
 cbuffer CameraBuffer : register(b1)
 {
     float3 cameraPosition;
+    float padding;
 };
 
 struct VertexInputType

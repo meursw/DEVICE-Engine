@@ -4,6 +4,11 @@
 
 #include "IMGUI/imgui.h"
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+
 using DEVICE_VERTEX::VertexLayout;
 using namespace DirectX;
 
@@ -17,11 +22,14 @@ Plane::Plane(D3DClass* d3d, UINT div_x, UINT div_y, float size)
 	m_vertices(VertexLayout{}
 		.Append(VertexLayout::Position3D)
 		.Append(VertexLayout::Texture2D)
-		.Append(VertexLayout::Normal))
+		.Append(VertexLayout::Normal)
+		.Append(VertexLayout::Tangent)
+		.Append(VertexLayout::Bitangent))
 {
-	MakeVertices();
-	MakeIndices();
-	AddBinds(d3d);
+	//MakeVertices();
+	//MakeIndices();
+	//AddBinds(d3d);
+	LoadWithAssimp(d3d);
 }
 
 void Plane::AddBinds(D3DClass* d3d)
@@ -34,12 +42,11 @@ void Plane::AddBinds(D3DClass* d3d)
 	AddBind(VertexBuffer::Resolve(d3d, geometryTag, m_vertices));
 	AddBind(IndexBuffer::Resolve(d3d, geometryTag, m_indices));
 
-
 	auto vertexShader = VertexShader::Resolve(
 		d3d,
 		ShaderType::VERTEX_SHADER,
 		nullptr,
-		"SHADERS/phong.vs",
+		"SHADERS/phongNormalMap.vs",
 		"PhongVertexEntry"
 	);
 
@@ -66,6 +73,94 @@ void Plane::AddBinds(D3DClass* d3d)
 	AddBind(std::make_shared<TransformCbufDouble>(d3d, *this, 0u, 3u));
 
 }
+
+void Plane::LoadWithAssimp(D3DClass* d3d)
+{
+	Assimp::Importer imp;
+	const auto pModel = imp.ReadFile("../DEVICE/ASSETS/MODELS/brick_wall.obj",
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_ConvertToLeftHanded |
+		aiProcess_GenNormals |
+		aiProcess_CalcTangentSpace
+	);
+
+	const auto pMesh = pModel->mMeshes[0];
+
+	for (unsigned int i = 0; i < pMesh->mNumVertices; i++)
+	{
+		m_vertices.EmplaceBack(
+			*reinterpret_cast<XMFLOAT3*>(&pMesh->mVertices[i]),
+			*reinterpret_cast<XMFLOAT2*>(&pMesh->mTextureCoords[0][i]),
+			*reinterpret_cast<XMFLOAT3*>(&pMesh->mNormals[i]),
+			*reinterpret_cast<XMFLOAT3*>(&pMesh->mTangents[i]),
+			*reinterpret_cast<XMFLOAT3*>(&pMesh->mBitangents[i])
+		);
+	}
+
+	auto x = &pMesh->mBitangents[0];
+
+	for (unsigned int i = 0; i < pMesh->mNumFaces; i++)
+	{
+		const auto& face = pMesh->mFaces[i];
+		assert(face.mNumIndices == 3);
+		m_indices.push_back(face.mIndices[0]);
+		m_indices.push_back(face.mIndices[1]);
+		m_indices.push_back(face.mIndices[2]);
+	}
+
+	using namespace std::string_literals;
+	const auto base = "../DEVICE/ASSETS/TEXTURES/BRICKWALL/"s;
+
+	if (pMesh->mMaterialIndex >= 0)
+	{
+		const auto pMaterials = pModel->mMaterials;
+		auto& material = pMaterials[pMesh->mMaterialIndex];
+
+		aiString texFilename;
+
+		material->GetTexture(aiTextureType_DIFFUSE, 0, &texFilename);
+		AddBind(Texture::Resolve(d3d, base + texFilename.C_Str(), nullptr, 0));
+
+		material->GetTexture(aiTextureType_NORMALS, 0, &texFilename);
+		AddBind(Texture::Resolve(d3d, base + texFilename.C_Str(), nullptr, 1));
+
+		AddBind(Sampler::Resolve(d3d));
+	}
+
+	AddBind(VertexBuffer::Resolve(d3d, "PLANE", m_vertices));
+	AddBind(IndexBuffer::Resolve(d3d, "PLANE", m_indices));
+
+	auto vertexShader = VertexShader::Resolve(
+		d3d,
+		ShaderType::VERTEX_SHADER,
+		nullptr,
+		"SHADERS/phongNormalMap.vs",
+		"PhongVertexEntry"
+	);
+
+	auto vBytecode = vertexShader->GetBytecode();
+	AddBind(std::move(vertexShader));
+
+	AddBind(PixelShader::Resolve(
+		d3d,
+		ShaderType::PIXEL_SHADER,
+		nullptr,
+		"SHADERS/phongNormalMap.ps",
+		"PhongPixelEntry"
+	));
+
+	AddBind(InputLayout::Resolve(d3d, m_vertices.GetLayout(), vBytecode));
+	AddBind(Topology::Resolve(d3d, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+
+	AddBind(PixelConstantBuffer<NormalMapCbuf>::Resolve(d3d, cbData, 2u));
+
+	AddBind(std::make_shared<TransformCbufDouble>(d3d, *this, 0u, 3u));
+
+	// Scale the plane.
+	Transform(XMMatrixScaling(m_size, m_size, 1.0f));
+}
+
 
 void Plane::MakeVertices()
 {

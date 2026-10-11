@@ -2,11 +2,10 @@
 
 SystemClass::SystemClass() 
 {
-	// Initialize for WIC functionality
-	HRESULT hr;
-	hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-	if (FAILED(hr))
-		throw DEVICE_Exception(__LINE__, __FILE__);
+	HRESULT hr = CoInitializeEx(
+		nullptr,
+		COINIT_MULTITHREADED
+	);
 
 	// Create window.
 	int screenWidth{ (int)(800 * 1.5) }, screenHeight{ (int)(600 * 1.5) };

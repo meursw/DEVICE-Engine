@@ -20,6 +20,9 @@ private:
 	void MakeIndices();
 	void CalculateModelVectors();
 	void CalculateTangentBinormal(VertexPosTex v1, VertexPosTex v2, VertexPosTex v3);
+
+private:
+	void LoadWithAssimp(D3DClass* d3d);
 	
 public:
 	void SetPosition(DirectX::XMFLOAT3 pos);
